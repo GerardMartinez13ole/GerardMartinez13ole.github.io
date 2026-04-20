@@ -62,6 +62,12 @@
       font-weight: 600;
     }
 
+    .btn-danger {
+      border-color: #c48f87;
+      background: #f8e5e2;
+      color: #7a1f18;
+    }
+
     .meta {
       margin-left: auto;
       font-size: 14px;
@@ -136,8 +142,89 @@
     }
 
     @media (max-width: 760px) {
+      body {
+        padding: 10px;
+      }
+
+      .app {
+        padding: 10px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      button {
+        width: 100%;
+        min-height: 38px;
+      }
+
       .meta {
+        grid-column: 1 / -1;
         margin-left: 0;
+        text-align: center;
+      }
+
+      .board {
+        overflow-x: visible;
+      }
+
+      table,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      table {
+        min-width: 0;
+      }
+
+      tbody {
+        display: grid;
+        gap: 10px;
+      }
+
+      tr {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fcfaf4;
+        padding: 8px;
+      }
+
+      .row-head {
+        width: auto;
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 2px 4px 8px;
+        margin-bottom: 4px;
+      }
+
+      td {
+        border: 0;
+        padding: 4px;
+      }
+
+      td::before {
+        content: attr(data-col-name);
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        margin-bottom: 2px;
       }
     }
   </style>
@@ -153,6 +240,7 @@
       <button id="checkBtn" type="button">Comprobar</button>
       <button id="clearBtn" type="button">Limpiar</button>
       <button id="hintBtn" type="button">Pistas</button>
+      <button id="surrenderBtn" class="btn-danger" type="button">Rendirse / Mostrar solucion</button>
       <span class="meta" id="meta">Intentos: 0</span>
     </div>
 
@@ -228,6 +316,7 @@
     const scoreEl = document.getElementById("score");
     const metaEl = document.getElementById("meta");
     const hintBtn = document.getElementById("hintBtn");
+    const surrenderBtn = document.getElementById("surrenderBtn");
 
     const state = {
       hints: false,
@@ -237,6 +326,7 @@
       teams: [],
       boardKey: "",
       boardLabel: "",
+      surrendered: false,
       byKey: new Map(),
       lookup: new Map(),
       pairMap: new Map()
@@ -504,6 +594,7 @@
         cols: [...state.cols],
         attempts: state.attempts,
         hints: state.hints,
+        surrendered: state.surrendered,
         values: collectValues()
       };
 
@@ -556,8 +647,91 @@
       return { type: "ok", player: state.byKey.get(playerKey) };
     }
 
+    function solveBoardAssignment() {
+      const slots = [];
+
+      for (let rowIndex = 0; rowIndex < state.rows.length; rowIndex += 1) {
+        for (let colIndex = 0; colIndex < state.cols.length; colIndex += 1) {
+          const row = state.rows[rowIndex];
+          const col = state.cols[colIndex];
+          const options = [...new Set(optionsForPair(row, col))];
+          if (!options.length) {
+            return null;
+          }
+
+          slots.push({
+            flatIndex: rowIndex * 3 + colIndex,
+            options
+          });
+        }
+      }
+
+      slots.sort((a, b) => a.options.length - b.options.length);
+      const used = new Set();
+      const assignment = new Array(9).fill(null);
+
+      function backtrack(pointer) {
+        if (pointer >= slots.length) {
+          return true;
+        }
+
+        const slot = slots[pointer];
+        for (const playerKey of slot.options) {
+          if (used.has(playerKey)) {
+            continue;
+          }
+
+          used.add(playerKey);
+          assignment[slot.flatIndex] = playerKey;
+
+          if (backtrack(pointer + 1)) {
+            return true;
+          }
+
+          used.delete(playerKey);
+          assignment[slot.flatIndex] = null;
+        }
+
+        return false;
+      }
+
+      return backtrack(0) ? assignment : null;
+    }
+
+    function paintSolution(solution, fromRestore) {
+      const cells = getCells();
+
+      cells.forEach((cell, index) => {
+        clearCellVisual(cell);
+        const inputEl = cell.querySelector("input");
+        const statusEl = cell.querySelector(".status");
+        const player = state.byKey.get(solution[index]);
+
+        if (player) {
+          inputEl.value = player.name;
+          cell.classList.add("ok");
+          statusEl.textContent = "Solucion";
+        }
+      });
+
+      state.surrendered = true;
+      scoreEl.textContent = fromRestore ? "Solucion recuperada." : "Te rendiste. Solucion mostrada.";
+      saveProgress();
+    }
+
+    function surrenderBoard(fromRestore) {
+      const solution = solveBoardAssignment();
+      if (!solution) {
+        scoreEl.textContent = "No se pudo calcular una solucion para este tablero.";
+        return;
+      }
+
+      paintSolution(solution, Boolean(fromRestore));
+    }
+
     function checkBoard() {
       state.attempts += 1;
+      state.surrendered = false;
       updateMeta();
 
       let validCount = 0;
@@ -618,6 +792,7 @@
     }
 
     function clearBoard() {
+      state.surrendered = false;
       getCells().forEach((cell) => {
         clearCellVisual(cell);
         cell.querySelector("input").value = "";
@@ -631,6 +806,7 @@
         inputEl.addEventListener("input", () => {
           const cell = inputEl.closest(".cell");
           clearCellVisual(cell);
+          state.surrendered = false;
           saveProgress();
         });
 
@@ -656,7 +832,7 @@
         state.cols.forEach((col, colIndex) => {
           const hint = state.hints ? new Set(optionsForPair(row, col)).size + " opciones" : "";
           html +=
-            "<td><div class=\"cell\" data-row=\"" + rowIndex + "\" data-col=\"" + colIndex +
+            "<td data-col-name=\"" + col + "\"><div class=\"cell\" data-row=\"" + rowIndex + "\" data-col=\"" + colIndex +
             "\"><input type=\"text\" placeholder=\"Jugador\" autocomplete=\"off\" spellcheck=\"false\">" +
             "<div class=\"hint\">" + hint + "</div><div class=\"status\"></div></div></td>";
         });
@@ -675,6 +851,7 @@
       state.boardKey = boardKey;
       state.boardLabel = boardLabel;
       state.attempts = 0;
+      state.surrendered = false;
 
       if (!restoreProgress) {
         state.hints = false;
@@ -684,13 +861,19 @@
       if (progress) {
         state.attempts = Number(progress.attempts) || 0;
         state.hints = Boolean(progress.hints);
+        state.surrendered = Boolean(progress.surrendered);
       }
 
       renderBoard();
 
       if (progress) {
         applyValues(progress.values);
-        scoreEl.textContent = "Progreso recuperado.";
+
+        if (state.surrendered) {
+          surrenderBoard(true);
+        } else {
+          scoreEl.textContent = "Progreso recuperado.";
+        }
       } else {
         scoreEl.textContent = "Aun no has comprobado el tablero.";
       }
@@ -722,6 +905,7 @@
       document.getElementById("randomBtn").addEventListener("click", loadRandom);
       document.getElementById("checkBtn").addEventListener("click", checkBoard);
       document.getElementById("clearBtn").addEventListener("click", clearBoard);
+      surrenderBtn.addEventListener("click", () => surrenderBoard(false));
       hintBtn.addEventListener("click", () => {
         state.hints = !state.hints;
         refreshHintButton();
