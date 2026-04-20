@@ -3,45 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grid de La Liga</title>
+  <title>Futbol Grid</title>
   <style>
     :root {
-      --bg: #f6f4ee;
-      --card: #ffffff;
-      --line: #d8d2c4;
-      --ink: #1c1c1c;
-      --muted: #5b5b5b;
-      --ok: #19753a;
-      --bad: #b3261e;
-      --btn: #ece7db;
+      --bg: #00111f;
+      --panel: #00192c;
+      --tile: #00162a;
+      --line: #2f4b86;
+      --ink: #e8f7ff;
+      --cyan: #21d8ff;
+      --gold: #f4c13f;
+      --ok: #2de47f;
+      --bad: #ff5a66;
+      --muted: #8ca6c0;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: "Segoe UI", Tahoma, sans-serif;
       color: var(--ink);
-      background: linear-gradient(180deg, #f8f6f1, #efe9db);
-      padding: 16px;
+      background:
+        radial-gradient(1000px 520px at 10% -10%, #063f62 0%, transparent 65%),
+        radial-gradient(800px 420px at 100% 0%, #0c2f4f 0%, transparent 60%),
+        linear-gradient(180deg, #000b14, #00111f 70%, #001725);
+      padding: 14px;
     }
 
     .app {
       max-width: 980px;
       margin: 0 auto;
-      background: var(--card);
-      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #001626, #001321);
+      border: 1px solid #174070;
       border-radius: 14px;
       padding: 14px;
+      box-shadow: 0 20px 36px rgba(0, 0, 0, 0.35);
     }
 
     h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0.5px;
     }
 
     .subtitle {
-      margin: 0 0 12px;
+      margin: 6px 0 12px;
       color: var(--muted);
     }
 
@@ -53,117 +63,309 @@
       margin-bottom: 12px;
     }
 
-    button {
-      border: 1px solid #bdb5a2;
+    .toolbar button,
+    .guess-submit,
+    .choice-btn,
+    .choice-cancel {
+      border: 1px solid #2d5386;
       border-radius: 999px;
       padding: 8px 12px;
-      background: var(--btn);
+      background: #032340;
       cursor: pointer;
       font-weight: 600;
+      color: var(--ink);
+    }
+
+    .toolbar button:hover,
+    .guess-submit:hover,
+    .choice-btn:hover,
+    .choice-cancel:hover {
+      filter: brightness(1.12);
+    }
+
+    .btn-accent {
+      border-color: #85652d;
+      background: #2d2517;
+      color: var(--gold);
     }
 
     .btn-danger {
-      border-color: #c48f87;
-      background: #f8e5e2;
-      color: #7a1f18;
+      border-color: #844150;
+      background: #351623;
+      color: #ff95a4;
     }
 
     .meta {
       margin-left: auto;
       font-size: 14px;
-      color: #444;
+      color: #a4c7e8;
     }
 
-    .board {
-      overflow-x: auto;
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 650px;
+    .tile {
+      min-width: 0;
+      aspect-ratio: 1 / 1;
+      border: 2px solid var(--line);
+      background: var(--tile);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
     }
 
-    th, td {
-      border: 1px solid var(--line);
-      padding: 8px;
-      vertical-align: top;
+    .tile.corner {
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #00182d, #001428);
     }
 
-    th {
-      background: #f2ecdf;
+    .brand {
+      font-weight: 800;
+      font-size: clamp(18px, 2.1vw, 28px);
+      line-height: 1.05;
       text-align: center;
+      letter-spacing: 1px;
     }
 
-    .row-head {
-      text-align: left;
-      width: 190px;
+    .brand .a {
+      color: var(--gold);
     }
 
-    .cell input {
+    .brand .b {
+      color: #90f0ff;
+      font-style: italic;
+    }
+
+    .tile.team {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 6px;
+      background: linear-gradient(160deg, #001f38 0%, #001628 75%);
+    }
+
+    .crest-wrap {
+      flex: 1;
       width: 100%;
-      border: 1px solid #cdc7ba;
-      border-radius: 8px;
-      padding: 7px;
-      font-size: 14px;
+      display: grid;
+      place-items: center;
+      padding: 4px;
     }
 
-    .hint {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #636363;
-      min-height: 16px;
+    .crest-wrap img {
+      max-width: 72%;
+      max-height: 72%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+    }
+
+    .crest-fallback {
+      width: 60%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      border: 2px solid #4aa6cb;
+      color: #9be9ff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: clamp(10px, 1.5vw, 16px);
+      background: radial-gradient(circle at 30% 30%, #083a56, #041b2c);
+    }
+
+    .team-label {
+      width: 100%;
+      background: linear-gradient(180deg, #32dfff, #16b9dc);
+      color: #001525;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 5px 4px;
+      font-size: clamp(11px, 1.5vw, 20px);
+      min-height: 28px;
+      display: grid;
+      place-items: center;
+    }
+
+    .tile.play {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 10px;
+      background: linear-gradient(150deg, #001324, #000e1b);
+    }
+
+    .tile.play.empty {
+      box-shadow: inset 0 0 0 1px rgba(33, 216, 255, 0.08);
+    }
+
+    .tile.play.filled {
+      border-color: #2e8066;
+      background: linear-gradient(160deg, #082f2a, #06201d);
+    }
+
+    .tile.play.candidate {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(244, 193, 63, 0.5) inset;
+    }
+
+    .player-name {
+      font-weight: 700;
+      font-size: clamp(12px, 1.35vw, 18px);
+      line-height: 1.2;
+      color: #bfffe0;
+      word-break: break-word;
+    }
+
+    .empty-mark {
+      color: rgba(185, 231, 255, 0.24);
+      font-size: clamp(20px, 3.2vw, 46px);
+      letter-spacing: 2px;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .hint-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #a7f4ff;
+      background: rgba(20, 96, 126, 0.55);
+      border: 1px solid rgba(83, 196, 230, 0.45);
+      border-radius: 999px;
+      padding: 2px 6px;
+    }
+
+    .guess-panel {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .guess-input {
+      width: 100%;
+      border: 2px solid #6c8db1;
+      border-radius: 18px;
+      background: #d6d9e8;
+      color: #13263a;
+      font-size: clamp(17px, 2.1vw, 24px);
+      padding: 14px 18px;
+      outline: none;
+    }
+
+    .guess-input::placeholder {
+      color: #7c8393;
+    }
+
+    .guess-submit {
+      min-height: 56px;
+      min-width: 64px;
+      border-width: 4px;
+      border-color: var(--gold);
+      background: #01263f;
+      color: #fff;
+      font-size: 27px;
+      line-height: 1;
+      padding: 0 18px;
     }
 
     .status {
-      margin-top: 4px;
-      font-size: 12px;
+      margin-top: 10px;
+      min-height: 24px;
+      font-size: 15px;
       font-weight: 700;
-      min-height: 16px;
+      color: #b3d8f5;
     }
 
-    .cell.ok input {
-      border-color: var(--ok);
-      background: #eff9f1;
+    .status.ok {
+      color: var(--ok);
     }
 
-    .cell.ok .status { color: var(--ok); }
-
-    .cell.bad input {
-      border-color: var(--bad);
-      background: #fff0ef;
+    .status.bad {
+      color: var(--bad);
     }
-
-    .cell.bad .status { color: var(--bad); }
 
     .score {
-      margin-top: 12px;
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #bbdcf6;
+    }
+
+    .choice-panel {
+      margin-top: 10px;
+      border: 1px solid #2f4f78;
+      border-radius: 10px;
+      background: rgba(0, 28, 48, 0.85);
+      padding: 10px;
+    }
+
+    .choice-panel.hidden {
+      display: none;
+    }
+
+    .choice-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #9bd0f1;
       font-weight: 700;
     }
 
-    @media (max-width: 760px) {
-      body {
-        padding: 10px;
-      }
+    .choice-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
+    .choice-btn {
+      border-radius: 10px;
+      background: #053055;
+      color: #d8f4ff;
+      font-weight: 700;
+      border-color: #2a6c9d;
+      padding: 8px 10px;
+    }
+
+    .choice-cancel {
+      margin-top: 8px;
+      border-radius: 10px;
+      background: #2a2030;
+      border-color: #6f557f;
+      color: #ffd6ff;
+    }
+
+    @media (max-width: 900px) {
       .app {
-        padding: 10px;
-        border-radius: 12px;
+        padding: 12px;
       }
 
-      h1 {
-        font-size: 24px;
+      .matrix {
+        gap: 6px;
+      }
+
+      .team-label {
+        min-height: 24px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      body {
+        padding: 8px;
       }
 
       .toolbar {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-      }
-
-      button {
-        width: 100%;
-        min-height: 38px;
       }
 
       .meta {
@@ -172,86 +374,83 @@
         text-align: center;
       }
 
-      .board {
-        overflow-x: visible;
+      .guess-panel {
+        grid-template-columns: 1fr;
       }
 
-      table,
-      tbody,
-      tr,
-      th,
-      td {
-        display: block;
+      .guess-submit {
+        width: 100%;
+        min-height: 50px;
+      }
+    }
+
+    @media (max-width: 460px) {
+      .tile {
+        border-width: 1.5px;
       }
 
-      thead {
-        display: none;
-      }
-
-      table {
-        min-width: 0;
-      }
-
-      tbody {
-        display: grid;
-        gap: 10px;
-      }
-
-      tr {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: #fcfaf4;
-        padding: 8px;
-      }
-
-      .row-head {
-        width: auto;
-        background: transparent;
-        border: 0;
-        border-bottom: 1px solid var(--line);
-        padding: 2px 4px 8px;
-        margin-bottom: 4px;
-      }
-
-      td {
-        border: 0;
+      .team-label {
+        font-size: 10px;
         padding: 4px;
       }
 
-      td::before {
-        content: attr(data-col-name);
-        display: block;
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--muted);
-        margin-bottom: 2px;
+      .player-name {
+        font-size: 11px;
+      }
+
+      .guess-input {
+        padding: 12px 14px;
       }
     }
   </style>
 </head>
 <body>
   <main class="app">
-    <h1>Grid de La Liga</h1>
-    <p class="subtitle">Escribe un jugador que haya jugado en ambos clubes en cada casilla. No repitas nombres.</p>
+    <h1>Futbol Grid</h1>
+    <p class="subtitle">Escribe un jugador y el sistema lo pondra en la casilla correcta. Si encaja en varias, eliges cual.</p>
 
     <div class="toolbar">
       <button id="dailyBtn" type="button">Reto de hoy</button>
       <button id="randomBtn" type="button">Grid aleatorio</button>
-      <button id="checkBtn" type="button">Comprobar</button>
       <button id="clearBtn" type="button">Limpiar</button>
-      <button id="hintBtn" type="button">Pistas</button>
+      <button id="hintBtn" class="btn-accent" type="button">Pistas: OFF</button>
       <button id="surrenderBtn" class="btn-danger" type="button">Rendirse / Mostrar solucion</button>
-      <span class="meta" id="meta">Intentos: 0</span>
+      <span class="meta" id="meta">Jugadas: 0</span>
     </div>
 
-    <div class="board">
-      <table id="gridTable"></table>
+    <div class="matrix" id="gridBoard"></div>
+
+    <div class="guess-panel">
+      <input id="guessInput" class="guess-input" type="text" placeholder="Type the footballer here" autocomplete="off" spellcheck="false">
+      <button id="guessBtn" class="guess-submit" type="button" aria-label="Colocar jugador">&#9873;</button>
     </div>
 
-    <p class="score" id="score">Aun no has comprobado el tablero.</p>
+    <div id="choicePanel" class="choice-panel hidden">
+      <p class="choice-title" id="choiceTitle">Elige una casilla:</p>
+      <div class="choice-list" id="choiceList"></div>
+      <button id="choiceCancel" class="choice-cancel" type="button">Cancelar</button>
+    </div>
+
+    <p class="status" id="status"></p>
+    <p class="score" id="score">Completadas: 0/9</p>
   </main>
 
   <script>
+    const TEAM_META = {
+      "Barcelona": { logo: "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg" },
+      "Real Madrid": { logo: "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" },
+      "Sevilla": { logo: "https://upload.wikimedia.org/wikipedia/en/3/3b/Sevilla_FC_logo.svg" },
+      "Atletico Madrid": { logo: "https://upload.wikimedia.org/wikipedia/en/f/f9/Atletico_Madrid_Logo_2024.svg" },
+      "Valencia": { logo: "https://upload.wikimedia.org/wikipedia/en/c/ce/Valenciacf.svg" },
+      "Villarreal": { logo: "https://upload.wikimedia.org/wikipedia/en/b/b9/Villarreal_CF_logo-en.svg" },
+      "Real Sociedad": { logo: "https://upload.wikimedia.org/wikipedia/en/f/f1/Real_Sociedad_logo.svg" },
+      "Espanyol": { logo: "https://upload.wikimedia.org/wikipedia/en/9/92/RCD_Espanyol_crest.svg" },
+      "Celta Vigo": { logo: "https://upload.wikimedia.org/wikipedia/en/1/12/RC_Celta_de_Vigo_logo.svg" },
+      "Malaga": { logo: "https://upload.wikimedia.org/wikipedia/en/6/6d/M%C3%A1laga_CF.svg" },
+      "Mallorca": { logo: "https://upload.wikimedia.org/wikipedia/en/e/e0/Rcd_mallorca.svg" },
+      "Real Betis": { logo: "https://upload.wikimedia.org/wikipedia/en/1/13/Real_betis_logo.svg" }
+    };
+
     const PLAYERS = [
       { name: "Luis Figo", teams: ["Barcelona", "Real Madrid"], aliases: ["figo"] },
       { name: "Ronaldo Nazario", teams: ["Barcelona", "Real Madrid"], aliases: ["ronaldo"] },
@@ -310,13 +509,20 @@
       { name: "Rafinha Alcantara", teams: ["Barcelona", "Celta Vigo"], aliases: ["rafinha"] }
     ];
 
-    const STORAGE_KEY = "laliga-grid-progress-v2";
+    const STORAGE_KEY = "futbol-grid-v3";
 
-    const tableEl = document.getElementById("gridTable");
+    const boardEl = document.getElementById("gridBoard");
+    const guessInputEl = document.getElementById("guessInput");
+    const guessBtn = document.getElementById("guessBtn");
     const scoreEl = document.getElementById("score");
+    const statusEl = document.getElementById("status");
     const metaEl = document.getElementById("meta");
     const hintBtn = document.getElementById("hintBtn");
     const surrenderBtn = document.getElementById("surrenderBtn");
+    const choicePanelEl = document.getElementById("choicePanel");
+    const choiceTitleEl = document.getElementById("choiceTitle");
+    const choiceListEl = document.getElementById("choiceList");
+    const choiceCancelBtn = document.getElementById("choiceCancel");
 
     const state = {
       hints: false,
@@ -327,6 +533,8 @@
       boardKey: "",
       boardLabel: "",
       surrendered: false,
+      entries: new Array(9).fill(null),
+      pending: null,
       byKey: new Map(),
       lookup: new Map(),
       pairMap: new Map()
@@ -344,6 +552,23 @@
 
     function pairKey(a, b) {
       return [a, b].sort().join("|");
+    }
+
+    function indexToRowCol(index) {
+      return { row: Math.floor(index / 3), col: index % 3 };
+    }
+
+    function rowColToIndex(row, col) {
+      return row * 3 + col;
+    }
+
+    function teamInitials(team) {
+      return team
+        .split(" ")
+        .slice(0, 2)
+        .map((part) => part.charAt(0))
+        .join("")
+        .toUpperCase();
     }
 
     function hashText(text) {
@@ -379,6 +604,10 @@
       if (state.lookup.get(normalized) !== playerKey) {
         state.lookup.set(normalized, null);
       }
+    }
+
+    function getTeamLogo(team) {
+      return (TEAM_META[team] && TEAM_META[team].logo) || "";
     }
 
     function buildIndex() {
@@ -496,10 +725,10 @@
 
     function generateBoard(seed) {
       const random = mulberry32(seed);
-      const MAX_TRIES = 1400;
+      const maxTries = 1400;
       let best = null;
 
-      for (let attempt = 0; attempt < MAX_TRIES; attempt += 1) {
+      for (let attempt = 0; attempt < maxTries; attempt += 1) {
         const rows = pickUnique(state.teams, 3, random);
         const cols = pickUnique(state.teams.filter((team) => !rows.includes(team)), 3, random);
 
@@ -543,44 +772,26 @@
       return best;
     }
 
+    function writeStatus(message, kind) {
+      statusEl.textContent = message;
+      statusEl.classList.remove("ok", "bad");
+      if (kind) {
+        statusEl.classList.add(kind);
+      }
+    }
+
     function updateMeta() {
       const label = state.boardLabel ? " | " + state.boardLabel : "";
-      metaEl.textContent = "Intentos: " + state.attempts + label;
+      metaEl.textContent = "Jugadas: " + state.attempts + label;
     }
 
     function refreshHintButton() {
-      hintBtn.textContent = state.hints ? "Ocultar pistas" : "Pistas";
+      hintBtn.textContent = state.hints ? "Pistas: ON" : "Pistas: OFF";
     }
 
-    function refreshHints() {
-      tableEl.querySelectorAll(".cell").forEach((cell) => {
-        const row = state.rows[Number(cell.dataset.row)];
-        const col = state.cols[Number(cell.dataset.col)];
-        const hintText = state.hints ? new Set(optionsForPair(row, col)).size + " opciones" : "";
-        cell.querySelector(".hint").textContent = hintText;
-      });
-    }
-
-    function clearCellVisual(cell) {
-      cell.classList.remove("ok", "bad");
-      cell.querySelector(".status").textContent = "";
-    }
-
-    function getCells() {
-      return [...tableEl.querySelectorAll(".cell")];
-    }
-
-    function collectValues() {
-      return getCells().map((cell) => cell.querySelector("input").value || "");
-    }
-
-    function applyValues(values) {
-      const cells = getCells();
-      cells.forEach((cell, index) => {
-        const value = Array.isArray(values) ? (values[index] || "") : "";
-        cell.querySelector("input").value = value;
-        clearCellVisual(cell);
-      });
+    function refreshScore() {
+      const solved = state.entries.filter(Boolean).length;
+      scoreEl.textContent = solved === 9 ? "Completadas: 9/9. Grid completado." : "Completadas: " + solved + "/9";
     }
 
     function saveProgress() {
@@ -595,13 +806,13 @@
         attempts: state.attempts,
         hints: state.hints,
         surrendered: state.surrendered,
-        values: collectValues()
+        entries: [...state.entries]
       };
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
       } catch (_) {
-        // localStorage puede no estar disponible; el juego sigue funcionando.
+        // Si localStorage falla, el juego sigue siendo funcional.
       }
     }
 
@@ -647,28 +858,154 @@
       return { type: "ok", player: state.byKey.get(playerKey) };
     }
 
-    function solveBoardAssignment() {
+    function findCandidateCells(playerKey) {
+      const player = state.byKey.get(playerKey);
+      const candidates = [];
+
+      for (let row = 0; row < 3; row += 1) {
+        for (let col = 0; col < 3; col += 1) {
+          const index = rowColToIndex(row, col);
+          if (state.entries[index]) {
+            continue;
+          }
+
+          const rowTeam = state.rows[row];
+          const colTeam = state.cols[col];
+          if (player.teams.includes(rowTeam) && player.teams.includes(colTeam)) {
+            candidates.push(index);
+          }
+        }
+      }
+
+      return candidates;
+    }
+
+    function hideChoicePanel() {
+      state.pending = null;
+      choicePanelEl.classList.add("hidden");
+      choiceTitleEl.textContent = "Elige una casilla:";
+      choiceListEl.innerHTML = "";
+    }
+
+    function showChoicePanel(playerKey, candidates) {
+      state.pending = { playerKey, candidates: [...candidates] };
+      const player = state.byKey.get(playerKey);
+      choiceTitleEl.textContent = player.name + " encaja en varias casillas. Elige una:";
+      choiceListEl.innerHTML = "";
+
+      candidates.forEach((index) => {
+        const pos = indexToRowCol(index);
+        const rowTeam = state.rows[pos.row];
+        const colTeam = state.cols[pos.col];
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-btn";
+        button.textContent = rowTeam + " x " + colTeam;
+        button.addEventListener("click", () => {
+          placePlayer(index, playerKey, true);
+        });
+        choiceListEl.appendChild(button);
+      });
+
+      choicePanelEl.classList.remove("hidden");
+      renderBoard();
+    }
+
+    function placePlayer(index, playerKey, fromChoice) {
+      if (state.entries[index]) {
+        writeStatus("Esa casilla ya esta ocupada.", "bad");
+        return;
+      }
+
+      state.entries[index] = playerKey;
+      state.surrendered = false;
+      hideChoicePanel();
+      renderBoard();
+      refreshScore();
+
+      const pos = indexToRowCol(index);
+      writeStatus(
+        state.byKey.get(playerKey).name + " colocado en " + state.rows[pos.row] + " x " + state.cols[pos.col] + ".",
+        "ok"
+      );
+
+      guessInputEl.value = "";
+      if (!fromChoice) {
+        guessInputEl.focus();
+      }
+      saveProgress();
+    }
+
+    function submitGuess() {
+      state.attempts += 1;
+      updateMeta();
+
+      const resolved = resolvePlayer(guessInputEl.value);
+      if (resolved.type === "empty") {
+        writeStatus("Escribe un jugador.", "bad");
+        return;
+      }
+
+      if (resolved.type === "unknown") {
+        writeStatus("Jugador no reconocido en la base actual.", "bad");
+        return;
+      }
+
+      if (resolved.type === "ambiguous") {
+        writeStatus("Nombre ambiguo. Escribe nombre y apellido.", "bad");
+        return;
+      }
+
+      const used = new Set(state.entries.filter(Boolean));
+      if (used.has(resolved.player.key)) {
+        writeStatus("Ese jugador ya esta colocado.", "bad");
+        return;
+      }
+
+      const candidates = findCandidateCells(resolved.player.key);
+      if (!candidates.length) {
+        writeStatus("No hay casilla libre donde encaje ese jugador.", "bad");
+        return;
+      }
+
+      if (candidates.length === 1) {
+        placePlayer(candidates[0], resolved.player.key, false);
+        return;
+      }
+
+      writeStatus("El jugador encaja en varias casillas. Elige una.", "ok");
+      showChoicePanel(resolved.player.key, candidates);
+      saveProgress();
+    }
+
+    function solveBoardAssignment(fixedEntries) {
+      const normalized = Array.isArray(fixedEntries) ? [...fixedEntries] : new Array(9).fill(null);
+      const assignment = new Array(9).fill(null);
+      const used = new Set();
       const slots = [];
 
-      for (let rowIndex = 0; rowIndex < state.rows.length; rowIndex += 1) {
-        for (let colIndex = 0; colIndex < state.cols.length; colIndex += 1) {
-          const row = state.rows[rowIndex];
-          const col = state.cols[colIndex];
-          const options = [...new Set(optionsForPair(row, col))];
+      for (let row = 0; row < 3; row += 1) {
+        for (let col = 0; col < 3; col += 1) {
+          const index = rowColToIndex(row, col);
+          const options = [...new Set(optionsForPair(state.rows[row], state.cols[col]))];
           if (!options.length) {
             return null;
           }
 
-          slots.push({
-            flatIndex: rowIndex * 3 + colIndex,
-            options
-          });
+          const fixed = normalized[index];
+          if (fixed) {
+            if (!options.includes(fixed) || used.has(fixed)) {
+              return null;
+            }
+            assignment[index] = fixed;
+            used.add(fixed);
+          } else {
+            slots.push({ index, options });
+          }
         }
       }
 
       slots.sort((a, b) => a.options.length - b.options.length);
-      const used = new Set();
-      const assignment = new Array(9).fill(null);
 
       function backtrack(pointer) {
         if (pointer >= slots.length) {
@@ -681,15 +1018,15 @@
             continue;
           }
 
+          assignment[slot.index] = playerKey;
           used.add(playerKey);
-          assignment[slot.flatIndex] = playerKey;
 
           if (backtrack(pointer + 1)) {
             return true;
           }
 
+          assignment[slot.index] = null;
           used.delete(playerKey);
-          assignment[slot.flatIndex] = null;
         }
 
         return false;
@@ -698,151 +1035,164 @@
       return backtrack(0) ? assignment : null;
     }
 
-    function paintSolution(solution, fromRestore) {
-      const cells = getCells();
-
-      cells.forEach((cell, index) => {
-        clearCellVisual(cell);
-        const inputEl = cell.querySelector("input");
-        const statusEl = cell.querySelector(".status");
-        const player = state.byKey.get(solution[index]);
-
-        if (player) {
-          inputEl.value = player.name;
-          cell.classList.add("ok");
-          statusEl.textContent = "Solucion";
-        }
-      });
-
-      state.surrendered = true;
-      scoreEl.textContent = fromRestore ? "Solucion recuperada." : "Te rendiste. Solucion mostrada.";
-      saveProgress();
-    }
-
-    function surrenderBoard(fromRestore) {
-      const solution = solveBoardAssignment();
+    function revealSolution(fromRestore) {
+      let solution = solveBoardAssignment(state.entries);
       if (!solution) {
-        scoreEl.textContent = "No se pudo calcular una solucion para este tablero.";
+        solution = solveBoardAssignment(new Array(9).fill(null));
+      }
+
+      if (!solution) {
+        writeStatus("No se pudo calcular una solucion valida.", "bad");
         return;
       }
 
-      paintSolution(solution, Boolean(fromRestore));
+      state.entries = [...solution];
+      state.surrendered = true;
+      hideChoicePanel();
+      renderBoard();
+      refreshScore();
+      writeStatus(fromRestore ? "Solucion recuperada." : "Te rendiste. Solucion mostrada.", "ok");
+      saveProgress();
     }
 
-    function checkBoard() {
-      state.attempts += 1;
-      state.surrendered = false;
-      updateMeta();
-
-      let validCount = 0;
-      const used = new Set();
-
-      getCells().forEach((cell) => {
-        clearCellVisual(cell);
-
-        const row = state.rows[Number(cell.dataset.row)];
-        const col = state.cols[Number(cell.dataset.col)];
-        const inputEl = cell.querySelector("input");
-        const statusEl = cell.querySelector(".status");
-        const result = resolvePlayer(inputEl.value);
-
-        if (result.type === "empty") {
-          cell.classList.add("bad");
-          statusEl.textContent = "Vacio";
-          return;
-        }
-
-        if (result.type === "unknown") {
-          cell.classList.add("bad");
-          statusEl.textContent = "No reconocido";
-          return;
-        }
-
-        if (result.type === "ambiguous") {
-          cell.classList.add("bad");
-          statusEl.textContent = "Nombre ambiguo";
-          return;
-        }
-
-        if (used.has(result.player.key)) {
-          cell.classList.add("bad");
-          statusEl.textContent = "Repetido";
-          return;
-        }
-
-        if (!result.player.teams.includes(row) || !result.player.teams.includes(col)) {
-          cell.classList.add("bad");
-          statusEl.textContent = "No coincide";
-          return;
-        }
-
-        used.add(result.player.key);
-        validCount += 1;
-        cell.classList.add("ok");
-        statusEl.textContent = "Correcto";
-      });
-
-      if (validCount === 9) {
-        scoreEl.textContent = "Perfecto. Puntuacion: 9/9";
-      } else {
-        scoreEl.textContent = "Puntuacion: " + validCount + "/9";
+    function requestSurrender() {
+      if (state.surrendered) {
+        writeStatus("La solucion ya esta mostrada.", "ok");
+        return;
       }
 
-      saveProgress();
+      const hasProgress = state.entries.some(Boolean);
+      const message = hasProgress
+        ? "Si te rindes, se mostrara la solucion completa. ¿Quieres continuar?"
+        : "¿Quieres rendirte y mostrar la solucion?";
+
+      if (!window.confirm(message)) {
+        return;
+      }
+
+      revealSolution(false);
     }
 
     function clearBoard() {
+      state.entries = new Array(9).fill(null);
+      state.pending = null;
       state.surrendered = false;
-      getCells().forEach((cell) => {
-        clearCellVisual(cell);
-        cell.querySelector("input").value = "";
-      });
-      scoreEl.textContent = "Aun no has comprobado el tablero.";
+      state.attempts = 0;
+      hideChoicePanel();
+      renderBoard();
+      refreshScore();
+      updateMeta();
+      guessInputEl.value = "";
+      writeStatus("Tablero limpiado.", "ok");
       saveProgress();
     }
 
-    function attachInputHandlers() {
-      tableEl.querySelectorAll(".cell input").forEach((inputEl) => {
-        inputEl.addEventListener("input", () => {
-          const cell = inputEl.closest(".cell");
-          clearCellVisual(cell);
-          state.surrendered = false;
-          saveProgress();
-        });
+    function createTeamTile(team) {
+      const tile = document.createElement("div");
+      tile.className = "tile team";
 
-        inputEl.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            checkBoard();
-          }
+      const crestWrap = document.createElement("div");
+      crestWrap.className = "crest-wrap";
+
+      const logo = getTeamLogo(team);
+      if (logo) {
+        const img = document.createElement("img");
+        img.src = logo;
+        img.alt = team;
+        img.loading = "lazy";
+        img.addEventListener("error", () => {
+          crestWrap.innerHTML = "";
+          const fallback = document.createElement("div");
+          fallback.className = "crest-fallback";
+          fallback.textContent = teamInitials(team);
+          crestWrap.appendChild(fallback);
         });
-      });
+        crestWrap.appendChild(img);
+      } else {
+        const fallback = document.createElement("div");
+        fallback.className = "crest-fallback";
+        fallback.textContent = teamInitials(team);
+        crestWrap.appendChild(fallback);
+      }
+
+      const label = document.createElement("div");
+      label.className = "team-label";
+      label.textContent = team;
+
+      tile.appendChild(crestWrap);
+      tile.appendChild(label);
+      return tile;
+    }
+
+    function createCornerTile() {
+      const tile = document.createElement("div");
+      tile.className = "tile corner";
+      const brand = document.createElement("div");
+      brand.className = "brand";
+      brand.innerHTML = "<span class=\"a\">FUTBOL</span><span class=\"b\">11</span><br><span class=\"b\">GRID</span>";
+      tile.appendChild(brand);
+      return tile;
+    }
+
+    function createPlayTile(row, col) {
+      const index = rowColToIndex(row, col);
+      const key = state.entries[index];
+      const tile = document.createElement("div");
+      tile.className = "tile play " + (key ? "filled" : "empty");
+
+      if (state.pending && state.pending.candidates.includes(index)) {
+        tile.classList.add("candidate");
+      }
+
+      if (key) {
+        const nameEl = document.createElement("div");
+        nameEl.className = "player-name";
+        nameEl.textContent = state.byKey.get(key).name;
+        tile.appendChild(nameEl);
+      } else {
+        const emptyMark = document.createElement("div");
+        emptyMark.className = "empty-mark";
+        emptyMark.textContent = "-";
+        tile.appendChild(emptyMark);
+      }
+
+      if (state.hints) {
+        const hint = document.createElement("div");
+        hint.className = "hint-badge";
+        hint.textContent = new Set(optionsForPair(state.rows[row], state.cols[col])).size + " op";
+        tile.appendChild(hint);
+      }
+
+      return tile;
     }
 
     function renderBoard() {
-      let html = "<thead><tr><th>Club x Club</th>";
-      for (const col of state.cols) {
-        html += "<th>" + col + "</th>";
+      boardEl.innerHTML = "";
+
+      for (let row = -1; row < 3; row += 1) {
+        for (let col = -1; col < 3; col += 1) {
+          if (row === -1 && col === -1) {
+            boardEl.appendChild(createCornerTile());
+            continue;
+          }
+
+          if (row === -1) {
+            boardEl.appendChild(createTeamTile(state.cols[col]));
+            continue;
+          }
+
+          if (col === -1) {
+            boardEl.appendChild(createTeamTile(state.rows[row]));
+            continue;
+          }
+
+          boardEl.appendChild(createPlayTile(row, col));
+        }
       }
-      html += "</tr></thead><tbody>";
 
-      state.rows.forEach((row, rowIndex) => {
-        html += "<tr><th class=\"row-head\">" + row + "</th>";
-
-        state.cols.forEach((col, colIndex) => {
-          const hint = state.hints ? new Set(optionsForPair(row, col)).size + " opciones" : "";
-          html +=
-            "<td data-col-name=\"" + col + "\"><div class=\"cell\" data-row=\"" + rowIndex + "\" data-col=\"" + colIndex +
-            "\"><input type=\"text\" placeholder=\"Jugador\" autocomplete=\"off\" spellcheck=\"false\">" +
-            "<div class=\"hint\">" + hint + "</div><div class=\"status\"></div></div></td>";
-        });
-
-        html += "</tr>";
-      });
-
-      html += "</tbody>";
-      tableEl.innerHTML = html;
-      attachInputHandlers();
+      refreshHintButton();
+      refreshScore();
+      updateMeta();
     }
 
     function openBoard(boardData, boardKey, boardLabel, restoreProgress) {
@@ -852,6 +1202,8 @@
       state.boardLabel = boardLabel;
       state.attempts = 0;
       state.surrendered = false;
+      state.pending = null;
+      state.entries = new Array(9).fill(null);
 
       if (!restoreProgress) {
         state.hints = false;
@@ -862,25 +1214,25 @@
         state.attempts = Number(progress.attempts) || 0;
         state.hints = Boolean(progress.hints);
         state.surrendered = Boolean(progress.surrendered);
+        if (Array.isArray(progress.entries) && progress.entries.length === 9) {
+          state.entries = progress.entries.map((key) => (state.byKey.has(key) ? key : null));
+        }
       }
 
+      hideChoicePanel();
       renderBoard();
+      guessInputEl.value = "";
 
       if (progress) {
-        applyValues(progress.values);
-
         if (state.surrendered) {
-          surrenderBoard(true);
+          revealSolution(true);
         } else {
-          scoreEl.textContent = "Progreso recuperado.";
+          writeStatus("Progreso recuperado.", "ok");
         }
       } else {
-        scoreEl.textContent = "Aun no has comprobado el tablero.";
+        writeStatus("", "");
       }
 
-      updateMeta();
-      refreshHintButton();
-      refreshHints();
       saveProgress();
     }
 
@@ -895,6 +1247,7 @@
       const seed = Date.now() >>> 0;
       const board = generateBoard(seed);
       openBoard(board, "random-" + seed, "Grid aleatorio", false);
+      writeStatus("Nuevo grid aleatorio listo.", "ok");
     }
 
     function boot() {
@@ -903,14 +1256,24 @@
 
       document.getElementById("dailyBtn").addEventListener("click", loadDaily);
       document.getElementById("randomBtn").addEventListener("click", loadRandom);
-      document.getElementById("checkBtn").addEventListener("click", checkBoard);
       document.getElementById("clearBtn").addEventListener("click", clearBoard);
-      surrenderBtn.addEventListener("click", () => surrenderBoard(false));
       hintBtn.addEventListener("click", () => {
         state.hints = !state.hints;
-        refreshHintButton();
-        refreshHints();
+        renderBoard();
         saveProgress();
+      });
+      surrenderBtn.addEventListener("click", requestSurrender);
+      guessBtn.addEventListener("click", submitGuess);
+      guessInputEl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          submitGuess();
+        }
+      });
+      choiceCancelBtn.addEventListener("click", () => {
+        hideChoicePanel();
+        renderBoard();
+        writeStatus("Seleccion cancelada.", "ok");
       });
     }
 
