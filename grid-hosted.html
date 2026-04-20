@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid de La Liga</title>
+  <style>
+    :root {
+      --bg: #f6f4ee;
+      --card: #ffffff;
+      --line: #d8d2c4;
+      --ink: #1c1c1c;
+      --muted: #5b5b5b;
+      --ok: #19753a;
+      --bad: #b3261e;
+      --btn: #ece7db;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f8f6f1, #efe9db);
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 980px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    button {
+      border: 1px solid #bdb5a2;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--btn);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .meta {
+      margin-left: auto;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .board {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f2ecdf;
+      text-align: center;
+    }
+
+    .row-head {
+      text-align: left;
+      width: 190px;
+    }
+
+    .cell input {
+      width: 100%;
+      border: 1px solid #cdc7ba;
+      border-radius: 8px;
+      padding: 7px;
+      font-size: 14px;
+    }
+
+    .hint {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #636363;
+      min-height: 16px;
+    }
+
+    .status {
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      min-height: 16px;
+    }
+
+    .cell.ok input {
+      border-color: var(--ok);
+      background: #eff9f1;
+    }
+
+    .cell.ok .status { color: var(--ok); }
+
+    .cell.bad input {
+      border-color: var(--bad);
+      background: #fff0ef;
+    }
+
+    .cell.bad .status { color: var(--bad); }
+
+    .score {
+      margin-top: 12px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 760px) {
+      .meta {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>Grid de La Liga</h1>
+    <p class="subtitle">Escribe un jugador que haya jugado en ambos clubes en cada casilla. No repitas nombres.</p>
+
+    <div class="toolbar">
+      <button id="dailyBtn" type="button">Reto de hoy</button>
+      <button id="randomBtn" type="button">Grid aleatorio</button>
+      <button id="checkBtn" type="button">Comprobar</button>
+      <button id="clearBtn" type="button">Limpiar</button>
+      <button id="hintBtn" type="button">Pistas</button>
+      <span class="meta" id="meta">Intentos: 0</span>
+    </div>
+
+    <div class="board">
+      <table id="gridTable"></table>
+    </div>
+
+    <p class="score" id="score">Aun no has comprobado el tablero.</p>
+  </main>
+
+  <script>
+    const PLAYERS = [
+      { name: "Luis Figo", teams: ["Barcelona", "Real Madrid"] },
+      { name: "Ronaldo Nazario", teams: ["Barcelona", "Real Madrid"] },
+      { name: "Michael Laudrup", teams: ["Barcelona", "Real Madrid"] },
+      { name: "Samuel Eto'o", teams: ["Barcelona", "Real Madrid", "Mallorca"] },
+      { name: "Ivan Rakitic", teams: ["Sevilla", "Barcelona"] },
+      { name: "Dani Alves", teams: ["Sevilla", "Barcelona"] },
+      { name: "Jules Kounde", teams: ["Sevilla", "Barcelona"] },
+      { name: "Sergio Ramos", teams: ["Sevilla", "Real Madrid"] },
+      { name: "Isco", teams: ["Sevilla", "Real Madrid", "Malaga"] },
+      { name: "Sergio Reguilon", teams: ["Sevilla", "Real Madrid", "Atletico Madrid"] },
+      { name: "Kevin Gameiro", teams: ["Sevilla", "Atletico Madrid", "Valencia"] },
+      { name: "Geoffrey Kondogbia", teams: ["Valencia", "Atletico Madrid", "Sevilla"] },
+      { name: "David Villa", teams: ["Valencia", "Barcelona", "Atletico Madrid"] },
+      { name: "Jordi Alba", teams: ["Valencia", "Barcelona"] },
+      { name: "Raul Albiol", teams: ["Valencia", "Real Madrid", "Villarreal"] },
+      { name: "Canales", teams: ["Valencia", "Real Madrid", "Real Betis"] },
+      { name: "Rodrigo De Paul", teams: ["Valencia", "Atletico Madrid"] },
+      { name: "Antoine Griezmann", teams: ["Real Sociedad", "Atletico Madrid", "Barcelona"] },
+      { name: "Martin Odegaard", teams: ["Real Sociedad", "Real Madrid"] },
+      { name: "Asier Illarramendi", teams: ["Real Sociedad", "Real Madrid"] },
+      { name: "Robin Le Normand", teams: ["Real Sociedad", "Atletico Madrid"] },
+      { name: "Arda Turan", teams: ["Atletico Madrid", "Barcelona"] },
+      { name: "Memphis Depay", teams: ["Atletico Madrid", "Barcelona"] },
+      { name: "Alvaro Morata", teams: ["Real Madrid", "Atletico Madrid"] },
+      { name: "Marcos Llorente", teams: ["Real Madrid", "Atletico Madrid"] },
+      { name: "Dani Parejo", teams: ["Valencia", "Villarreal"] },
+      { name: "Francis Coquelin", teams: ["Valencia", "Villarreal"] },
+      { name: "Gerard Moreno", teams: ["Villarreal", "Espanyol"] },
+      { name: "Joan Capdevila", teams: ["Espanyol", "Atletico Madrid", "Villarreal"] }
+    ];
+
+    const tableEl = document.getElementById("gridTable");
+    const scoreEl = document.getElementById("score");
+    const metaEl = document.getElementById("meta");
+
+    const state = {
+      hints: false,
+      attempts: 0,
+      rows: [],
+      cols: [],
+      byName: new Map(),
+      pairMap: new Map(),
+      teams: []
+    };
+
+    function normalizeName(value) {
+      return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9 ]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function pairKey(a, b) {
+      return [a, b].sort().join("|");
+    }
+
+    function hashText(text) {
+      let h = 2166136261;
+      for (let i = 0; i < text.length; i += 1) {
+        h ^= text.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function mulberry32(seed) {
+      let t = seed >>> 0;
+      return function () {
+        t += 0x6D2B79F5;
+        let r = Math.imul(t ^ (t >>> 15), 1 | t);
+        r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+        return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function buildIndex() {
+      const teams = new Set();
+
+      for (const player of PLAYERS) {
+        const key = normalizeName(player.name);
+        state.byName.set(key, { key, name: player.name, teams: [...player.teams] });
+
+        for (const team of player.teams) {
+          teams.add(team);
+        }
+
+        for (let i = 0; i < player.teams.length; i += 1) {
+          for (let j = i + 1; j < player.teams.length; j += 1) {
+            const k = pairKey(player.teams[i], player.teams[j]);
+            if (!state.pairMap.has(k)) {
+              state.pairMap.set(k, []);
+            }
+            state.pairMap.get(k).push(player.name);
+          }
+        }
+      }
+
+      state.teams = [...teams].sort();
+    }
+
+    function optionsForPair(a, b) {
+      return state.pairMap.get(pairKey(a, b)) || [];
+    }
+
+    function pickUnique(list, amount, random) {
+      const pool = [...list];
+      for (let i = pool.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool.slice(0, amount);
+    }
+
+    function generateBoard(seed) {
+      const random = mulberry32(seed);
+      let best = null;
+
+      for (let a = 0; a < 500; a += 1) {
+        const rows = pickUnique(state.teams, 3, random);
+        const cols = pickUnique(state.teams.filter((t) => !rows.includes(t)), 3, random);
+
+        let valid = true;
+        let richness = 0;
+
+        for (const r of rows) {
+          for (const c of cols) {
+            const opts = optionsForPair(r, c);
+            if (!opts.length) {
+              valid = false;
+            }
+            richness += opts.length;
+          }
+        }
+
+        if (valid && (!best || richness > best.richness)) {
+          best = { rows, cols, richness };
+        }
+      }
+
+      if (!best) {
+        throw new Error("No se pudo generar tablero");
+      }
+
+      state.rows = best.rows;
+      state.cols = best.cols;
+    }
+
+    function renderBoard() {
+      let html = "<thead><tr><th>Club x Club</th>";
+      for (const col of state.cols) {
+        html += "<th>" + col + "</th>";
+      }
+      html += "</tr></thead><tbody>";
+
+      state.rows.forEach((row, rIdx) => {
+        html += "<tr><th class=\"row-head\">" + row + "</th>";
+
+        state.cols.forEach((col, cIdx) => {
+          const hint = state.hints ? optionsForPair(row, col).length + " opciones" : "";
+          html +=
+            "<td><div class=\"cell\" data-row=\"" + rIdx + "\" data-col=\"" + cIdx +
+            "\"><input type=\"text\" placeholder=\"Jugador\"><div class=\"hint\">" + hint +
+            "</div><div class=\"status\"></div></div></td>";
+        });
+
+        html += "</tr>";
+      });
+
+      html += "</tbody>";
+      tableEl.innerHTML = html;
+      scoreEl.textContent = "Aun no has comprobado el tablero.";
+    }
+
+    function refreshHints() {
+      tableEl.querySelectorAll(".cell").forEach((cell) => {
+        const r = state.rows[Number(cell.dataset.row)];
+        const c = state.cols[Number(cell.dataset.col)];
+        cell.querySelector(".hint").textContent = state.hints ? optionsForPair(r, c).length + " opciones" : "";
+      });
+    }
+
+    function setAttempts() {
+      metaEl.textContent = "Intentos: " + state.attempts;
+    }
+
+    function clearBoard() {
+      tableEl.querySelectorAll(".cell").forEach((cell) => {
+        cell.classList.remove("ok", "bad");
+        cell.querySelector("input").value = "";
+        cell.querySelector(".status").textContent = "";
+      });
+      scoreEl.textContent = "Aun no has comprobado el tablero.";
+      refreshHints();
+    }
+
+    function checkBoard() {
+      state.attempts += 1;
+      setAttempts();
+
+      let validCount = 0;
+      const used = new Set();
+
+      tableEl.querySelectorAll(".cell").forEach((cell) => {
+        cell.classList.remove("ok", "bad");
+
+        const r = state.rows[Number(cell.dataset.row)];
+        const c = state.cols[Number(cell.dataset.col)];
+        const input = cell.querySelector("input");
+        const status = cell.querySelector(".status");
+        const key = normalizeName(input.value || "");
+        const player = state.byName.get(key);
+
+        if (!player) {
+          cell.classList.add("bad");
+          status.textContent = input.value.trim() ? "No reconocido" : "Vacio";
+          return;
+        }
+
+        if (used.has(player.key)) {
+          cell.classList.add("bad");
+          status.textContent = "Repetido";
+          return;
+        }
+
+        if (!player.teams.includes(r) || !player.teams.includes(c)) {
+          cell.classList.add("bad");
+          status.textContent = "No coincide";
+          return;
+        }
+
+        used.add(player.key);
+        validCount += 1;
+        cell.classList.add("ok");
+        status.textContent = "Correcto";
+      });
+
+      scoreEl.textContent = "Puntuacion: " + validCount + "/9";
+    }
+
+    function loadDaily() {
+      const d = new Date();
+      const seedText = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+      generateBoard(hashText(seedText));
+      state.attempts = 0;
+      setAttempts();
+      renderBoard();
+    }
+
+    function loadRandom() {
+      generateBoard((Date.now() >>> 0));
+      state.attempts = 0;
+      setAttempts();
+      renderBoard();
+    }
+
+    function boot() {
+      buildIndex();
+      loadDaily();
+
+      document.getElementById("dailyBtn").addEventListener("click", loadDaily);
+      document.getElementById("randomBtn").addEventListener("click", loadRandom);
+      document.getElementById("checkBtn").addEventListener("click", checkBoard);
+      document.getElementById("clearBtn").addEventListener("click", clearBoard);
+      document.getElementById("hintBtn").addEventListener("click", () => {
+        state.hints = !state.hints;
+        refreshHints();
+      });
+    }
+
+    boot();
+  </script>
+</body>
+</html>
