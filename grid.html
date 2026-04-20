@@ -199,12 +199,48 @@
       box-shadow: 0 0 0 2px rgba(244, 193, 63, 0.5) inset;
     }
 
+    .player-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      max-width: 100%;
+    }
+
     .player-name {
       font-weight: 700;
       font-size: clamp(12px, 1.35vw, 18px);
       line-height: 1.2;
       color: #bfffe0;
       word-break: break-word;
+      text-align: center;
+    }
+
+    .player-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(110, 165, 205, 0.45);
+      background: rgba(3, 22, 34, 0.6);
+    }
+
+    .flag-icon {
+      width: 18px;
+      height: 13px;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      object-fit: cover;
+      display: block;
+    }
+
+    .pos-badge {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      color: #9be9ff;
+      line-height: 1;
     }
 
     .empty-mark {
@@ -213,19 +249,6 @@
       letter-spacing: 2px;
       line-height: 1;
       user-select: none;
-    }
-
-    .hint-badge {
-      position: absolute;
-      bottom: 4px;
-      right: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #a7f4ff;
-      background: rgba(20, 96, 126, 0.55);
-      border: 1px solid rgba(83, 196, 230, 0.45);
-      border-radius: 999px;
-      padding: 2px 6px;
     }
 
     .guess-panel {
@@ -430,6 +453,20 @@
         font-size: 11px;
       }
 
+      .player-meta {
+        gap: 5px;
+        padding: 2px 5px;
+      }
+
+      .flag-icon {
+        width: 16px;
+        height: 12px;
+      }
+
+      .pos-badge {
+        font-size: 10px;
+      }
+
       .guess-input {
         padding: 12px 14px;
       }
@@ -441,13 +478,11 @@
 
   <main class="app">
     <h1>Futbol Grid</h1>
-    <p class="subtitle">Escribe un jugador y el sistema lo pondra en la casilla correcta. Si encaja en varias, eliges cual.</p>
+    <p class="subtitle">Escribe un jugador y el sistema lo colocara en cruces de equipo, pais y posicion. Si encaja en varias, eliges cual.</p>
 
     <div class="toolbar">
-      <button id="dailyBtn" type="button">Reto de hoy</button>
       <button id="randomBtn" type="button">Grid aleatorio</button>
       <button id="clearBtn" type="button">Limpiar</button>
-      <button id="hintBtn" class="btn-accent" type="button">Pistas: OFF</button>
       <button id="surrenderBtn" class="btn-danger" type="button">Rendirse / Mostrar solucion</button>
       <span class="meta" id="meta">Jugadas: 0</span>
     </div>
@@ -472,6 +507,8 @@
   <script src="navbar.js"></script>
   <script>
     const TEAM_META = {
+      "Alaves": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Deportivo_Alaves_logo_(2020).svg/250px-Deportivo_Alaves_logo_(2020).svg.png" },
+      "Athletic Bilbao": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Club_Athletic_Bilbao_logo.svg/250px-Club_Athletic_Bilbao_logo.svg.png" },
       "Barcelona": { logo: "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg" },
       "Real Madrid": { logo: "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" },
       "Sevilla": { logo: "https://upload.wikimedia.org/wikipedia/en/3/3b/Sevilla_FC_logo.svg" },
@@ -483,66 +520,374 @@
       "Celta Vigo": { logo: "https://upload.wikimedia.org/wikipedia/en/1/12/RC_Celta_de_Vigo_logo.svg" },
       "Malaga": { logo: "https://upload.wikimedia.org/wikipedia/en/6/6d/M%C3%A1laga_CF.svg" },
       "Mallorca": { logo: "https://upload.wikimedia.org/wikipedia/en/e/e0/Rcd_mallorca.svg" },
-      "Real Betis": { logo: "https://upload.wikimedia.org/wikipedia/en/1/13/Real_betis_logo.svg" }
+      "Real Betis": { logo: "https://upload.wikimedia.org/wikipedia/en/1/13/Real_betis_logo.svg" },
+      "Elche": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a7/Elche_CF_logo.svg/250px-Elche_CF_logo.svg.png" },
+      "Getafe": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/46/Getafe_CF_logo.svg/250px-Getafe_CF_logo.svg.png" },
+      "Girona": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f7/Girona_FC_Logo.svg/250px-Girona_FC_Logo.svg.png" },
+      "Levante": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7b/Levante_UD_logo.svg/250px-Levante_UD_logo.svg.png" },
+      "Osasuna": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/3/38/CA_Osasuna_logo.svg/250px-CA_Osasuna_logo.svg.png" },
+      "Oviedo": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/Real_Oviedo_logo.svg/250px-Real_Oviedo_logo.svg.png" },
+      "Rayo Vallecano": { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d8/Rayo_Vallecano_logo.svg/250px-Rayo_Vallecano_logo.svg.png" }
     };
 
     const PLAYERS = [
-      { name: "Luis Figo", teams: ["Barcelona", "Real Madrid"], aliases: ["figo"] },
-      { name: "Ronaldo Nazario", teams: ["Barcelona", "Real Madrid"], aliases: ["ronaldo"] },
-      { name: "Michael Laudrup", teams: ["Barcelona", "Real Madrid"], aliases: ["laudrup"] },
-      { name: "Samuel Eto'o", teams: ["Mallorca", "Real Madrid", "Barcelona"], aliases: ["etoo"] },
-      { name: "Dani Alves", teams: ["Sevilla", "Barcelona"] },
-      { name: "Ivan Rakitic", teams: ["Sevilla", "Barcelona"], aliases: ["rakitic"] },
-      { name: "Jules Kounde", teams: ["Sevilla", "Barcelona"], aliases: ["kounde"] },
-      { name: "Clement Lenglet", teams: ["Sevilla", "Barcelona"], aliases: ["lenglet"] },
-      { name: "Sergio Ramos", teams: ["Sevilla", "Real Madrid"], aliases: ["ramos"] },
-      { name: "Isco", teams: ["Malaga", "Real Madrid", "Sevilla"] },
-      { name: "Sergio Reguilon", teams: ["Sevilla", "Real Madrid", "Atletico Madrid"], aliases: ["reguilon"] },
-      { name: "Kevin Gameiro", teams: ["Sevilla", "Atletico Madrid", "Valencia"], aliases: ["gameiro"] },
-      { name: "Geoffrey Kondogbia", teams: ["Valencia", "Atletico Madrid", "Sevilla"], aliases: ["kondogbia"] },
-      { name: "Ever Banega", teams: ["Valencia", "Sevilla"], aliases: ["banega"] },
-      { name: "Adil Rami", teams: ["Valencia", "Sevilla"], aliases: ["rami"] },
-      { name: "David Villa", teams: ["Valencia", "Barcelona", "Atletico Madrid"], aliases: ["villa"] },
-      { name: "Jordi Alba", teams: ["Valencia", "Barcelona"], aliases: ["alba"] },
-      { name: "Paco Alcacer", teams: ["Valencia", "Barcelona"], aliases: ["alcacer"] },
-      { name: "Andre Gomes", teams: ["Valencia", "Barcelona"], aliases: ["gomes"] },
-      { name: "Jeison Murillo", teams: ["Valencia", "Barcelona"], aliases: ["murillo"] },
-      { name: "Raul Albiol", teams: ["Valencia", "Real Madrid", "Villarreal"], aliases: ["albiol"] },
-      { name: "Sergio Canales", teams: ["Valencia", "Real Madrid", "Real Betis"], aliases: ["canales"] },
-      { name: "Denis Cheryshev", teams: ["Real Madrid", "Valencia", "Villarreal"], aliases: ["cheryshev"] },
-      { name: "Fernando Morientes", teams: ["Real Madrid", "Valencia"], aliases: ["morientes"] },
-      { name: "Alvaro Morata", teams: ["Real Madrid", "Atletico Madrid"], aliases: ["morata"] },
-      { name: "Marcos Llorente", teams: ["Real Madrid", "Atletico Madrid"], aliases: ["llorente"] },
-      { name: "Theo Hernandez", teams: ["Real Madrid", "Atletico Madrid", "Real Sociedad"], aliases: ["theo"] },
-      { name: "Antoine Griezmann", teams: ["Real Sociedad", "Atletico Madrid", "Barcelona"], aliases: ["griezmann"] },
-      { name: "Martin Odegaard", teams: ["Real Sociedad", "Real Madrid"], aliases: ["odegaard"] },
-      { name: "Asier Illarramendi", teams: ["Real Sociedad", "Real Madrid"], aliases: ["illarramendi"] },
-      { name: "Esteban Granero", teams: ["Real Sociedad", "Real Madrid", "Espanyol"], aliases: ["granero"] },
-      { name: "Robin Le Normand", teams: ["Real Sociedad", "Atletico Madrid"], aliases: ["le normand"] },
+      { name: "Pedri", teams: ["Barcelona"] },
+      { name: "Gavi", teams: ["Barcelona"] },
+      { name: "Lamine Yamal", teams: ["Barcelona"] },
+      { name: "Ronald Araujo", teams: ["Barcelona"] },
+      { name: "Marc-Andre ter Stegen", teams: ["Barcelona"], aliases: ["ter stegen"] },
+      { name: "Alejandro Balde", teams: ["Barcelona"], aliases: ["balde"] },
+      { name: "Frenkie de Jong", teams: ["Barcelona"], aliases: ["de jong"] },
+      { name: "Raphinha", teams: ["Barcelona"] },
+      { name: "Robert Lewandowski", teams: ["Barcelona"], aliases: ["lewandowski"] },
+      { name: "Pau Cubarsi", teams: ["Barcelona"], aliases: ["cubarsi"] },
+      { name: "Fermin Lopez", teams: ["Barcelona"], aliases: ["fermin"] },
+      { name: "Dani Olmo", teams: ["Barcelona"], aliases: ["olmo"] },
+      { name: "Vinicius Junior", teams: ["Real Madrid"], aliases: ["vinicius","vini jr"] },
+      { name: "Jude Bellingham", teams: ["Real Madrid"], aliases: ["bellingham"] },
+      { name: "Kylian Mbappe", teams: ["Real Madrid"], aliases: ["mbappe"] },
+      { name: "Rodrygo", teams: ["Real Madrid"], aliases: ["rodrygo goes"] },
+      { name: "Federico Valverde", teams: ["Real Madrid"], aliases: ["valverde","fede valverde"] },
+      { name: "Aurelien Tchouameni", teams: ["Real Madrid"], aliases: ["tchouameni"] },
+      { name: "Eduardo Camavinga", teams: ["Real Madrid"], aliases: ["camavinga"] },
+      { name: "Eder Militao", teams: ["Real Madrid"], aliases: ["militao"] },
+      { name: "Thibaut Courtois", teams: ["Real Madrid"], aliases: ["courtois"] },
+      { name: "Antonio Rudiger", teams: ["Real Madrid"], aliases: ["rudiger"] },
+      { name: "Luka Modric", teams: ["Real Madrid"], aliases: ["modric"] },
+      { name: "Brahim Diaz", teams: ["Real Madrid"], aliases: ["brahim"] },
+      { name: "Endrick", teams: ["Real Madrid"], aliases: ["endrick felipe"] },
+      { name: "Arda Guler", teams: ["Real Madrid"], aliases: ["guler"] },
+      { name: "Jan Oblak", teams: ["Atletico Madrid"], aliases: ["oblak"] },
+      { name: "Koke", teams: ["Atletico Madrid"], aliases: ["koke resurreccion"] },
+      { name: "Rodrigo De Paul", teams: ["Atletico Madrid"], aliases: ["de paul"] },
+      { name: "Jose Maria Gimenez", teams: ["Atletico Madrid"], aliases: ["gimenez"] },
+      { name: "Samuel Lino", teams: ["Atletico Madrid"], aliases: ["lino"] },
+      { name: "Nahuel Molina", teams: ["Atletico Madrid"], aliases: ["molina"] },
+      { name: "Conor Gallagher", teams: ["Atletico Madrid","Chelsea"], aliases: ["gallagher"] },
+      { name: "Julian Alvarez", teams: ["Atletico Madrid","Manchester City"], aliases: ["julian","alvarez"] },
+      { name: "Inaki Williams", teams: ["Athletic Bilbao"], aliases: ["inaki"] },
+      { name: "Nico Williams", teams: ["Athletic Bilbao"], aliases: ["nico"] },
+      { name: "Unai Simon", teams: ["Athletic Bilbao"], aliases: ["simon"] },
+      { name: "Oihan Sancet", teams: ["Athletic Bilbao"], aliases: ["sancet"] },
+      { name: "Dani Vivian", teams: ["Athletic Bilbao"], aliases: ["vivian"] },
+      { name: "Mikel Oyarzabal", teams: ["Real Sociedad"], aliases: ["oyarzabal"] },
+      { name: "Martin Zubimendi", teams: ["Real Sociedad"], aliases: ["zubimendi"] },
+      { name: "Alex Remiro", teams: ["Real Sociedad"], aliases: ["remiro"] },
+      { name: "Igor Zubeldia", teams: ["Real Sociedad"], aliases: ["zubeldia"] },
+      { name: "Takefusa Kubo", teams: ["Real Sociedad","Real Madrid","Mallorca"], aliases: ["kubo"] },
+      { name: "Viktor Tsygankov", teams: ["Girona"], aliases: ["tsygankov"] },
+      { name: "Ivan Martin", teams: ["Girona"], aliases: ["ivan martin"] },
+      { name: "Cristhian Stuani", teams: ["Girona","Espanyol"], aliases: ["stuani"] },
+      { name: "Bryan Gil", teams: ["Girona","Sevilla"], aliases: ["bryan"] },
+      { name: "Alex Baena", teams: ["Villarreal"], aliases: ["baena"] },
+      { name: "Dani Parejo", teams: ["Villarreal","Valencia"], aliases: ["parejo"] },
+      { name: "Gerard Moreno", teams: ["Villarreal","Espanyol"], aliases: ["gerard"] },
+      { name: "Nabil Fekir", teams: ["Real Betis"], aliases: ["fekir"] },
+      { name: "Pablo Fornals", teams: ["Real Betis","Villarreal","Malaga"], aliases: ["fornals"] },
+      { name: "Isco", teams: ["Real Betis","Real Madrid","Sevilla","Malaga"], aliases: ["isco alarcon"] },
+      { name: "Vitor Roque", teams: ["Real Betis"], aliases: ["roque"] },
+      { name: "Jose Gaya", teams: ["Valencia","Barcelona"], aliases: ["gaya"] },
+      { name: "Hugo Duro", teams: ["Valencia","Getafe"], aliases: ["duro"] },
+      { name: "Pepelu", teams: ["Valencia","Getafe"] },
+      { name: "Javi Guerra", teams: ["Valencia"], aliases: ["juerra"] },
+      { name: "Jesus Navas", teams: ["Sevilla"], aliases: ["navas"] },
+      { name: "Isaac Romero", teams: ["Sevilla"], aliases: ["isaac"] },
+      { name: "Fran Beltran", teams: ["Celta Vigo","Rayo Vallecano"], aliases: ["beltran"] },
+      { name: "Iago Aspas", teams: ["Celta Vigo","Sevilla"], aliases: ["aspas"] },
+      { name: "Aimar Oroz", teams: ["Osasuna"], aliases: ["aimar"] },
+      { name: "Ante Budimir", teams: ["Osasuna","Mallorca"], aliases: ["budimir"] },
+      { name: "Carlos Vicente", teams: ["Alaves"], aliases: ["vicente"] },
       { name: "Arda Turan", teams: ["Atletico Madrid", "Barcelona"], aliases: ["arda"] },
-      { name: "Memphis Depay", teams: ["Atletico Madrid", "Barcelona"], aliases: ["depay"] },
-      { name: "Joao Felix", teams: ["Atletico Madrid", "Barcelona"], aliases: ["felix"] },
-      { name: "Luis Suarez", teams: ["Barcelona", "Atletico Madrid"], aliases: ["suarez"] },
-      { name: "Dani Parejo", teams: ["Valencia", "Villarreal"], aliases: ["parejo"] },
-      { name: "Francis Coquelin", teams: ["Valencia", "Villarreal"], aliases: ["coquelin"] },
-      { name: "Gabriel Paulista", teams: ["Valencia", "Villarreal"], aliases: ["paulista"] },
-      { name: "Rodri", teams: ["Atletico Madrid", "Villarreal"] },
+      { name: "Diego Costa", teams: ["Atletico Madrid", "Celta Vigo"], aliases: ["costa"] },
       { name: "Diego Godin", teams: ["Atletico Madrid", "Villarreal"], aliases: ["godin"] },
-      { name: "Joan Capdevila", teams: ["Espanyol", "Atletico Madrid", "Villarreal"], aliases: ["capdevila"] },
-      { name: "Gerard Moreno", teams: ["Villarreal", "Espanyol"], aliases: ["gerard"] },
-      { name: "Carlos Bacca", teams: ["Sevilla", "Villarreal"], aliases: ["bacca"] },
-      { name: "Denis Suarez", teams: ["Barcelona", "Villarreal", "Celta Vigo"], aliases: ["denis"] },
-      { name: "Munir El Haddadi", teams: ["Barcelona", "Valencia", "Sevilla"], aliases: ["munir"] },
-      { name: "Jasper Cillessen", teams: ["Barcelona", "Valencia"], aliases: ["cillessen"] },
-      { name: "Nolito", teams: ["Barcelona", "Celta Vigo"] },
-      { name: "Santi Mina", teams: ["Valencia", "Celta Vigo"], aliases: ["mina"] },
-      { name: "Iago Aspas", teams: ["Celta Vigo", "Sevilla"], aliases: ["aspas"] },
+      { name: "Javier Manquillo", teams: ["Atletico Madrid", "Celta Vigo"], aliases: ["manquillo"] },
+      { name: "Joao Felix", teams: ["Atletico Madrid", "Barcelona"], aliases: ["felix"] },
       { name: "Juanfran", teams: ["Atletico Madrid", "Espanyol"] },
       { name: "Mario Suarez", teams: ["Atletico Madrid", "Valencia"], aliases: ["mario suarez"] },
+      { name: "Memphis Depay", teams: ["Atletico Madrid", "Barcelona"], aliases: ["depay"] },
+      { name: "Rodri", teams: ["Atletico Madrid", "Villarreal"] },
+      { name: "Aleix Vidal", teams: ["Barcelona", "Sevilla", "Espanyol"], aliases: ["aleix vidal"] },
+      { name: "Carles Perez", teams: ["Barcelona", "Celta Vigo"], aliases: ["carles perez"] },
+      { name: "Claudio Bravo", teams: ["Barcelona", "Real Betis"], aliases: ["bravo"] },
+      { name: "Denis Suarez", teams: ["Barcelona", "Villarreal", "Celta Vigo"], aliases: ["denis"] },
+      { name: "Hector Bellerin", teams: ["Barcelona", "Real Betis"], aliases: ["bellerin"] },
+      { name: "Jasper Cillessen", teams: ["Barcelona", "Valencia"], aliases: ["cillessen"] },
+      { name: "Juan Miranda", teams: ["Barcelona", "Real Betis"], aliases: ["miranda"] },
+      { name: "Luis Figo", teams: ["Barcelona", "Real Madrid"], aliases: ["figo"] },
+      { name: "Luis Suarez", teams: ["Barcelona", "Atletico Madrid"], aliases: ["suarez"] },
+      { name: "Marc Bartra", teams: ["Barcelona", "Real Betis"], aliases: ["bartra"] },
+      { name: "Martin Braithwaite", teams: ["Barcelona", "Espanyol"], aliases: ["braithwaite"] },
+      { name: "Michael Laudrup", teams: ["Barcelona", "Real Madrid"], aliases: ["laudrup"] },
+      { name: "Munir El Haddadi", teams: ["Barcelona", "Valencia", "Sevilla"], aliases: ["munir"] },
+      { name: "Nolito", teams: ["Barcelona", "Celta Vigo"] },
+      { name: "Oscar Mingueza", teams: ["Barcelona", "Celta Vigo"], aliases: ["mingueza"] },
+      { name: "Rafinha Alcantara", teams: ["Barcelona", "Celta Vigo"], aliases: ["rafinha"] },
+      { name: "Ronaldo Nazario", teams: ["Barcelona", "Real Madrid"], aliases: ["ronaldo"] },
+      { name: "Augusto Fernandez", teams: ["Celta Vigo", "Atletico Madrid"], aliases: ["augusto"] },
+      { name: "Brais Mendez", teams: ["Celta Vigo", "Real Sociedad"], aliases: ["brais"] },
+      { name: "Iago Aspas", teams: ["Celta Vigo", "Sevilla"], aliases: ["aspas"] },
+      { name: "Borja Iglesias", teams: ["Espanyol", "Real Betis"], aliases: ["borja iglesias"] },
+      { name: "Joan Capdevila", teams: ["Espanyol", "Atletico Madrid", "Villarreal"], aliases: ["capdevila"] },
+      { name: "Mario Hermoso", teams: ["Espanyol", "Atletico Madrid"], aliases: ["hermoso"] },
+      { name: "Isco", teams: ["Malaga", "Real Madrid", "Sevilla"] },
+      { name: "Roque Santa Cruz", teams: ["Malaga", "Real Betis"], aliases: ["roque"] },
+      { name: "Samu Castillejo", teams: ["Malaga", "Villarreal"], aliases: ["castillejo"] },
+      { name: "Marco Asensio", teams: ["Mallorca", "Real Madrid", "Espanyol"], aliases: ["asensio"] },
+      { name: "Samuel Eto'o", teams: ["Mallorca", "Real Madrid", "Barcelona"], aliases: ["etoo"] },
+      { name: "Giovani Lo Celso", teams: ["Real Betis", "Villarreal"], aliases: ["lo celso"] },
+      { name: "Joaquin Sanchez", teams: ["Real Betis", "Valencia", "Malaga"], aliases: ["joaquin"] },
+      { name: "Alvaro Morata", teams: ["Real Madrid", "Atletico Madrid"], aliases: ["morata"] },
+      { name: "Denis Cheryshev", teams: ["Real Madrid", "Valencia", "Villarreal"], aliases: ["cheryshev"] },
+      { name: "Diego Lopez", teams: ["Real Madrid", "Villarreal"], aliases: ["diego lopez"] },
+      { name: "Ezequiel Garay", teams: ["Real Madrid", "Valencia"], aliases: ["garay"] },
+      { name: "Fernando Hierro", teams: ["Real Madrid", "Malaga"], aliases: ["hierro"] },
+      { name: "Fernando Morientes", teams: ["Real Madrid", "Valencia"], aliases: ["morientes"] },
+      { name: "Jose Callejon", teams: ["Real Madrid", "Espanyol"], aliases: ["callejon"] },
+      { name: "Julio Baptista", teams: ["Real Madrid", "Sevilla", "Malaga"], aliases: ["baptista"] },
+      { name: "Lucas Vazquez", teams: ["Real Madrid", "Espanyol"], aliases: ["lucas vazquez"] },
+      { name: "Marcos Llorente", teams: ["Real Madrid", "Atletico Madrid"], aliases: ["llorente"] },
+      { name: "Pablo Sarabia", teams: ["Real Madrid", "Espanyol", "Sevilla"], aliases: ["sarabia"] },
+      { name: "Raul de Tomas", teams: ["Real Madrid", "Espanyol"], aliases: ["rdt", "de tomas"] },
+      { name: "Roberto Soldado", teams: ["Real Madrid", "Valencia", "Villarreal"], aliases: ["soldado"] },
+      { name: "Ruud van Nistelrooy", teams: ["Real Madrid", "Malaga"], aliases: ["van nistelrooy"] },
+      { name: "Takefusa Kubo", teams: ["Real Madrid", "Mallorca", "Real Sociedad"], aliases: ["kubo"] },
+      { name: "Theo Hernandez", teams: ["Real Madrid", "Atletico Madrid", "Real Sociedad"], aliases: ["theo"] },
+      { name: "Adnan Januzaj", teams: ["Real Sociedad", "Sevilla"], aliases: ["januzaj"] },
+      { name: "Alvaro Odriozola", teams: ["Real Sociedad", "Real Madrid"], aliases: ["odriozola"] },
+      { name: "Antoine Griezmann", teams: ["Real Sociedad", "Atletico Madrid", "Barcelona"], aliases: ["griezmann"] },
+      { name: "Asier Illarramendi", teams: ["Real Sociedad", "Real Madrid"], aliases: ["illarramendi"] },
+      { name: "Esteban Granero", teams: ["Real Sociedad", "Real Madrid", "Espanyol"], aliases: ["granero"] },
+      { name: "Joseba Llorente", teams: ["Real Sociedad", "Villarreal"], aliases: ["joseba llorente"] },
+      { name: "Martin Odegaard", teams: ["Real Sociedad", "Real Madrid"], aliases: ["odegaard"] },
+      { name: "Robin Le Normand", teams: ["Real Sociedad", "Atletico Madrid"], aliases: ["le normand"] },
+      { name: "Xabi Alonso", teams: ["Real Sociedad", "Real Madrid"], aliases: ["xabi alonso"] },
+      { name: "Carlos Bacca", teams: ["Sevilla", "Villarreal"], aliases: ["bacca"] },
+      { name: "Clement Lenglet", teams: ["Sevilla", "Barcelona"], aliases: ["lenglet"] },
+      { name: "Dani Alves", teams: ["Sevilla", "Barcelona"] },
+      { name: "Ivan Rakitic", teams: ["Sevilla", "Barcelona"], aliases: ["rakitic"] },
+      { name: "Javi Varas", teams: ["Sevilla", "Celta Vigo"], aliases: ["varas"] },
+      { name: "Jules Kounde", teams: ["Sevilla", "Barcelona"], aliases: ["kounde"] },
+      { name: "Kevin Gameiro", teams: ["Sevilla", "Atletico Madrid", "Valencia"], aliases: ["gameiro"] },
+      { name: "Sergio Ramos", teams: ["Sevilla", "Real Madrid"], aliases: ["ramos"] },
+      { name: "Sergio Reguilon", teams: ["Sevilla", "Real Madrid", "Atletico Madrid"], aliases: ["reguilon"] },
       { name: "Vitolo", teams: ["Sevilla", "Atletico Madrid"] },
-      { name: "Diego Costa", teams: ["Atletico Madrid", "Celta Vigo"], aliases: ["costa"] },
-      { name: "Rafinha Alcantara", teams: ["Barcelona", "Celta Vigo"], aliases: ["rafinha"] }
+      { name: "Adil Rami", teams: ["Valencia", "Sevilla"], aliases: ["rami"] },
+      { name: "Andre Gomes", teams: ["Valencia", "Barcelona"], aliases: ["gomes"] },
+      { name: "Dani Parejo", teams: ["Valencia", "Villarreal"], aliases: ["parejo"] },
+      { name: "Daniel Wass", teams: ["Valencia", "Celta Vigo"], aliases: ["wass"] },
+      { name: "David Villa", teams: ["Valencia", "Barcelona", "Atletico Madrid"], aliases: ["villa"] },
+      { name: "Ever Banega", teams: ["Valencia", "Sevilla"], aliases: ["banega"] },
+      { name: "Francis Coquelin", teams: ["Valencia", "Villarreal"], aliases: ["coquelin"] },
+      { name: "Gabriel Paulista", teams: ["Valencia", "Villarreal"], aliases: ["paulista"] },
+      { name: "Geoffrey Kondogbia", teams: ["Valencia", "Atletico Madrid", "Sevilla"], aliases: ["kondogbia"] },
+      { name: "Jeison Murillo", teams: ["Valencia", "Barcelona"], aliases: ["murillo"] },
+      { name: "Jordi Alba", teams: ["Valencia", "Barcelona"], aliases: ["alba"] },
+      { name: "Kang-In Lee", teams: ["Valencia", "Mallorca"], aliases: ["kang in lee"] },
+      { name: "Pablo Hernandez", teams: ["Valencia", "Celta Vigo"], aliases: ["pablo hernandez"] },
+      { name: "Paco Alcacer", teams: ["Valencia", "Barcelona"], aliases: ["alcacer"] },
+      { name: "Raul Albiol", teams: ["Valencia", "Real Madrid", "Villarreal"], aliases: ["albiol"] },
+      { name: "Santi Mina", teams: ["Valencia", "Celta Vigo"], aliases: ["mina"] },
+      { name: "Sergio Canales", teams: ["Valencia", "Real Madrid", "Real Betis"], aliases: ["canales"] },
+      { name: "Ayoze Perez", teams: ["Villarreal", "Real Betis"], aliases: ["ayoze"] },
+      { name: "Gerard Moreno", teams: ["Villarreal", "Espanyol"], aliases: ["gerard"] },
+      { name: "Santi Cazorla", teams: ["Villarreal", "Malaga"], aliases: ["cazorla"] }
     ];
+
+    const PLAYER_PROFILE = {
+      "pedri": { countryCode: "es", position: "MC" },
+      "gavi": { countryCode: "es", position: "MC" },
+      "lamine yamal": { countryCode: "es", position: "ED" },
+      "ronald araujo": { countryCode: "uy", position: "DFC" },
+      "marc-andre ter stegen": { countryCode: "de", position: "POR" },
+      "alejandro balde": { countryCode: "es", position: "LI" },
+      "frenkie de jong": { countryCode: "nl", position: "MC" },
+      "raphinha": { countryCode: "br", position: "EI" },
+      "robert lewandowski": { countryCode: "pl", position: "DC" },
+      "pau cubarsi": { countryCode: "es", position: "DFC" },
+      "fermin lopez": { countryCode: "es", position: "MC" },
+      "dani olmo": { countryCode: "es", position: "MCO" },
+      "vinicius junior": { countryCode: "br", position: "EI" },
+      "jude bellingham": { countryCode: "en", position: "MCO" },
+      "kylian mbappe": { countryCode: "fr", position: "DC" },
+      "rodrygo": { countryCode: "br", position: "ED" },
+      "federico valverde": { countryCode: "uy", position: "MC" },
+      "aurelien tchouameni": { countryCode: "fr", position: "MCD" },
+      "eduardo camavinga": { countryCode: "fr", position: "MC" },
+      "eder militao": { countryCode: "br", position: "DFC" },
+      "thibaut courtois": { countryCode: "be", position: "POR" },
+      "antonio rudiger": { countryCode: "de", position: "DFC" },
+      "luka modric": { countryCode: "hr", position: "MC" },
+      "brahim diaz": { countryCode: "ma", position: "MCO" },
+      "endrick": { countryCode: "br", position: "DC" },
+      "arda guler": { countryCode: "tr", position: "MCO" },
+      "jan oblak": { countryCode: "si", position: "POR" },
+      "koke": { countryCode: "es", position: "MC" },
+      "rodrigo de paul": { countryCode: "ar", position: "MC" },
+      "jose maria gimenez": { countryCode: "uy", position: "DFC" },
+      "samuel lino": { countryCode: "br", position: "EI" },
+      "nahuel molina": { countryCode: "ar", position: "LD" },
+      "conor gallagher": { countryCode: "en", position: "MC" },
+      "julian alvarez": { countryCode: "ar", position: "DC" },
+      "inaki williams": { countryCode: "gh", position: "ED" },
+      "nico williams": { countryCode: "es", position: "EI" },
+      "unai simon": { countryCode: "es", position: "POR" },
+      "oihan sancet": { countryCode: "es", position: "MCO" },
+      "dani vivian": { countryCode: "es", position: "DFC" },
+      "mikel oyarzabal": { countryCode: "es", position: "EI" },
+      "martin zubimendi": { countryCode: "es", position: "MCD" },
+      "alex remiro": { countryCode: "es", position: "POR" },
+      "igor zubeldia": { countryCode: "es", position: "DFC" },
+      "takefusa kubo": { countryCode: "jp", position: "ED" },
+      "viktor tsygankov": { countryCode: "ua", position: "ED" },
+      "ivan martin": { countryCode: "es", position: "MCO" },
+      "cristhian stuani": { countryCode: "uy", position: "DC" },
+      "bryan gil": { countryCode: "es", position: "EI" },
+      "alex baena": { countryCode: "es", position: "EI" },
+      "dani parejo": { countryCode: "es", position: "MC" },
+      "gerard moreno": { countryCode: "es", position: "DC" },
+      "nabil fekir": { countryCode: "fr", position: "MCO" },
+      "pablo fornals": { countryCode: "es", position: "MCO" },
+      "isco": { countryCode: "es", position: "MCO" },
+      "vitor roque": { countryCode: "br", position: "DC" },
+      "jose gaya": { countryCode: "es", position: "LI" },
+      "hugo duro": { countryCode: "es", position: "DC" },
+      "pepelu": { countryCode: "es", position: "DC" },
+      "javi guerra": { countryCode: "es", position: "MC" },
+      "jesus navas": { countryCode: "es", position: "LD" },
+      "isaac romero": { countryCode: "es", position: "DC" },
+      "fran beltran": { countryCode: "es", position: "MC" },
+      "iago aspas": { countryCode: "es", position: "DC" },
+      "aimar oroz": { countryCode: "es", position: "MCO" },
+      "ante budimir": { countryCode: "hr", position: "DC" },
+      "carlos vicente": { countryCode: "es", position: "ED" },
+      "luis figo": { countryCode: "pt", position: "ED" },
+      "ronaldo nazario": { countryCode: "br", position: "DC" },
+      "michael laudrup": { countryCode: "dk", position: "MCO" },
+      "samuel etoo": { countryCode: "cm", position: "DC" },
+      "dani alves": { countryCode: "br", position: "LD" },
+      "ivan rakitic": { countryCode: "hr", position: "MC" },
+      "jules kounde": { countryCode: "fr", position: "DFC" },
+      "clement lenglet": { countryCode: "fr", position: "DFC" },
+      "sergio ramos": { countryCode: "es", position: "DFC" },
+      "isco": { countryCode: "es", position: "MCO" },
+      "sergio reguilon": { countryCode: "es", position: "LI" },
+      "kevin gameiro": { countryCode: "fr", position: "DC" },
+      "geoffrey kondogbia": { countryCode: "cf", position: "MCD" },
+      "ever banega": { countryCode: "ar", position: "MC" },
+      "adil rami": { countryCode: "fr", position: "DFC" },
+      "david villa": { countryCode: "es", position: "DC" },
+      "jordi alba": { countryCode: "es", position: "LI" },
+      "paco alcacer": { countryCode: "es", position: "DC" },
+      "andre gomes": { countryCode: "pt", position: "MC" },
+      "jeison murillo": { countryCode: "co", position: "DFC" },
+      "raul albiol": { countryCode: "es", position: "DFC" },
+      "sergio canales": { countryCode: "es", position: "MCO" },
+      "denis cheryshev": { countryCode: "ru", position: "EI" },
+      "fernando morientes": { countryCode: "es", position: "DC" },
+      "alvaro morata": { countryCode: "es", position: "DC" },
+      "marcos llorente": { countryCode: "es", position: "MC" },
+      "theo hernandez": { countryCode: "fr", position: "LI" },
+      "antoine griezmann": { countryCode: "fr", position: "DC" },
+      "martin odegaard": { countryCode: "no", position: "MCO" },
+      "asier illarramendi": { countryCode: "es", position: "MCD" },
+      "esteban granero": { countryCode: "es", position: "MC" },
+      "robin le normand": { countryCode: "es", position: "DFC" },
+      "arda turan": { countryCode: "tr", position: "MCO" },
+      "memphis depay": { countryCode: "nl", position: "DC" },
+      "joao felix": { countryCode: "pt", position: "SD" },
+      "luis suarez": { countryCode: "uy", position: "DC" },
+      "dani parejo": { countryCode: "es", position: "MC" },
+      "francis coquelin": { countryCode: "fr", position: "MCD" },
+      "gabriel paulista": { countryCode: "br", position: "DFC" },
+      "rodri": { countryCode: "es", position: "MCD" },
+      "diego godin": { countryCode: "uy", position: "DFC" },
+      "joan capdevila": { countryCode: "es", position: "LI" },
+      "gerard moreno": { countryCode: "es", position: "DC" },
+      "carlos bacca": { countryCode: "co", position: "DC" },
+      "denis suarez": { countryCode: "es", position: "MC" },
+      "munir el haddadi": { countryCode: "ma", position: "SD" },
+      "jasper cillessen": { countryCode: "nl", position: "POR" },
+      "nolito": { countryCode: "es", position: "EI" },
+      "santi mina": { countryCode: "es", position: "DC" },
+      "iago aspas": { countryCode: "es", position: "DC" },
+      "juanfran": { countryCode: "es", position: "LD" },
+      "mario suarez": { countryCode: "es", position: "MCD" },
+      "vitolo": { countryCode: "es", position: "EI" },
+      "diego costa": { countryCode: "es", position: "DC" },
+      "rafinha alcantara": { countryCode: "br", position: "MC" },
+      "joaquin sanchez": { countryCode: "es", position: "ED" },
+      "claudio bravo": { countryCode: "cl", position: "POR" },
+      "marc bartra": { countryCode: "es", position: "DFC" },
+      "hector bellerin": { countryCode: "es", position: "LD" },
+      "juan miranda": { countryCode: "es", position: "LI" },
+      "giovani lo celso": { countryCode: "ar", position: "MC" },
+      "ayoze perez": { countryCode: "es", position: "EI" },
+      "martin braithwaite": { countryCode: "dk", position: "DC" },
+      "aleix vidal": { countryCode: "es", position: "LD" },
+      "raul de tomas": { countryCode: "es", position: "DC" },
+      "lucas vazquez": { countryCode: "es", position: "ED" },
+      "jose callejon": { countryCode: "es", position: "ED" },
+      "marco asensio": { countryCode: "es", position: "ED" },
+      "pablo sarabia": { countryCode: "es", position: "ED" },
+      "borja iglesias": { countryCode: "es", position: "DC" },
+      "augusto fernandez": { countryCode: "ar", position: "MC" },
+      "javi varas": { countryCode: "es", position: "POR" },
+      "carles perez": { countryCode: "es", position: "ED" },
+      "oscar mingueza": { countryCode: "es", position: "DFC" },
+      "javier manquillo": { countryCode: "es", position: "LD" },
+      "santi cazorla": { countryCode: "es", position: "MC" },
+      "samu castillejo": { countryCode: "es", position: "ED" },
+      "roque santa cruz": { countryCode: "py", position: "DC" },
+      "ruud van nistelrooy": { countryCode: "nl", position: "DC" },
+      "fernando hierro": { countryCode: "es", position: "DFC" },
+      "julio baptista": { countryCode: "br", position: "SD" },
+      "roberto soldado": { countryCode: "es", position: "DC" },
+      "ezequiel garay": { countryCode: "ar", position: "DFC" },
+      "daniel wass": { countryCode: "dk", position: "MC" },
+      "pablo hernandez": { countryCode: "es", position: "EI" },
+      "diego lopez": { countryCode: "es", position: "POR" },
+      "alvaro odriozola": { countryCode: "es", position: "LD" },
+      "takefusa kubo": { countryCode: "jp", position: "ED" },
+      "kang in lee": { countryCode: "kr", position: "MCO" },
+      "xabi alonso": { countryCode: "es", position: "MCD" },
+      "adnan januzaj": { countryCode: "be", position: "ED" },
+      "mario hermoso": { countryCode: "es", position: "DFC" },
+      "brais mendez": { countryCode: "es", position: "MCO" },
+      "joseba llorente": { countryCode: "es", position: "DC" }
+    };
+
+    const COUNTRY_META = {
+      de: { name: "Alemania" },
+      pl: { name: "Polonia" },
+      en: { name: "Inglaterra" },
+      si: { name: "Eslovenia" },
+      gh: { name: "Ghana" },
+      ua: { name: "Ucrania" },
+      tr: { name: "Turquia" },
+      ma: { name: "Marruecos" },
+      nl: { name: "Paises Bajos" },
+      ar: { name: "Argentina" },
+      br: { name: "Brasil" },
+      cf: { name: "R. Centroafricana" },
+      cm: { name: "Camerun" },
+      co: { name: "Colombia" },
+      cl: { name: "Chile" },
+      dk: { name: "Dinamarca" },
+      es: { name: "Espana" },
+      be: { name: "Belgica" },
+      fr: { name: "Francia" },
+      hr: { name: "Croacia" },
+      jp: { name: "Japon" },
+      kr: { name: "Corea del Sur" },
+      ma: { name: "Marruecos" },
+      nl: { name: "Paises Bajos" },
+      no: { name: "Noruega" },
+      pt: { name: "Portugal" },
+      py: { name: "Paraguay" },
+      ru: { name: "Rusia" },
+      tr: { name: "Turquia" },
+      uy: { name: "Uruguay" }
+    };
 
     const STORAGE_KEY = "futbol-grid-v3";
 
@@ -552,7 +897,6 @@
     const scoreEl = document.getElementById("score");
     const statusEl = document.getElementById("status");
     const metaEl = document.getElementById("meta");
-    const hintBtn = document.getElementById("hintBtn");
     const surrenderBtn = document.getElementById("surrenderBtn");
     const choicePanelEl = document.getElementById("choicePanel");
     const choiceTitleEl = document.getElementById("choiceTitle");
@@ -560,11 +904,11 @@
     const choiceCancelBtn = document.getElementById("choiceCancel");
 
     const state = {
-      hints: false,
       attempts: 0,
       rows: [],
       cols: [],
-      teams: [],
+      teamConstraints: [],
+      constraints: [],
       boardKey: "",
       boardLabel: "",
       surrendered: false,
@@ -606,13 +950,78 @@
         .toUpperCase();
     }
 
-    function hashText(text) {
-      let h = 2166136261;
-      for (let i = 0; i < text.length; i += 1) {
-        h ^= text.charCodeAt(i);
-        h = Math.imul(h, 16777619);
+    function getPlayerProfile(playerKey) {
+      return PLAYER_PROFILE[playerKey] || { countryCode: "", position: "N/D" };
+    }
+
+    function getFlagUrl(countryCode, size) {
+      if (!countryCode) {
+        return "";
       }
-      return h >>> 0;
+      const safeSize = size || "24x18";
+      return "https://flagcdn.com/" + safeSize + "/" + countryCode.toLowerCase() + ".png";
+    }
+
+    function constraintKey(type, value) {
+      return type + ":" + value;
+    }
+
+    function parseConstraint(key) {
+      const separator = key.indexOf(":");
+      if (separator === -1) {
+        return { type: "team", value: key };
+      }
+      return {
+        type: key.slice(0, separator),
+        value: key.slice(separator + 1)
+      };
+    }
+
+    function isTeamConstraint(key) {
+      return parseConstraint(key).type === "team";
+    }
+
+    function getCountryName(countryCode) {
+      const code = (countryCode || "").toLowerCase();
+      if (!code) {
+        return "Pais";
+      }
+      return (COUNTRY_META[code] && COUNTRY_META[code].name) || code.toUpperCase();
+    }
+
+    function getConstraintLabel(key) {
+      const parsed = parseConstraint(key);
+      if (parsed.type === "team") {
+        return parsed.value;
+      }
+      if (parsed.type === "country") {
+        return getCountryName(parsed.value);
+      }
+      if (parsed.type === "position") {
+        return parsed.value.toUpperCase();
+      }
+      return parsed.value;
+    }
+
+    function getCountryConstraints(constraints) {
+      if (!Array.isArray(constraints)) {
+        return [];
+      }
+      return constraints.filter((constraint) => parseConstraint(constraint).type === "country");
+    }
+
+    function playerMatchesConstraint(player, constraint) {
+      const parsed = parseConstraint(constraint);
+      if (parsed.type === "team") {
+        return player.teams.includes(parsed.value);
+      }
+      if (parsed.type === "country") {
+        return (player.countryCode || "").toLowerCase() === parsed.value.toLowerCase();
+      }
+      if (parsed.type === "position") {
+        return (player.position || "").toUpperCase() === parsed.value.toUpperCase();
+      }
+      return false;
     }
 
     function mulberry32(seed) {
@@ -649,13 +1058,20 @@
       state.byKey.clear();
       state.lookup.clear();
       state.pairMap.clear();
+      state.teamConstraints = [];
+      state.constraints = [];
+
+      const usageCount = new Map();
 
       for (const player of PLAYERS) {
         const key = normalizeName(player.name);
+        const profile = getPlayerProfile(key);
         const entry = {
           key,
           name: player.name,
-          teams: [...player.teams]
+          teams: [...player.teams],
+          countryCode: (profile.countryCode || "").toLowerCase(),
+          position: (profile.position || "N/D").toUpperCase()
         };
 
         state.byKey.set(key, entry);
@@ -667,9 +1083,22 @@
           }
         }
 
-        for (let i = 0; i < player.teams.length; i += 1) {
-          for (let j = i + 1; j < player.teams.length; j += 1) {
-            const keyPair = pairKey(player.teams[i], player.teams[j]);
+        const playerConstraints = entry.teams.map((team) => constraintKey("team", team));
+        if (entry.countryCode) {
+          playerConstraints.push(constraintKey("country", entry.countryCode));
+        }
+        if (entry.position && entry.position !== "N/D") {
+          playerConstraints.push(constraintKey("position", entry.position));
+        }
+
+        const uniqueConstraints = [...new Set(playerConstraints)];
+        uniqueConstraints.forEach((constraint) => {
+          usageCount.set(constraint, (usageCount.get(constraint) || 0) + 1);
+        });
+
+        for (let i = 0; i < uniqueConstraints.length; i += 1) {
+          for (let j = i + 1; j < uniqueConstraints.length; j += 1) {
+            const keyPair = pairKey(uniqueConstraints[i], uniqueConstraints[j]);
             if (!state.pairMap.has(keyPair)) {
               state.pairMap.set(keyPair, []);
             }
@@ -680,18 +1109,45 @@
 
       const connectivity = new Map();
       for (const [keyPair, players] of state.pairMap.entries()) {
-        if (players.length < 2) {
+        if (!players.length) {
           continue;
         }
-        const clubs = keyPair.split("|");
-        connectivity.set(clubs[0], (connectivity.get(clubs[0]) || 0) + 1);
-        connectivity.set(clubs[1], (connectivity.get(clubs[1]) || 0) + 1);
+        const constraints = keyPair.split("|");
+        if (isTeamConstraint(constraints[0])) {
+          connectivity.set(constraints[0], (connectivity.get(constraints[0]) || 0) + 1);
+        }
+        if (isTeamConstraint(constraints[1])) {
+          connectivity.set(constraints[1], (connectivity.get(constraints[1]) || 0) + 1);
+        }
       }
 
-      state.teams = [...connectivity.entries()]
-        .filter((entry) => entry[1] >= 4)
+      state.teamConstraints = [...connectivity.entries()]
+        .filter((entry) => entry[1] >= 4 && (usageCount.get(entry[0]) || 0) >= 2)
         .map((entry) => entry[0])
-        .sort();
+        .sort((a, b) => getConstraintLabel(a).localeCompare(getConstraintLabel(b)));
+
+      const extraConstraints = [...usageCount.keys()]
+        .filter((constraint) => !isTeamConstraint(constraint))
+        .filter((constraint) => (usageCount.get(constraint) || 0) >= 2)
+        .filter((constraint) => {
+          let teamLinks = 0;
+          for (const teamConstraint of state.teamConstraints) {
+            if (new Set(optionsForPair(teamConstraint, constraint)).size > 0) {
+              teamLinks += 1;
+            }
+          }
+          return teamLinks >= 2;
+        })
+        .sort((a, b) => {
+          const first = parseConstraint(a);
+          const second = parseConstraint(b);
+          if (first.type !== second.type) {
+            return first.type.localeCompare(second.type);
+          }
+          return getConstraintLabel(a).localeCompare(getConstraintLabel(b));
+        });
+
+      state.constraints = [...state.teamConstraints, ...extraConstraints];
     }
 
     function optionsForPair(a, b) {
@@ -758,14 +1214,42 @@
       return backtrack(0);
     }
 
-    function generateBoard(seed) {
+    function generateBoard(seed, blockedCountryCodes) {
       const random = mulberry32(seed);
-      const maxTries = 1400;
+      const maxTries = 2200;
       let best = null;
+      const blockedCountries = new Set(
+        (blockedCountryCodes || []).map((code) => String(code).toLowerCase())
+      );
+
+      if (state.teamConstraints.length < 3) {
+        throw new Error("No hay suficientes equipos para generar el tablero.");
+      }
+
+      if (state.constraints.length < 6) {
+        throw new Error("No hay suficientes condiciones para generar el tablero.");
+      }
 
       for (let attempt = 0; attempt < maxTries; attempt += 1) {
-        const rows = pickUnique(state.teams, 3, random);
-        const cols = pickUnique(state.teams.filter((team) => !rows.includes(team)), 3, random);
+        const rows = pickUnique(state.teamConstraints, 3, random);
+        const colPool = state.constraints.filter((constraint) => !rows.includes(constraint));
+        const cols = pickUnique(colPool, 3, random);
+
+        if (cols.length < 3) {
+          continue;
+        }
+
+        const hasCountry = cols.some((constraint) => parseConstraint(constraint).type === "country");
+        const hasPosition = cols.some((constraint) => parseConstraint(constraint).type === "position");
+        if (!hasCountry || !hasPosition) {
+          continue;
+        }
+
+        const countryCodesInCols = getCountryConstraints(cols)
+          .map((constraint) => parseConstraint(constraint).value.toLowerCase());
+        if (countryCodesInCols.some((code) => blockedCountries.has(code))) {
+          continue;
+        }
 
         let valid = true;
         let richness = 0;
@@ -786,7 +1270,7 @@
           }
         }
 
-        if (!valid || minOptions < 2) {
+        if (!valid || minOptions < 1) {
           continue;
         }
 
@@ -794,7 +1278,9 @@
           continue;
         }
 
-        const score = richness + minOptions * 4 + random();
+        const nonTeamCols = cols.filter((constraint) => !isTeamConstraint(constraint)).length;
+        const diversityScore = (hasCountry ? 4 : 0) + (hasPosition ? 4 : 0);
+        const score = richness * 0.45 + minOptions * 2.5 + nonTeamCols * 2 + diversityScore + random() * 8;
         if (!best || score > best.score) {
           best = { rows, cols, score };
         }
@@ -820,10 +1306,6 @@
       metaEl.textContent = "Jugadas: " + state.attempts + label;
     }
 
-    function refreshHintButton() {
-      hintBtn.textContent = state.hints ? "Pistas: ON" : "Pistas: OFF";
-    }
-
     function refreshScore() {
       const solved = state.entries.filter(Boolean).length;
       scoreEl.textContent = solved === 9 ? "Completadas: 9/9. Grid completado." : "Completadas: " + solved + "/9";
@@ -839,7 +1321,6 @@
         rows: [...state.rows],
         cols: [...state.cols],
         attempts: state.attempts,
-        hints: state.hints,
         surrendered: state.surrendered,
         entries: [...state.entries]
       };
@@ -904,9 +1385,9 @@
             continue;
           }
 
-          const rowTeam = state.rows[row];
-          const colTeam = state.cols[col];
-          if (player.teams.includes(rowTeam) && player.teams.includes(colTeam)) {
+          const rowConstraint = state.rows[row];
+          const colConstraint = state.cols[col];
+          if (playerMatchesConstraint(player, rowConstraint) && playerMatchesConstraint(player, colConstraint)) {
             candidates.push(index);
           }
         }
@@ -930,12 +1411,12 @@
 
       candidates.forEach((index) => {
         const pos = indexToRowCol(index);
-        const rowTeam = state.rows[pos.row];
-        const colTeam = state.cols[pos.col];
+        const rowLabel = getConstraintLabel(state.rows[pos.row]);
+        const colLabel = getConstraintLabel(state.cols[pos.col]);
         const button = document.createElement("button");
         button.type = "button";
         button.className = "choice-btn";
-        button.textContent = rowTeam + " x " + colTeam;
+        button.textContent = rowLabel + " x " + colLabel;
         button.addEventListener("click", () => {
           placePlayer(index, playerKey, true);
         });
@@ -960,7 +1441,12 @@
 
       const pos = indexToRowCol(index);
       writeStatus(
-        state.byKey.get(playerKey).name + " colocado en " + state.rows[pos.row] + " x " + state.cols[pos.col] + ".",
+        state.byKey.get(playerKey).name
+          + " colocado en "
+          + getConstraintLabel(state.rows[pos.row])
+          + " x "
+          + getConstraintLabel(state.cols[pos.col])
+          + ".",
         "ok"
       );
 
@@ -1122,31 +1608,68 @@
       saveProgress();
     }
 
-    function createTeamTile(team) {
+    function createConstraintTile(constraintKeyValue) {
+      const parsed = parseConstraint(constraintKeyValue);
       const tile = document.createElement("div");
       tile.className = "tile team";
 
       const crestWrap = document.createElement("div");
       crestWrap.className = "crest-wrap";
 
-      const logo = getTeamLogo(team);
+      if (parsed.type === "country") {
+        const countryCode = parsed.value.toLowerCase();
+        const flag = document.createElement("img");
+        flag.src = getFlagUrl(countryCode, "48x36");
+        flag.alt = getCountryName(countryCode);
+        flag.loading = "lazy";
+        flag.style.maxWidth = "72%";
+        flag.style.maxHeight = "56%";
+        flag.style.border = "1px solid rgba(255, 255, 255, 0.35)";
+        flag.style.borderRadius = "3px";
+        flag.addEventListener("error", () => {
+          crestWrap.innerHTML = "";
+          const fallback = document.createElement("div");
+          fallback.className = "crest-fallback";
+          fallback.textContent = countryCode.toUpperCase();
+          crestWrap.appendChild(fallback);
+        });
+        crestWrap.appendChild(flag);
+
+        tile.appendChild(crestWrap);
+        return tile;
+      }
+
+      if (parsed.type === "position") {
+        const positionBadge = document.createElement("div");
+        positionBadge.className = "pos-badge";
+        positionBadge.style.fontSize = "clamp(18px, 2.3vw, 28px)";
+        positionBadge.style.padding = "8px 14px";
+        positionBadge.style.borderRadius = "10px";
+        positionBadge.style.background = "rgba(2, 41, 62, 0.75)";
+        positionBadge.style.border = "1px solid rgba(110, 165, 205, 0.45)";
+        positionBadge.textContent = parsed.value.toUpperCase();
+        tile.appendChild(positionBadge);
+        return tile;
+      }
+
+      const logo = getTeamLogo(parsed.value);
       if (logo) {
         const img = document.createElement("img");
         img.src = logo;
-        img.alt = team;
+        img.alt = parsed.value;
         img.loading = "lazy";
         img.addEventListener("error", () => {
           crestWrap.innerHTML = "";
           const fallback = document.createElement("div");
           fallback.className = "crest-fallback";
-          fallback.textContent = teamInitials(team);
+          fallback.textContent = teamInitials(parsed.value);
           crestWrap.appendChild(fallback);
         });
         crestWrap.appendChild(img);
       } else {
         const fallback = document.createElement("div");
         fallback.className = "crest-fallback";
-        fallback.textContent = teamInitials(team);
+        fallback.textContent = teamInitials(parsed.value);
         crestWrap.appendChild(fallback);
       }
 
@@ -1175,22 +1698,43 @@
       }
 
       if (key) {
+        const player = state.byKey.get(key);
+        const profile = getPlayerProfile(key);
+        const cardEl = document.createElement("div");
+        cardEl.className = "player-card";
+
         const nameEl = document.createElement("div");
         nameEl.className = "player-name";
-        nameEl.textContent = state.byKey.get(key).name;
-        tile.appendChild(nameEl);
+        nameEl.textContent = player.name;
+
+        const metaEl = document.createElement("div");
+        metaEl.className = "player-meta";
+
+        if (profile.countryCode) {
+          const flagEl = document.createElement("img");
+          flagEl.className = "flag-icon";
+          flagEl.src = getFlagUrl(profile.countryCode);
+          flagEl.alt = "Bandera " + profile.countryCode.toUpperCase();
+          flagEl.loading = "lazy";
+          flagEl.addEventListener("error", () => {
+            flagEl.remove();
+          });
+          metaEl.appendChild(flagEl);
+        }
+
+        const posEl = document.createElement("span");
+        posEl.className = "pos-badge";
+        posEl.textContent = profile.position;
+        metaEl.appendChild(posEl);
+
+        cardEl.appendChild(nameEl);
+        cardEl.appendChild(metaEl);
+        tile.appendChild(cardEl);
       } else {
         const emptyMark = document.createElement("div");
         emptyMark.className = "empty-mark";
         emptyMark.textContent = "-";
         tile.appendChild(emptyMark);
-      }
-
-      if (state.hints) {
-        const hint = document.createElement("div");
-        hint.className = "hint-badge";
-        hint.textContent = new Set(optionsForPair(state.rows[row], state.cols[col])).size + " op";
-        tile.appendChild(hint);
       }
 
       return tile;
@@ -1207,12 +1751,12 @@
           }
 
           if (row === -1) {
-            boardEl.appendChild(createTeamTile(state.cols[col]));
+            boardEl.appendChild(createConstraintTile(state.cols[col]));
             continue;
           }
 
           if (col === -1) {
-            boardEl.appendChild(createTeamTile(state.rows[row]));
+            boardEl.appendChild(createConstraintTile(state.rows[row]));
             continue;
           }
 
@@ -1220,7 +1764,6 @@
         }
       }
 
-      refreshHintButton();
       refreshScore();
       updateMeta();
     }
@@ -1235,14 +1778,9 @@
       state.pending = null;
       state.entries = new Array(9).fill(null);
 
-      if (!restoreProgress) {
-        state.hints = false;
-      }
-
       const progress = restoreProgress ? loadProgress(boardKey) : null;
       if (progress) {
         state.attempts = Number(progress.attempts) || 0;
-        state.hints = Boolean(progress.hints);
         state.surrendered = Boolean(progress.surrendered);
         if (Array.isArray(progress.entries) && progress.entries.length === 9) {
           state.entries = progress.entries.map((key) => (state.byKey.has(key) ? key : null));
@@ -1266,32 +1804,40 @@
       saveProgress();
     }
 
-    function loadDaily() {
-      const now = new Date();
-      const seedText = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
-      const board = generateBoard(hashText(seedText));
-      openBoard(board, "daily-" + seedText, "Reto de hoy", true);
-    }
-
     function loadRandom() {
-      const seed = Date.now() >>> 0;
-      const board = generateBoard(seed);
-      openBoard(board, "random-" + seed, "Grid aleatorio", false);
+      const blockedCountries = getCountryConstraints(state.cols)
+        .map((constraint) => parseConstraint(constraint).value.toLowerCase());
+
+      let board = null;
+      let chosenSeed = 0;
+      const maxAttempts = 12;
+
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        const seed = (Date.now() + attempt * 2654435761) >>> 0;
+        try {
+          board = generateBoard(seed, blockedCountries);
+          chosenSeed = seed;
+          break;
+        } catch (_) {
+          // Reintentamos con otra semilla.
+        }
+      }
+
+      if (!board) {
+        writeStatus("No se pudo generar un grid con bandera distinta al anterior.", "bad");
+        return;
+      }
+
+      openBoard(board, "random-" + chosenSeed, "Grid aleatorio", false);
       writeStatus("Nuevo grid aleatorio listo.", "ok");
     }
 
     function boot() {
       buildIndex();
-      loadDaily();
+      loadRandom();
 
-      document.getElementById("dailyBtn").addEventListener("click", loadDaily);
       document.getElementById("randomBtn").addEventListener("click", loadRandom);
       document.getElementById("clearBtn").addEventListener("click", clearBoard);
-      hintBtn.addEventListener("click", () => {
-        state.hints = !state.hints;
-        renderBoard();
-        saveProgress();
-      });
       surrenderBtn.addEventListener("click", requestSurrender);
       guessBtn.addEventListener("click", submitGuess);
       guessInputEl.addEventListener("keydown", (event) => {
