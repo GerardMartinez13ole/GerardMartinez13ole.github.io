@@ -165,49 +165,81 @@
 
   <script>
     const PLAYERS = [
-      { name: "Luis Figo", teams: ["Barcelona", "Real Madrid"] },
-      { name: "Ronaldo Nazario", teams: ["Barcelona", "Real Madrid"] },
-      { name: "Michael Laudrup", teams: ["Barcelona", "Real Madrid"] },
-      { name: "Samuel Eto'o", teams: ["Barcelona", "Real Madrid", "Mallorca"] },
-      { name: "Ivan Rakitic", teams: ["Sevilla", "Barcelona"] },
+      { name: "Luis Figo", teams: ["Barcelona", "Real Madrid"], aliases: ["figo"] },
+      { name: "Ronaldo Nazario", teams: ["Barcelona", "Real Madrid"], aliases: ["ronaldo"] },
+      { name: "Michael Laudrup", teams: ["Barcelona", "Real Madrid"], aliases: ["laudrup"] },
+      { name: "Samuel Eto'o", teams: ["Mallorca", "Real Madrid", "Barcelona"], aliases: ["etoo"] },
       { name: "Dani Alves", teams: ["Sevilla", "Barcelona"] },
-      { name: "Jules Kounde", teams: ["Sevilla", "Barcelona"] },
-      { name: "Sergio Ramos", teams: ["Sevilla", "Real Madrid"] },
-      { name: "Isco", teams: ["Sevilla", "Real Madrid", "Malaga"] },
-      { name: "Sergio Reguilon", teams: ["Sevilla", "Real Madrid", "Atletico Madrid"] },
-      { name: "Kevin Gameiro", teams: ["Sevilla", "Atletico Madrid", "Valencia"] },
-      { name: "Geoffrey Kondogbia", teams: ["Valencia", "Atletico Madrid", "Sevilla"] },
-      { name: "David Villa", teams: ["Valencia", "Barcelona", "Atletico Madrid"] },
-      { name: "Jordi Alba", teams: ["Valencia", "Barcelona"] },
-      { name: "Raul Albiol", teams: ["Valencia", "Real Madrid", "Villarreal"] },
-      { name: "Canales", teams: ["Valencia", "Real Madrid", "Real Betis"] },
-      { name: "Rodrigo De Paul", teams: ["Valencia", "Atletico Madrid"] },
-      { name: "Antoine Griezmann", teams: ["Real Sociedad", "Atletico Madrid", "Barcelona"] },
-      { name: "Martin Odegaard", teams: ["Real Sociedad", "Real Madrid"] },
-      { name: "Asier Illarramendi", teams: ["Real Sociedad", "Real Madrid"] },
-      { name: "Robin Le Normand", teams: ["Real Sociedad", "Atletico Madrid"] },
-      { name: "Arda Turan", teams: ["Atletico Madrid", "Barcelona"] },
-      { name: "Memphis Depay", teams: ["Atletico Madrid", "Barcelona"] },
-      { name: "Alvaro Morata", teams: ["Real Madrid", "Atletico Madrid"] },
-      { name: "Marcos Llorente", teams: ["Real Madrid", "Atletico Madrid"] },
-      { name: "Dani Parejo", teams: ["Valencia", "Villarreal"] },
-      { name: "Francis Coquelin", teams: ["Valencia", "Villarreal"] },
-      { name: "Gerard Moreno", teams: ["Villarreal", "Espanyol"] },
-      { name: "Joan Capdevila", teams: ["Espanyol", "Atletico Madrid", "Villarreal"] }
+      { name: "Ivan Rakitic", teams: ["Sevilla", "Barcelona"], aliases: ["rakitic"] },
+      { name: "Jules Kounde", teams: ["Sevilla", "Barcelona"], aliases: ["kounde"] },
+      { name: "Clement Lenglet", teams: ["Sevilla", "Barcelona"], aliases: ["lenglet"] },
+      { name: "Sergio Ramos", teams: ["Sevilla", "Real Madrid"], aliases: ["ramos"] },
+      { name: "Isco", teams: ["Malaga", "Real Madrid", "Sevilla"] },
+      { name: "Sergio Reguilon", teams: ["Sevilla", "Real Madrid", "Atletico Madrid"], aliases: ["reguilon"] },
+      { name: "Kevin Gameiro", teams: ["Sevilla", "Atletico Madrid", "Valencia"], aliases: ["gameiro"] },
+      { name: "Geoffrey Kondogbia", teams: ["Valencia", "Atletico Madrid", "Sevilla"], aliases: ["kondogbia"] },
+      { name: "Ever Banega", teams: ["Valencia", "Sevilla"], aliases: ["banega"] },
+      { name: "Adil Rami", teams: ["Valencia", "Sevilla"], aliases: ["rami"] },
+      { name: "David Villa", teams: ["Valencia", "Barcelona", "Atletico Madrid"], aliases: ["villa"] },
+      { name: "Jordi Alba", teams: ["Valencia", "Barcelona"], aliases: ["alba"] },
+      { name: "Paco Alcacer", teams: ["Valencia", "Barcelona"], aliases: ["alcacer"] },
+      { name: "Andre Gomes", teams: ["Valencia", "Barcelona"], aliases: ["gomes"] },
+      { name: "Jeison Murillo", teams: ["Valencia", "Barcelona"], aliases: ["murillo"] },
+      { name: "Raul Albiol", teams: ["Valencia", "Real Madrid", "Villarreal"], aliases: ["albiol"] },
+      { name: "Sergio Canales", teams: ["Valencia", "Real Madrid", "Real Betis"], aliases: ["canales"] },
+      { name: "Denis Cheryshev", teams: ["Real Madrid", "Valencia", "Villarreal"], aliases: ["cheryshev"] },
+      { name: "Fernando Morientes", teams: ["Real Madrid", "Valencia"], aliases: ["morientes"] },
+      { name: "Alvaro Morata", teams: ["Real Madrid", "Atletico Madrid"], aliases: ["morata"] },
+      { name: "Marcos Llorente", teams: ["Real Madrid", "Atletico Madrid"], aliases: ["llorente"] },
+      { name: "Theo Hernandez", teams: ["Real Madrid", "Atletico Madrid", "Real Sociedad"], aliases: ["theo"] },
+      { name: "Antoine Griezmann", teams: ["Real Sociedad", "Atletico Madrid", "Barcelona"], aliases: ["griezmann"] },
+      { name: "Martin Odegaard", teams: ["Real Sociedad", "Real Madrid"], aliases: ["odegaard"] },
+      { name: "Asier Illarramendi", teams: ["Real Sociedad", "Real Madrid"], aliases: ["illarramendi"] },
+      { name: "Esteban Granero", teams: ["Real Sociedad", "Real Madrid", "Espanyol"], aliases: ["granero"] },
+      { name: "Robin Le Normand", teams: ["Real Sociedad", "Atletico Madrid"], aliases: ["le normand"] },
+      { name: "Arda Turan", teams: ["Atletico Madrid", "Barcelona"], aliases: ["arda"] },
+      { name: "Memphis Depay", teams: ["Atletico Madrid", "Barcelona"], aliases: ["depay"] },
+      { name: "Joao Felix", teams: ["Atletico Madrid", "Barcelona"], aliases: ["felix"] },
+      { name: "Luis Suarez", teams: ["Barcelona", "Atletico Madrid"], aliases: ["suarez"] },
+      { name: "Dani Parejo", teams: ["Valencia", "Villarreal"], aliases: ["parejo"] },
+      { name: "Francis Coquelin", teams: ["Valencia", "Villarreal"], aliases: ["coquelin"] },
+      { name: "Gabriel Paulista", teams: ["Valencia", "Villarreal"], aliases: ["paulista"] },
+      { name: "Rodri", teams: ["Atletico Madrid", "Villarreal"] },
+      { name: "Diego Godin", teams: ["Atletico Madrid", "Villarreal"], aliases: ["godin"] },
+      { name: "Joan Capdevila", teams: ["Espanyol", "Atletico Madrid", "Villarreal"], aliases: ["capdevila"] },
+      { name: "Gerard Moreno", teams: ["Villarreal", "Espanyol"], aliases: ["gerard"] },
+      { name: "Carlos Bacca", teams: ["Sevilla", "Villarreal"], aliases: ["bacca"] },
+      { name: "Denis Suarez", teams: ["Barcelona", "Villarreal", "Celta Vigo"], aliases: ["denis"] },
+      { name: "Munir El Haddadi", teams: ["Barcelona", "Valencia", "Sevilla"], aliases: ["munir"] },
+      { name: "Jasper Cillessen", teams: ["Barcelona", "Valencia"], aliases: ["cillessen"] },
+      { name: "Nolito", teams: ["Barcelona", "Celta Vigo"] },
+      { name: "Santi Mina", teams: ["Valencia", "Celta Vigo"], aliases: ["mina"] },
+      { name: "Iago Aspas", teams: ["Celta Vigo", "Sevilla"], aliases: ["aspas"] },
+      { name: "Juanfran", teams: ["Atletico Madrid", "Espanyol"] },
+      { name: "Mario Suarez", teams: ["Atletico Madrid", "Valencia"], aliases: ["mario suarez"] },
+      { name: "Vitolo", teams: ["Sevilla", "Atletico Madrid"] },
+      { name: "Diego Costa", teams: ["Atletico Madrid", "Celta Vigo"], aliases: ["costa"] },
+      { name: "Rafinha Alcantara", teams: ["Barcelona", "Celta Vigo"], aliases: ["rafinha"] }
     ];
+
+    const STORAGE_KEY = "laliga-grid-progress-v2";
 
     const tableEl = document.getElementById("gridTable");
     const scoreEl = document.getElementById("score");
     const metaEl = document.getElementById("meta");
+    const hintBtn = document.getElementById("hintBtn");
 
     const state = {
       hints: false,
       attempts: 0,
       rows: [],
       cols: [],
-      byName: new Map(),
-      pairMap: new Map(),
-      teams: []
+      teams: [],
+      boardKey: "",
+      boardLabel: "",
+      byKey: new Map(),
+      lookup: new Map(),
+      pairMap: new Map()
     };
 
     function normalizeName(value) {
@@ -243,29 +275,69 @@
       };
     }
 
+    function addLookupEntry(alias, playerKey) {
+      const normalized = normalizeName(alias);
+      if (!normalized) {
+        return;
+      }
+
+      if (!state.lookup.has(normalized)) {
+        state.lookup.set(normalized, playerKey);
+        return;
+      }
+
+      if (state.lookup.get(normalized) !== playerKey) {
+        state.lookup.set(normalized, null);
+      }
+    }
+
     function buildIndex() {
-      const teams = new Set();
+      state.byKey.clear();
+      state.lookup.clear();
+      state.pairMap.clear();
 
       for (const player of PLAYERS) {
         const key = normalizeName(player.name);
-        state.byName.set(key, { key, name: player.name, teams: [...player.teams] });
+        const entry = {
+          key,
+          name: player.name,
+          teams: [...player.teams]
+        };
 
-        for (const team of player.teams) {
-          teams.add(team);
+        state.byKey.set(key, entry);
+        addLookupEntry(player.name, key);
+
+        if (Array.isArray(player.aliases)) {
+          for (const alias of player.aliases) {
+            addLookupEntry(alias, key);
+          }
         }
 
         for (let i = 0; i < player.teams.length; i += 1) {
           for (let j = i + 1; j < player.teams.length; j += 1) {
-            const k = pairKey(player.teams[i], player.teams[j]);
-            if (!state.pairMap.has(k)) {
-              state.pairMap.set(k, []);
+            const keyPair = pairKey(player.teams[i], player.teams[j]);
+            if (!state.pairMap.has(keyPair)) {
+              state.pairMap.set(keyPair, []);
             }
-            state.pairMap.get(k).push(player.name);
+            state.pairMap.get(keyPair).push(entry.key);
           }
         }
       }
 
-      state.teams = [...teams].sort();
+      const connectivity = new Map();
+      for (const [keyPair, players] of state.pairMap.entries()) {
+        if (players.length < 2) {
+          continue;
+        }
+        const clubs = keyPair.split("|");
+        connectivity.set(clubs[0], (connectivity.get(clubs[0]) || 0) + 1);
+        connectivity.set(clubs[1], (connectivity.get(clubs[1]) || 0) + 1);
+      }
+
+      state.teams = [...connectivity.entries()]
+        .filter((entry) => entry[1] >= 4)
+        .map((entry) => entry[0])
+        .sort();
     }
 
     function optionsForPair(a, b) {
@@ -281,38 +353,294 @@
       return pool.slice(0, amount);
     }
 
+    function canSolveWithoutRepeats(rows, cols) {
+      const cells = [];
+
+      for (const row of rows) {
+        for (const col of cols) {
+          const options = [...new Set(optionsForPair(row, col))];
+          if (!options.length) {
+            return false;
+          }
+          cells.push(options);
+        }
+      }
+
+      cells.sort((a, b) => a.length - b.length);
+      const used = new Set();
+
+      function backtrack(index) {
+        if (index >= cells.length) {
+          return true;
+        }
+
+        const options = cells[index];
+        for (const playerKey of options) {
+          if (used.has(playerKey)) {
+            continue;
+          }
+
+          used.add(playerKey);
+
+          let impossible = false;
+          for (let i = index + 1; i < cells.length; i += 1) {
+            const hasAvailable = cells[i].some((key) => !used.has(key));
+            if (!hasAvailable) {
+              impossible = true;
+              break;
+            }
+          }
+
+          if (!impossible && backtrack(index + 1)) {
+            return true;
+          }
+
+          used.delete(playerKey);
+        }
+
+        return false;
+      }
+
+      return backtrack(0);
+    }
+
     function generateBoard(seed) {
       const random = mulberry32(seed);
+      const MAX_TRIES = 1400;
       let best = null;
 
-      for (let a = 0; a < 500; a += 1) {
+      for (let attempt = 0; attempt < MAX_TRIES; attempt += 1) {
         const rows = pickUnique(state.teams, 3, random);
-        const cols = pickUnique(state.teams.filter((t) => !rows.includes(t)), 3, random);
+        const cols = pickUnique(state.teams.filter((team) => !rows.includes(team)), 3, random);
 
         let valid = true;
         let richness = 0;
+        let minOptions = Infinity;
 
-        for (const r of rows) {
-          for (const c of cols) {
-            const opts = optionsForPair(r, c);
-            if (!opts.length) {
+        for (const row of rows) {
+          for (const col of cols) {
+            const count = new Set(optionsForPair(row, col)).size;
+            if (!count) {
               valid = false;
+              break;
             }
-            richness += opts.length;
+            minOptions = Math.min(minOptions, count);
+            richness += Math.min(count, 8);
+          }
+          if (!valid) {
+            break;
           }
         }
 
-        if (valid && (!best || richness > best.richness)) {
-          best = { rows, cols, richness };
+        if (!valid || minOptions < 2) {
+          continue;
+        }
+
+        if (!canSolveWithoutRepeats(rows, cols)) {
+          continue;
+        }
+
+        const score = richness + minOptions * 4 + random();
+        if (!best || score > best.score) {
+          best = { rows, cols, score };
         }
       }
 
       if (!best) {
-        throw new Error("No se pudo generar tablero");
+        throw new Error("No se pudo generar un tablero valido.");
       }
 
-      state.rows = best.rows;
-      state.cols = best.cols;
+      return best;
+    }
+
+    function updateMeta() {
+      const label = state.boardLabel ? " | " + state.boardLabel : "";
+      metaEl.textContent = "Intentos: " + state.attempts + label;
+    }
+
+    function refreshHintButton() {
+      hintBtn.textContent = state.hints ? "Ocultar pistas" : "Pistas";
+    }
+
+    function refreshHints() {
+      tableEl.querySelectorAll(".cell").forEach((cell) => {
+        const row = state.rows[Number(cell.dataset.row)];
+        const col = state.cols[Number(cell.dataset.col)];
+        const hintText = state.hints ? new Set(optionsForPair(row, col)).size + " opciones" : "";
+        cell.querySelector(".hint").textContent = hintText;
+      });
+    }
+
+    function clearCellVisual(cell) {
+      cell.classList.remove("ok", "bad");
+      cell.querySelector(".status").textContent = "";
+    }
+
+    function getCells() {
+      return [...tableEl.querySelectorAll(".cell")];
+    }
+
+    function collectValues() {
+      return getCells().map((cell) => cell.querySelector("input").value || "");
+    }
+
+    function applyValues(values) {
+      const cells = getCells();
+      cells.forEach((cell, index) => {
+        const value = Array.isArray(values) ? (values[index] || "") : "";
+        cell.querySelector("input").value = value;
+        clearCellVisual(cell);
+      });
+    }
+
+    function saveProgress() {
+      if (!state.boardKey) {
+        return;
+      }
+
+      const payload = {
+        boardKey: state.boardKey,
+        rows: [...state.rows],
+        cols: [...state.cols],
+        attempts: state.attempts,
+        hints: state.hints,
+        values: collectValues()
+      };
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (_) {
+        // localStorage puede no estar disponible; el juego sigue funcionando.
+      }
+    }
+
+    function loadProgress(boardKey) {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return null;
+        }
+
+        const data = JSON.parse(raw);
+        if (!data || data.boardKey !== boardKey) {
+          return null;
+        }
+
+        const sameRows = Array.isArray(data.rows) && data.rows.join("|") === state.rows.join("|");
+        const sameCols = Array.isArray(data.cols) && data.cols.join("|") === state.cols.join("|");
+        if (!sameRows || !sameCols) {
+          return null;
+        }
+
+        return data;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function resolvePlayer(inputValue) {
+      const key = normalizeName(inputValue || "");
+      if (!key) {
+        return { type: "empty" };
+      }
+
+      if (!state.lookup.has(key)) {
+        return { type: "unknown" };
+      }
+
+      const playerKey = state.lookup.get(key);
+      if (playerKey === null) {
+        return { type: "ambiguous" };
+      }
+
+      return { type: "ok", player: state.byKey.get(playerKey) };
+    }
+
+    function checkBoard() {
+      state.attempts += 1;
+      updateMeta();
+
+      let validCount = 0;
+      const used = new Set();
+
+      getCells().forEach((cell) => {
+        clearCellVisual(cell);
+
+        const row = state.rows[Number(cell.dataset.row)];
+        const col = state.cols[Number(cell.dataset.col)];
+        const inputEl = cell.querySelector("input");
+        const statusEl = cell.querySelector(".status");
+        const result = resolvePlayer(inputEl.value);
+
+        if (result.type === "empty") {
+          cell.classList.add("bad");
+          statusEl.textContent = "Vacio";
+          return;
+        }
+
+        if (result.type === "unknown") {
+          cell.classList.add("bad");
+          statusEl.textContent = "No reconocido";
+          return;
+        }
+
+        if (result.type === "ambiguous") {
+          cell.classList.add("bad");
+          statusEl.textContent = "Nombre ambiguo";
+          return;
+        }
+
+        if (used.has(result.player.key)) {
+          cell.classList.add("bad");
+          statusEl.textContent = "Repetido";
+          return;
+        }
+
+        if (!result.player.teams.includes(row) || !result.player.teams.includes(col)) {
+          cell.classList.add("bad");
+          statusEl.textContent = "No coincide";
+          return;
+        }
+
+        used.add(result.player.key);
+        validCount += 1;
+        cell.classList.add("ok");
+        statusEl.textContent = "Correcto";
+      });
+
+      if (validCount === 9) {
+        scoreEl.textContent = "Perfecto. Puntuacion: 9/9";
+      } else {
+        scoreEl.textContent = "Puntuacion: " + validCount + "/9";
+      }
+
+      saveProgress();
+    }
+
+    function clearBoard() {
+      getCells().forEach((cell) => {
+        clearCellVisual(cell);
+        cell.querySelector("input").value = "";
+      });
+      scoreEl.textContent = "Aun no has comprobado el tablero.";
+      saveProgress();
+    }
+
+    function attachInputHandlers() {
+      tableEl.querySelectorAll(".cell input").forEach((inputEl) => {
+        inputEl.addEventListener("input", () => {
+          const cell = inputEl.closest(".cell");
+          clearCellVisual(cell);
+          saveProgress();
+        });
+
+        inputEl.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            checkBoard();
+          }
+        });
+      });
     }
 
     function renderBoard() {
@@ -322,15 +650,15 @@
       }
       html += "</tr></thead><tbody>";
 
-      state.rows.forEach((row, rIdx) => {
+      state.rows.forEach((row, rowIndex) => {
         html += "<tr><th class=\"row-head\">" + row + "</th>";
 
-        state.cols.forEach((col, cIdx) => {
-          const hint = state.hints ? optionsForPair(row, col).length + " opciones" : "";
+        state.cols.forEach((col, colIndex) => {
+          const hint = state.hints ? new Set(optionsForPair(row, col)).size + " opciones" : "";
           html +=
-            "<td><div class=\"cell\" data-row=\"" + rIdx + "\" data-col=\"" + cIdx +
-            "\"><input type=\"text\" placeholder=\"Jugador\"><div class=\"hint\">" + hint +
-            "</div><div class=\"status\"></div></div></td>";
+            "<td><div class=\"cell\" data-row=\"" + rowIndex + "\" data-col=\"" + colIndex +
+            "\"><input type=\"text\" placeholder=\"Jugador\" autocomplete=\"off\" spellcheck=\"false\">" +
+            "<div class=\"hint\">" + hint + "</div><div class=\"status\"></div></div></td>";
         });
 
         html += "</tr>";
@@ -338,89 +666,52 @@
 
       html += "</tbody>";
       tableEl.innerHTML = html;
-      scoreEl.textContent = "Aun no has comprobado el tablero.";
+      attachInputHandlers();
     }
 
-    function refreshHints() {
-      tableEl.querySelectorAll(".cell").forEach((cell) => {
-        const r = state.rows[Number(cell.dataset.row)];
-        const c = state.cols[Number(cell.dataset.col)];
-        cell.querySelector(".hint").textContent = state.hints ? optionsForPair(r, c).length + " opciones" : "";
-      });
-    }
+    function openBoard(boardData, boardKey, boardLabel, restoreProgress) {
+      state.rows = [...boardData.rows];
+      state.cols = [...boardData.cols];
+      state.boardKey = boardKey;
+      state.boardLabel = boardLabel;
+      state.attempts = 0;
 
-    function setAttempts() {
-      metaEl.textContent = "Intentos: " + state.attempts;
-    }
+      if (!restoreProgress) {
+        state.hints = false;
+      }
 
-    function clearBoard() {
-      tableEl.querySelectorAll(".cell").forEach((cell) => {
-        cell.classList.remove("ok", "bad");
-        cell.querySelector("input").value = "";
-        cell.querySelector(".status").textContent = "";
-      });
-      scoreEl.textContent = "Aun no has comprobado el tablero.";
+      const progress = restoreProgress ? loadProgress(boardKey) : null;
+      if (progress) {
+        state.attempts = Number(progress.attempts) || 0;
+        state.hints = Boolean(progress.hints);
+      }
+
+      renderBoard();
+
+      if (progress) {
+        applyValues(progress.values);
+        scoreEl.textContent = "Progreso recuperado.";
+      } else {
+        scoreEl.textContent = "Aun no has comprobado el tablero.";
+      }
+
+      updateMeta();
+      refreshHintButton();
       refreshHints();
-    }
-
-    function checkBoard() {
-      state.attempts += 1;
-      setAttempts();
-
-      let validCount = 0;
-      const used = new Set();
-
-      tableEl.querySelectorAll(".cell").forEach((cell) => {
-        cell.classList.remove("ok", "bad");
-
-        const r = state.rows[Number(cell.dataset.row)];
-        const c = state.cols[Number(cell.dataset.col)];
-        const input = cell.querySelector("input");
-        const status = cell.querySelector(".status");
-        const key = normalizeName(input.value || "");
-        const player = state.byName.get(key);
-
-        if (!player) {
-          cell.classList.add("bad");
-          status.textContent = input.value.trim() ? "No reconocido" : "Vacio";
-          return;
-        }
-
-        if (used.has(player.key)) {
-          cell.classList.add("bad");
-          status.textContent = "Repetido";
-          return;
-        }
-
-        if (!player.teams.includes(r) || !player.teams.includes(c)) {
-          cell.classList.add("bad");
-          status.textContent = "No coincide";
-          return;
-        }
-
-        used.add(player.key);
-        validCount += 1;
-        cell.classList.add("ok");
-        status.textContent = "Correcto";
-      });
-
-      scoreEl.textContent = "Puntuacion: " + validCount + "/9";
+      saveProgress();
     }
 
     function loadDaily() {
-      const d = new Date();
-      const seedText = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
-      generateBoard(hashText(seedText));
-      state.attempts = 0;
-      setAttempts();
-      renderBoard();
+      const now = new Date();
+      const seedText = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+      const board = generateBoard(hashText(seedText));
+      openBoard(board, "daily-" + seedText, "Reto de hoy", true);
     }
 
     function loadRandom() {
-      generateBoard((Date.now() >>> 0));
-      state.attempts = 0;
-      setAttempts();
-      renderBoard();
+      const seed = Date.now() >>> 0;
+      const board = generateBoard(seed);
+      openBoard(board, "random-" + seed, "Grid aleatorio", false);
     }
 
     function boot() {
@@ -431,9 +722,11 @@
       document.getElementById("randomBtn").addEventListener("click", loadRandom);
       document.getElementById("checkBtn").addEventListener("click", checkBoard);
       document.getElementById("clearBtn").addEventListener("click", clearBoard);
-      document.getElementById("hintBtn").addEventListener("click", () => {
+      hintBtn.addEventListener("click", () => {
         state.hints = !state.hints;
+        refreshHintButton();
         refreshHints();
+        saveProgress();
       });
     }
 
