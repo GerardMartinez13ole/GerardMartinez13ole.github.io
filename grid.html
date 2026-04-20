@@ -31,74 +31,11 @@
         radial-gradient(1000px 520px at 10% -10%, #063f62 0%, transparent 65%),
         radial-gradient(800px 420px at 100% 0%, #0c2f4f 0%, transparent 60%),
         linear-gradient(180deg, #000b14, #00111f 70%, #001725);
-      padding: 14px;
-    }
-
-    .topbar {
-      max-width: 980px;
-      margin: 0 auto 12px;
-      border: 1px solid #174070;
-      border-radius: 12px;
-      background: linear-gradient(180deg, rgba(0, 29, 50, 0.96), rgba(0, 22, 38, 0.94));
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-    }
-
-    .topbar-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-    }
-
-    .nav-brand {
-      color: #e7f7ff;
-      text-decoration: none;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      white-space: nowrap;
-      font-size: 0.98rem;
-    }
-
-    .nav-brand span {
-      color: var(--gold);
-      font-style: italic;
-      margin-right: 3px;
-    }
-
-    .top-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .top-links a {
-      color: #c7e7ff;
-      text-decoration: none;
-      border: 1px solid transparent;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 7px 10px;
-      transition: all 0.2s ease;
-    }
-
-    .top-links a:hover {
-      border-color: #2d5386;
-      background: rgba(6, 40, 67, 0.75);
-      color: #ffffff;
-    }
-
-    .top-links a.active {
-      border-color: #85652d;
-      background: #2d2517;
-      color: #f4c13f;
     }
 
     .app {
       max-width: 980px;
-      margin: 0 auto;
+      margin: 14px auto;
       background: linear-gradient(180deg, #001626, #001321);
       border: 1px solid #174070;
       border-radius: 14px;
@@ -206,9 +143,9 @@
     .tile.team {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      padding-top: 6px;
+      padding-top: 0;
       background: linear-gradient(160deg, #001f38 0%, #001628 75%);
     }
 
@@ -238,21 +175,6 @@
       font-weight: 800;
       font-size: clamp(10px, 1.5vw, 16px);
       background: radial-gradient(circle at 30% 30%, #083a56, #041b2c);
-    }
-
-    .team-label {
-      width: 100%;
-      background: linear-gradient(180deg, #32dfff, #16b9dc);
-      color: #001525;
-      text-align: center;
-      font-weight: 800;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-      padding: 5px 4px;
-      font-size: clamp(11px, 1.5vw, 20px);
-      min-height: 28px;
-      display: grid;
-      place-items: center;
     }
 
     .tile.play {
@@ -406,6 +328,63 @@
       color: #ffd6ff;
     }
 
+    @media (min-width: 901px) {
+      .app {
+        max-width: min(900px, calc(100vh - 390px));
+        margin: 4px auto;
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .subtitle {
+        margin: 4px 0 10px;
+        font-size: 14px;
+      }
+
+      .toolbar {
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .toolbar button,
+      .guess-submit,
+      .choice-btn,
+      .choice-cancel {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+
+      .matrix {
+        gap: 6px;
+        margin-top: 4px;
+      }
+
+      .guess-panel {
+        margin-top: 10px;
+        gap: 8px;
+      }
+
+      .guess-input {
+        font-size: clamp(14px, 1.1vw, 18px);
+        padding: 10px 14px;
+      }
+
+      .guess-submit {
+        min-height: 46px;
+        min-width: 56px;
+        font-size: 22px;
+      }
+
+      .status,
+      .score {
+        margin-top: 3px;
+        font-size: 13px;
+      }
+    }
+
     @media (max-width: 900px) {
       .app {
         padding: 12px;
@@ -414,25 +393,11 @@
       .matrix {
         gap: 6px;
       }
-
-      .team-label {
-        min-height: 24px;
-      }
     }
 
     @media (max-width: 680px) {
-      body {
-        padding: 8px;
-      }
-
-      .topbar-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .top-links {
-        width: 100%;
-        justify-content: flex-start;
+      .app {
+        margin: 8px auto;
       }
 
       .toolbar {
@@ -461,11 +426,6 @@
         border-width: 1.5px;
       }
 
-      .team-label {
-        font-size: 10px;
-        padding: 4px;
-      }
-
       .player-name {
         font-size: 11px;
       }
@@ -477,18 +437,7 @@
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="nav-brand" href="index.html"><span>FUTBOL</span>GRID</a>
-      <nav class="top-links" aria-label="Navegacion principal">
-        <a href="index.html">Inicio</a>
-        <a class="active" href="grid.html">Jugar Grid</a>
-        <a href="index.html#ranking">Ranking</a>
-        <a href="index.html#novedades">Novedades</a>
-        <a href="index.html#contacto">Contacto</a>
-      </nav>
-    </div>
-  </header>
+  <div id="site-navbar"></div>
 
   <main class="app">
     <h1>Futbol Grid</h1>
@@ -520,6 +469,7 @@
     <p class="score" id="score">Completadas: 0/9</p>
   </main>
 
+  <script src="navbar.js"></script>
   <script>
     const TEAM_META = {
       "Barcelona": { logo: "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg" },
@@ -1200,12 +1150,7 @@
         crestWrap.appendChild(fallback);
       }
 
-      const label = document.createElement("div");
-      label.className = "team-label";
-      label.textContent = team;
-
       tile.appendChild(crestWrap);
-      tile.appendChild(label);
       return tile;
     }
 

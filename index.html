@@ -8,9 +8,7 @@
     :root {
       --bg-a: #091525;
       --bg-b: #122844;
-      --card: #11273f;
       --ink: #f3f9ff;
-      --muted: #9ab4cf;
       --line: #2e4e74;
       --accent: #0fd2ff;
       --accent-2: #ffcc4d;
@@ -37,335 +35,49 @@
       text-decoration: none;
     }
 
-    .shell {
-      width: min(1100px, 92vw);
-      margin: 0 auto;
+    .center-stage {
+      min-height: calc(100vh - 74px);
+      display: grid;
+      place-items: center;
+      padding: 20px;
     }
 
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(8px);
-      background: rgba(9, 21, 37, 0.88);
-      border-bottom: 1px solid rgba(46, 78, 116, 0.7);
-    }
-
-    .nav-inner {
-      display: flex;
+    .go-grid {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 0;
-    }
-
-    .brand {
+      justify-content: center;
+      min-width: min(90vw, 340px);
+      padding: 16px 24px;
+      border-radius: 999px;
+      font-size: clamp(1.05rem, 2.2vw, 1.3rem);
       font-weight: 900;
-      letter-spacing: 1px;
-      font-size: 1.05rem;
-      white-space: nowrap;
-    }
-
-    .brand span {
-      color: var(--accent-2);
-      font-style: italic;
-      margin-right: 4px;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .nav-links a {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #cce2f8;
-      border: 1px solid transparent;
-      border-radius: 999px;
-      padding: 8px 12px;
-      transition: all 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      border-color: #3f6ea0;
-      background: rgba(24, 58, 92, 0.75);
-      color: #ffffff;
-    }
-
-    main {
-      padding: 34px 0 48px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.25fr 1fr;
-      gap: 22px;
-      align-items: stretch;
-      margin-bottom: 26px;
-    }
-
-    .hero-copy,
-    .hero-side {
-      background: linear-gradient(160deg, rgba(17, 39, 63, 0.95), rgba(10, 24, 41, 0.94));
-      border: 1px solid rgba(66, 101, 139, 0.65);
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 20px 36px rgba(0, 0, 0, 0.32);
-    }
-
-    h1 {
-      margin: 0;
-      line-height: 1.05;
-      font-size: clamp(2rem, 3.8vw, 3.2rem);
       letter-spacing: 0.5px;
-    }
-
-    .hero-copy p {
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: 1rem;
-      max-width: 48ch;
-    }
-
-    .cta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      border-radius: 999px;
-      font-weight: 800;
-      padding: 10px 16px;
-      border: 1px solid transparent;
-    }
-
-    .btn-primary {
-      background: linear-gradient(180deg, #2be0ff, #00b9df);
       color: #072035;
-      border-color: #8ef0ff;
+      border: 1px solid #8ef0ff;
+      background: linear-gradient(180deg, #2be0ff, #00b9df);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
+      transition: transform 0.18s ease, filter 0.18s ease;
     }
 
-    .btn-secondary {
-      background: rgba(8, 30, 51, 0.7);
-      color: #cfeaff;
-      border-color: #3f6ea0;
-    }
-
-    .hero-side h2 {
-      margin: 0;
-      font-size: 1.08rem;
-      color: #ebf6ff;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-    }
-
-    .hero-side ul {
-      margin: 12px 0 0;
-      padding-left: 18px;
-      color: #b9d6f3;
-      line-height: 1.5;
-    }
-
-    .sections {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .card {
-      background: linear-gradient(160deg, rgba(17, 39, 63, 0.9), rgba(10, 24, 41, 0.94));
-      border: 1px solid rgba(62, 99, 139, 0.7);
-      border-radius: 14px;
-      padding: 16px;
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .card h3 {
-      margin: 0;
-      font-size: 1.1rem;
-      letter-spacing: 0.3px;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.45;
-      flex: 1;
-    }
-
-    .card a {
-      align-self: flex-start;
-      border: 1px solid #3f6ea0;
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-weight: 700;
-      color: #d8ebff;
-    }
-
-    .card a:hover {
-      background: rgba(20, 54, 88, 0.9);
-    }
-
-    .panel {
-      background: linear-gradient(160deg, rgba(17, 39, 63, 0.9), rgba(10, 24, 41, 0.94));
-      border: 1px solid rgba(62, 99, 139, 0.7);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 14px;
-    }
-
-    .panel h2 {
-      margin: 0 0 10px;
-      font-size: 1.2rem;
-      letter-spacing: 0.4px;
-    }
-
-    .ranking-list {
-      margin: 0;
-      padding-left: 18px;
-      color: #c7def5;
-      line-height: 1.6;
-    }
-
-    .news-item {
-      color: #c7def5;
-      margin: 0 0 8px;
-      line-height: 1.45;
-    }
-
-    .contact-box {
-      color: #c7def5;
-      line-height: 1.6;
-    }
-
-    footer {
-      color: #a7c2dd;
-      border-top: 1px solid rgba(58, 95, 133, 0.7);
-      padding-top: 18px;
-      margin-top: 8px;
-      font-size: 0.92rem;
-    }
-
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .sections {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .go-grid:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
     }
 
     @media (max-width: 640px) {
-      .nav-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .nav-links {
-        width: 100%;
-        justify-content: flex-start;
-      }
-
-      .sections {
-        grid-template-columns: 1fr;
+      .center-stage {
+        min-height: calc(100vh - 118px);
       }
     }
   </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="shell nav-inner">
-      <a class="brand" href="index.html"><span>FUTBOL</span>GRID</a>
-      <nav class="nav-links" aria-label="Navegacion principal">
-        <a href="index.html">Inicio</a>
-        <a href="grid.html">Jugar Grid</a>
-        <a href="#ranking">Ranking</a>
-        <a href="#novedades">Novedades</a>
-        <a href="#contacto">Contacto</a>
-      </nav>
-    </div>
-  </header>
+  <div id="site-navbar"></div>
 
-  <main class="shell">
-    <section class="hero" id="inicio">
-      <article class="hero-copy">
-        <h1>Tu pagina principal de retos de futbol</h1>
-        <p>
-          El grid ahora vive en su propia pagina para que este index sea tu centro de navegacion.
-          Desde aqui puedes entrar al juego, revisar ranking y mantener otras secciones del proyecto.
-        </p>
-        <div class="cta">
-          <a class="btn btn-primary" href="grid.html">Ir al Grid</a>
-          <a class="btn btn-secondary" href="#ranking">Ver ranking</a>
-        </div>
-      </article>
-
-      <aside class="hero-side">
-        <h2>Estado del proyecto</h2>
-        <ul>
-          <li>Grid funcional separado en archivo independiente.</li>
-          <li>Entrada unica para jugador y seleccion de casilla inteligente.</li>
-          <li>Boton de rendirse y solucion automatica.</li>
-          <li>Diseno responsive para desktop, tablet y movil.</li>
-        </ul>
-      </aside>
-    </section>
-
-    <section class="sections" id="secciones">
-      <article class="card">
-        <h3>Grid Diario</h3>
-        <p>Juega el desafio del dia o genera uno aleatorio cuando quieras.</p>
-        <a href="grid.html">Abrir juego</a>
-      </article>
-
-      <article class="card" id="ranking">
-        <h3>Ranking</h3>
-        <p>Espacio para guardar estadisticas, rachas y mejores tiempos.</p>
-        <a href="#ranking-panel">Ver panel</a>
-      </article>
-
-      <article class="card" id="novedades">
-        <h3>Novedades</h3>
-        <p>Seccion para anunciar updates del juego y nuevos modos.</p>
-        <a href="#novedades-panel">Ver novedades</a>
-      </article>
-    </section>
-
-    <section class="panel" id="ranking-panel">
-      <h2>Ranking (placeholder)</h2>
-      <ol class="ranking-list">
-        <li>Jugador 1 - 9/9 en 7 intentos</li>
-        <li>Jugador 2 - 9/9 en 8 intentos</li>
-        <li>Jugador 3 - 8/9 en 9 intentos</li>
-      </ol>
-    </section>
-
-    <section class="panel" id="novedades-panel">
-      <h2>Novedades (placeholder)</h2>
-      <p class="news-item">Version 1.0: Grid base completo con solucionador y pistas.</p>
-      <p class="news-item">Siguiente paso: ranking persistente y modo contrarreloj.</p>
-    </section>
-
-    <section class="panel" id="contacto">
-      <h2>Contacto</h2>
-      <p class="contact-box">
-        Puedes usar esta seccion para enlace a redes, feedback o formulario de sugerencias.
-      </p>
-    </section>
-
-    <footer>
-      Futbol Grid - Home principal con navegacion hacia el juego y otras secciones.
-    </footer>
+  <main class="center-stage">
+    <a class="go-grid" href="grid.html">Ir al Grid</a>
   </main>
+
+  <script src="navbar.js"></script>
 </body>
 </html>
