@@ -2376,9 +2376,10 @@
       const code = (countryCode || "").toLowerCase();
       if (!code) return [];
       return [
-        "https://flagcdn.com/48x36/" + code + ".png",
-        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/flags/4x3/" + code + ".svg",
-        "https://flagpedia.net/data/flags/w80/" + code + ".webp"
+        "flags/" + code + ".png",                                                                          // 1r: fitxer local
+        "https://flagcdn.com/48x36/" + code + ".png",                                                     // 2n: flagcdn CDN
+        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/flags/4x3/" + code + ".svg",                  // 3r: jsDelivr CDN
+        "https://flagpedia.net/data/flags/w80/" + code + ".webp"                                           // 4t: flagpedia CDN
       ];
     }
 
