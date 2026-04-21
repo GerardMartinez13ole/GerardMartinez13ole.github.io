@@ -43,23 +43,17 @@
       box-shadow: 0 20px 36px rgba(0, 0, 0, 0.35);
     }
 
-    h1 {
-      margin: 0;
-      font-size: 30px;
-      letter-spacing: 0.5px;
-    }
-
-    .subtitle {
-      margin: 6px 0 12px;
-      color: var(--muted);
-    }
-
     .toolbar {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
+      background: rgba(0, 20, 35, 0.6);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     }
 
     .toolbar button,
@@ -257,6 +251,56 @@
       grid-template-columns: 1fr auto;
       gap: 10px;
       align-items: center;
+    }
+
+    .autocomplete-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .autocomplete-list {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      width: 100%;
+      max-height: 250px;
+      overflow-y: auto;
+      background-color: #011526;
+      border: 2px solid #0097a7;
+      border-radius: 6px;
+      z-index: 1000;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .autocomplete-list.hidden {
+      display: none;
+    }
+
+    .autocomplete-item {
+      padding: 12px 14px;
+      cursor: pointer;
+      color: #a0b5c9;
+      border-bottom: 1px solid #13263a;
+      font-size: 16px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover, .autocomplete-item.active {
+      background-color: #0097a7;
+      color: #fff;
+    }
+
+    .autocomplete-match {
+      font-weight: bold;
+      color: #fff;
+      text-transform: uppercase;
     }
 
     .guess-input {
@@ -477,31 +521,31 @@
   <div id="site-navbar"></div>
 
   <main class="app">
-    <h1>Futbol Grid</h1>
-    <p class="subtitle">Escribe un jugador y el sistema lo colocara en cruces de equipo, pais y posicion. Si encaja en varias, eliges cual.</p>
-
     <div class="toolbar">
-      <button id="randomBtn" type="button">Grid aleatorio</button>
-      <button id="clearBtn" type="button">Limpiar</button>
-      <button id="surrenderBtn" class="btn-danger" type="button">Rendirse / Mostrar solucion</button>
-      <span class="meta" id="meta">Jugadas: 0</span>
+      <button id="randomBtn" type="button">Grid aleatori</button>
+      <button id="clearBtn" type="button">Netejar</button>
+      <button id="surrenderBtn" class="btn-danger" type="button">Rendir-se / Mostrar solució</button>
+      <span class="meta" id="meta">Jugades: 0</span>
     </div>
 
     <div class="matrix" id="gridBoard"></div>
 
     <div class="guess-panel">
-      <input id="guessInput" class="guess-input" type="text" placeholder="Type the footballer here" autocomplete="off" spellcheck="false">
-      <button id="guessBtn" class="guess-submit" type="button" aria-label="Colocar jugador">&#9873;</button>
+      <div class="autocomplete-wrapper">
+        <input id="guessInput" class="guess-input" type="text" placeholder="Escriu el futbolista aquí" autocomplete="off" spellcheck="false">
+        <ul id="autocompleteList" class="autocomplete-list hidden"></ul>
+      </div>
+      <button id="guessBtn" class="guess-submit" type="button" aria-label="Col·locar jugador">&#9873;</button>
     </div>
 
     <div id="choicePanel" class="choice-panel hidden">
-      <p class="choice-title" id="choiceTitle">Elige una casilla:</p>
+      <p class="choice-title" id="choiceTitle">Tria una casella:</p>
       <div class="choice-list" id="choiceList"></div>
-      <button id="choiceCancel" class="choice-cancel" type="button">Cancelar</button>
+      <button id="choiceCancel" class="choice-cancel" type="button">Cancel·lar</button>
     </div>
 
     <p class="status" id="status"></p>
-    <p class="score" id="score">Completadas: 0/9</p>
+    <p class="score" id="score">Completades: 0/9</p>
   </main>
 
   <script src="navbar.js"></script>
@@ -857,34 +901,34 @@
     };
 
     const COUNTRY_META = {
-      de: { name: "Alemania" },
-      pl: { name: "Polonia" },
-      en: { name: "Inglaterra" },
-      si: { name: "Eslovenia" },
+      de: { name: "Alemanya" },
+      pl: { name: "Polònia" },
+      en: { name: "Anglaterra" },
+      si: { name: "Eslovènia" },
       gh: { name: "Ghana" },
-      ua: { name: "Ucrania" },
+      ua: { name: "Ucraïna" },
       tr: { name: "Turquia" },
-      ma: { name: "Marruecos" },
-      nl: { name: "Paises Bajos" },
+      ma: { name: "Marroc" },
+      nl: { name: "Països Baixos" },
       ar: { name: "Argentina" },
       br: { name: "Brasil" },
-      cf: { name: "R. Centroafricana" },
+      cf: { name: "R\. Centreafricana" },
       cm: { name: "Camerun" },
-      co: { name: "Colombia" },
+      co: { name: "Colòmbia" },
       cl: { name: "Chile" },
       dk: { name: "Dinamarca" },
-      es: { name: "Espana" },
-      be: { name: "Belgica" },
-      fr: { name: "Francia" },
-      hr: { name: "Croacia" },
-      jp: { name: "Japon" },
-      kr: { name: "Corea del Sur" },
-      ma: { name: "Marruecos" },
-      nl: { name: "Paises Bajos" },
+      es: { name: "Espanya" },
+      be: { name: "Bèlgica" },
+      fr: { name: "França" },
+      hr: { name: "Croàcia" },
+      jp: { name: "Japó" },
+      kr: { name: "Corea del Sud" },
+      ma: { name: "Marroc" },
+      nl: { name: "Països Baixos" },
       no: { name: "Noruega" },
       pt: { name: "Portugal" },
       py: { name: "Paraguay" },
-      ru: { name: "Rusia" },
+      ru: { name: "Rússia" },
       tr: { name: "Turquia" },
       uy: { name: "Uruguay" }
     };
@@ -893,6 +937,7 @@
 
     const boardEl = document.getElementById("gridBoard");
     const guessInputEl = document.getElementById("guessInput");
+    const autocompleteListEl = document.getElementById("autocompleteList");
     const guessBtn = document.getElementById("guessBtn");
     const scoreEl = document.getElementById("score");
     const statusEl = document.getElementById("status");
@@ -984,7 +1029,7 @@
     function getCountryName(countryCode) {
       const code = (countryCode || "").toLowerCase();
       if (!code) {
-        return "Pais";
+        return "País";
       }
       return (COUNTRY_META[code] && COUNTRY_META[code].name) || code.toUpperCase();
     }
@@ -1223,11 +1268,11 @@
       );
 
       if (state.teamConstraints.length < 3) {
-        throw new Error("No hay suficientes equipos para generar el tablero.");
+        throw new Error("No hi ha suficients equips per generar el tauler.");
       }
 
       if (state.constraints.length < 6) {
-        throw new Error("No hay suficientes condiciones para generar el tablero.");
+        throw new Error("No hi ha suficients condicions per generar el tauler.");
       }
 
       for (let attempt = 0; attempt < maxTries; attempt += 1) {
@@ -1287,7 +1332,7 @@
       }
 
       if (!best) {
-        throw new Error("No se pudo generar un tablero valido.");
+        throw new Error("No s\'ha pogut generar un tauler vàlid.");
       }
 
       return best;
@@ -1303,12 +1348,12 @@
 
     function updateMeta() {
       const label = state.boardLabel ? " | " + state.boardLabel : "";
-      metaEl.textContent = "Jugadas: " + state.attempts + label;
+      metaEl.textContent = "Jugades: " + state.attempts + label;
     }
 
     function refreshScore() {
       const solved = state.entries.filter(Boolean).length;
-      scoreEl.textContent = solved === 9 ? "Completadas: 9/9. Grid completado." : "Completadas: " + solved + "/9";
+      scoreEl.textContent = solved === 9 ? "Completadas: 9/9. Grid completado." : "Completades: " + solved + "/9";
     }
 
     function saveProgress() {
@@ -1399,14 +1444,14 @@
     function hideChoicePanel() {
       state.pending = null;
       choicePanelEl.classList.add("hidden");
-      choiceTitleEl.textContent = "Elige una casilla:";
+      choiceTitleEl.textContent = "Tria una casella:";
       choiceListEl.innerHTML = "";
     }
 
     function showChoicePanel(playerKey, candidates) {
       state.pending = { playerKey, candidates: [...candidates] };
       const player = state.byKey.get(playerKey);
-      choiceTitleEl.textContent = player.name + " encaja en varias casillas. Elige una:";
+      choiceTitleEl.textContent = player.name + " encaixa en diverses caselles\. Tria una:";
       choiceListEl.innerHTML = "";
 
       candidates.forEach((index) => {
@@ -1429,7 +1474,7 @@
 
     function placePlayer(index, playerKey, fromChoice) {
       if (state.entries[index]) {
-        writeStatus("Esa casilla ya esta ocupada.", "bad");
+        writeStatus("Aquesta casella ja està ocupada.", "bad");
         return;
       }
 
@@ -1442,7 +1487,7 @@
       const pos = indexToRowCol(index);
       writeStatus(
         state.byKey.get(playerKey).name
-          + " colocado en "
+          + " col·locat a "
           + getConstraintLabel(state.rows[pos.row])
           + " x "
           + getConstraintLabel(state.cols[pos.col])
@@ -1458,34 +1503,35 @@
     }
 
     function submitGuess() {
+      autocompleteListEl.classList.add("hidden");
       state.attempts += 1;
       updateMeta();
 
       const resolved = resolvePlayer(guessInputEl.value);
       if (resolved.type === "empty") {
-        writeStatus("Escribe un jugador.", "bad");
+        writeStatus("Escriu un jugador.", "bad");
         return;
       }
 
       if (resolved.type === "unknown") {
-        writeStatus("Jugador no reconocido en la base actual.", "bad");
+        writeStatus("Jugador no reconegut a la base actual.", "bad");
         return;
       }
 
       if (resolved.type === "ambiguous") {
-        writeStatus("Nombre ambiguo. Escribe nombre y apellido.", "bad");
+        writeStatus("Nom ambigu\. Escriu nom i cognom.", "bad");
         return;
       }
 
       const used = new Set(state.entries.filter(Boolean));
       if (used.has(resolved.player.key)) {
-        writeStatus("Ese jugador ya esta colocado.", "bad");
+        writeStatus("Aquest jugador ja està col·locat.", "bad");
         return;
       }
 
       const candidates = findCandidateCells(resolved.player.key);
       if (!candidates.length) {
-        writeStatus("No hay casilla libre donde encaje ese jugador.", "bad");
+        writeStatus("No hi ha cap casella lliure on encaixi aquest jugador.", "bad");
         return;
       }
 
@@ -1494,7 +1540,7 @@
         return;
       }
 
-      writeStatus("El jugador encaja en varias casillas. Elige una.", "ok");
+      writeStatus("El jugador encaixa en diverses caselles\. Tria una.", "ok");
       showChoicePanel(resolved.player.key, candidates);
       saveProgress();
     }
@@ -1563,7 +1609,7 @@
       }
 
       if (!solution) {
-        writeStatus("No se pudo calcular una solucion valida.", "bad");
+        writeStatus("No s\'ha pogut calcular una solució vàlida.", "bad");
         return;
       }
 
@@ -1572,20 +1618,20 @@
       hideChoicePanel();
       renderBoard();
       refreshScore();
-      writeStatus(fromRestore ? "Solucion recuperada." : "Te rendiste. Solucion mostrada.", "ok");
+      writeStatus(fromRestore ? "Solució recuperada." : "T\'has rendit\. Solució mostrada.", "ok");
       saveProgress();
     }
 
     function requestSurrender() {
       if (state.surrendered) {
-        writeStatus("La solucion ya esta mostrada.", "ok");
+        writeStatus("La solució ja està mostrada.", "ok");
         return;
       }
 
       const hasProgress = state.entries.some(Boolean);
       const message = hasProgress
-        ? "Si te rindes, se mostrara la solucion completa. ¿Quieres continuar?"
-        : "¿Quieres rendirte y mostrar la solucion?";
+        ? "Si et rendeixes, es mostrarà la solució completa\. Vols continuar?"
+        : "Vols rendir-te i mostrar la solució?";
 
       if (!window.confirm(message)) {
         return;
@@ -1604,7 +1650,7 @@
       refreshScore();
       updateMeta();
       guessInputEl.value = "";
-      writeStatus("Tablero limpiado.", "ok");
+      writeStatus("Tauler netejat.", "ok");
       saveProgress();
     }
 
@@ -1707,28 +1753,7 @@
         nameEl.className = "player-name";
         nameEl.textContent = player.name;
 
-        const metaEl = document.createElement("div");
-        metaEl.className = "player-meta";
-
-        if (profile.countryCode) {
-          const flagEl = document.createElement("img");
-          flagEl.className = "flag-icon";
-          flagEl.src = getFlagUrl(profile.countryCode);
-          flagEl.alt = "Bandera " + profile.countryCode.toUpperCase();
-          flagEl.loading = "lazy";
-          flagEl.addEventListener("error", () => {
-            flagEl.remove();
-          });
-          metaEl.appendChild(flagEl);
-        }
-
-        const posEl = document.createElement("span");
-        posEl.className = "pos-badge";
-        posEl.textContent = profile.position;
-        metaEl.appendChild(posEl);
-
         cardEl.appendChild(nameEl);
-        cardEl.appendChild(metaEl);
         tile.appendChild(cardEl);
       } else {
         const emptyMark = document.createElement("div");
@@ -1795,7 +1820,7 @@
         if (state.surrendered) {
           revealSolution(true);
         } else {
-          writeStatus("Progreso recuperado.", "ok");
+          writeStatus("Progrés recuperat.", "ok");
         }
       } else {
         writeStatus("", "");
@@ -1824,12 +1849,107 @@
       }
 
       if (!board) {
-        writeStatus("No se pudo generar un grid con bandera distinta al anterior.", "bad");
+        writeStatus("No s\'ha pogut generar un grid amb bandera diferent a l\'anterior.", "bad");
         return;
       }
 
       openBoard(board, "random-" + chosenSeed, "Grid aleatorio", false);
-      writeStatus("Nuevo grid aleatorio listo.", "ok");
+      writeStatus("Nou grid aleatori llest.", "ok");
+    }
+
+    let autocompleteFocusIndex = -1;
+
+    function getAutocompleteOptions(inputValue) {
+      if (inputValue.length < 3) return [];
+      const normalizedInput = normalizeName(inputValue);
+      if (!normalizedInput) return [];
+      
+      const matches = [];
+      const MAX_RESULTS = 10;
+      const seenNames = new Set();
+      
+      for (const player of PLAYERS) {
+        if (matches.length >= MAX_RESULTS) break;
+        if (seenNames.has(player.name)) continue;
+        
+        // Check name
+        if (normalizeName(player.name).includes(normalizedInput)) {
+          matches.push(player);
+          seenNames.add(player.name);
+          continue;
+        }
+        // Check aliases
+        if (player.aliases) {
+          for (const alias of player.aliases) {
+            if (normalizeName(alias).includes(normalizedInput)) {
+              matches.push(player);
+              seenNames.add(player.name);
+              break;
+            }
+          }
+        }
+      }
+      return matches;
+    }
+
+    function renderAutocomplete(options, inputValue) {
+      autocompleteListEl.innerHTML = "";
+      autocompleteFocusIndex = -1;
+      
+      if (!options || options.length === 0) {
+        autocompleteListEl.classList.add("hidden");
+        return;
+      }
+      
+      autocompleteListEl.classList.remove("hidden");
+      const normalizedInput = normalizeName(inputValue);
+      
+      options.forEach((player) => {
+        const item = document.createElement("li");
+        item.className = "autocomplete-item";
+        
+        // Find matching part in normalized name to highlight
+        const normName = normalizeName(player.name);
+        const matchIndex = normName.indexOf(normalizedInput);
+        
+        if (matchIndex !== -1) {
+          // Reconstruct original string with highlight based on char indices
+          // Simplified approach since normalizeName doesn't strictly preserve length 
+          // (it might strip accents but usually preserves alpha-numeric layout)
+          // For a perfect match, case-insensitive index on original name is better:
+          const plainLower = player.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          const exactMatchIndex = plainLower.indexOf(normalizedInput);
+          if (exactMatchIndex !== -1) {
+            const before = player.name.substring(0, exactMatchIndex);
+            const matchText = player.name.substring(exactMatchIndex, exactMatchIndex + normalizedInput.length);
+            const after = player.name.substring(exactMatchIndex + normalizedInput.length);
+            item.innerHTML = `${before}<span class="autocomplete-match">${matchText}</span>${after}`;
+          } else {
+            item.textContent = player.name;
+          }
+        } else {
+          item.textContent = player.name;
+        }
+        
+        item.addEventListener("click", () => {
+          guessInputEl.value = player.name;
+          autocompleteListEl.classList.add("hidden");
+          submitGuess();
+        });
+        
+        autocompleteListEl.appendChild(item);
+      });
+    }
+
+    function updateAutocompleteFocus(items) {
+      items.forEach((item, index) => {
+        if (index === autocompleteFocusIndex) {
+          item.classList.add("active");
+          item.scrollIntoView({ block: "nearest" });
+        } else {
+          item.classList.remove("active");
+        }
+      });
     }
 
     function boot() {
@@ -1841,15 +1961,48 @@
       surrenderBtn.addEventListener("click", requestSurrender);
       guessBtn.addEventListener("click", submitGuess);
       guessInputEl.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
+        const items = autocompleteListEl.querySelectorAll(".autocomplete-item");
+        
+        if (event.key === "ArrowDown") {
+          if (!autocompleteListEl.classList.contains("hidden") && items.length > 0) {
+            event.preventDefault();
+            autocompleteFocusIndex = (autocompleteFocusIndex + 1) % items.length;
+            updateAutocompleteFocus(items);
+          }
+        } else if (event.key === "ArrowUp") {
+          if (!autocompleteListEl.classList.contains("hidden") && items.length > 0) {
+            event.preventDefault();
+            autocompleteFocusIndex = autocompleteFocusIndex <= 0 ? items.length - 1 : autocompleteFocusIndex - 1;
+            updateAutocompleteFocus(items);
+          }
+        } else if (event.key === "Enter") {
           event.preventDefault();
-          submitGuess();
+          if (!autocompleteListEl.classList.contains("hidden") && autocompleteFocusIndex > -1 && items.length > 0) {
+            items[autocompleteFocusIndex].click();
+          } else {
+            autocompleteListEl.classList.add("hidden");
+            submitGuess();
+          }
+        } else if (event.key === "Escape") {
+          autocompleteListEl.classList.add("hidden");
+        }
+      });
+      
+      guessInputEl.addEventListener("input", (event) => {
+        const val = event.target.value;
+        const options = getAutocompleteOptions(val);
+        renderAutocomplete(options, val);
+      });
+      
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".autocomplete-wrapper")) {
+          autocompleteListEl.classList.add("hidden");
         }
       });
       choiceCancelBtn.addEventListener("click", () => {
         hideChoicePanel();
         renderBoard();
-        writeStatus("Seleccion cancelada.", "ok");
+        writeStatus("Selecció cancel·lada.", "ok");
       });
     }
 
