@@ -192,6 +192,11 @@
     .tile.play.candidate {
       border-color: var(--gold);
       box-shadow: 0 0 0 2px rgba(244, 193, 63, 0.5) inset;
+      cursor: pointer;
+    }
+
+    .tile.play.candidate:hover {
+      background: rgba(244, 193, 63, 0.15);
     }
 
     .player-card {
@@ -2273,8 +2278,7 @@
       us: { name: "Estats Units" },
       uy: { name: "Uruguay" },
       bg: { name: "Bulgària" },
-      ve: { name: "Veneçuela" }
-      ,
+      ve: { name: "Veneçuela" },
       al: { name: "Albània" },
       ro: { name: "Romania" },
       ao: { name: "Angola" },
@@ -2988,6 +2992,7 @@
     }
 
     function requestSurrender() {
+      console.log("requestSurrender triggered");
       if (state.surrendered) {
         writeStatus("La solució ja està mostrada.", "ok");
         return;
@@ -3114,6 +3119,9 @@
 
       if (state.pending && state.pending.candidates.includes(index)) {
         tile.classList.add("candidate");
+        tile.addEventListener("click", () => {
+          placePlayer(index, state.pending.playerKey, true);
+        });
       }
 
       if (key) {
@@ -3326,13 +3334,31 @@
     }
 
     function boot() {
-      buildIndex();
-      loadRandom();
+      console.log("Iniciant boot...");
+      try {
+        buildIndex();
+        console.log("Index construit.");
+      } catch (e) {
+        console.error("Error en buildIndex:", e);
+      }
 
-      document.getElementById("randomBtn").addEventListener("click", loadRandom);
-      document.getElementById("clearBtn").addEventListener("click", clearBoard);
-      surrenderBtn.addEventListener("click", requestSurrender);
-      guessBtn.addEventListener("click", submitGuess);
+      const buttonListeners = [
+        { id: "randomBtn", fn: loadRandom },
+        { id: "clearBtn", fn: clearBoard },
+        { id: "surrenderBtn", fn: requestSurrender },
+        { id: "guessBtn", fn: submitGuess }
+      ];
+
+      buttonListeners.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) {
+          el.addEventListener("click", item.fn);
+          console.log(`Listener afegit a ${item.id}`);
+        } else {
+          console.error(`No s'ha trobat l'element amb id: ${item.id}`);
+        }
+      });
+
       guessInputEl.addEventListener("keydown", (event) => {
         const items = autocompleteListEl.querySelectorAll(".autocomplete-item");
 
@@ -3372,11 +3398,19 @@
           autocompleteListEl.classList.add("hidden");
         }
       });
+
       choiceCancelBtn.addEventListener("click", () => {
         hideChoicePanel();
         renderBoard();
         writeStatus("Selecció cancel·lada.", "ok");
       });
+
+      try {
+        loadRandom();
+        console.log("Grid inicial carregat.");
+      } catch (e) {
+        console.error("Error en loadRandom inicial:", e);
+      }
     }
 
     boot();
