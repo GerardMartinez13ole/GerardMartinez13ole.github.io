@@ -2372,6 +2372,16 @@
       return "https://flagcdn.com/" + safeSize + "/" + countryCode.toLowerCase() + ".png";
     }
 
+    function getFlagUrls(countryCode) {
+      const code = (countryCode || "").toLowerCase();
+      if (!code) return [];
+      return [
+        "https://flagcdn.com/48x36/" + code + ".png",
+        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/flags/4x3/" + code + ".svg",
+        "https://flagpedia.net/data/flags/w80/" + code + ".webp"
+      ];
+    }
+
     function constraintKey(type, value) {
       return type + ":" + value;
     }
@@ -3034,8 +3044,11 @@
 
       if (parsed.type === "country") {
         const countryCode = parsed.value.toLowerCase();
+        const flagUrls = getFlagUrls(countryCode);
+        let urlIndex = 0;
+
         const flag = document.createElement("img");
-        flag.src = getFlagUrl(countryCode, "48x36");
+        flag.src = flagUrls[urlIndex];
         flag.alt = getCountryName(countryCode);
         flag.loading = "lazy";
         flag.style.maxWidth = "72%";
@@ -3043,11 +3056,11 @@
         flag.style.border = "1px solid rgba(255, 255, 255, 0.35)";
         flag.style.borderRadius = "3px";
         flag.addEventListener("error", () => {
-          crestWrap.innerHTML = "";
-          const fallback = document.createElement("div");
-          fallback.className = "crest-fallback";
-          fallback.textContent = countryCode.toUpperCase();
-          crestWrap.appendChild(fallback);
+          urlIndex += 1;
+          if (urlIndex < flagUrls.length) {
+            flag.src = flagUrls[urlIndex];
+          }
+          // Si tots els CDNs fallen, no es mostra res (casella buida, sense text)
         });
         crestWrap.appendChild(flag);
 
