@@ -1415,7 +1415,57 @@
       { name: "Guille Fernandez", teams: ["Barcelona"], aliases: ["guille"] },
       { name: "Tomas Marques", teams: ["Barcelona"], aliases: ["marques"] },
       { name: "Daniel Rodriguez Barca", teams: ["Barcelona"], aliases: ["daniel rodriguez"] },
-      { name: "Toni Fernandez", teams: ["Barcelona"], aliases: ["toni fernandez"] }
+      { name: "Toni Fernandez", teams: ["Barcelona"], aliases: ["toni fernandez"] },
+      // === Jugadors d'un sol club a La Liga ===
+      // Barcelona
+      { name: "Lionel Messi", teams: ["Barcelona"], aliases: ["messi", "leo messi"] },
+      { name: "Xavi Hernandez", teams: ["Barcelona"], aliases: ["xavi"] },
+      { name: "Andres Iniesta", teams: ["Barcelona"], aliases: ["iniesta"] },
+      { name: "Carles Puyol", teams: ["Barcelona"], aliases: ["puyol"] },
+      { name: "Victor Valdes", teams: ["Barcelona"], aliases: ["valdes"] },
+      { name: "Gerard Pique", teams: ["Barcelona"], aliases: ["pique"] },
+      { name: "Sergio Busquets", teams: ["Barcelona"], aliases: ["busquets"] },
+      { name: "Pedro Rodriguez", teams: ["Barcelona"], aliases: ["pedro"] },
+      { name: "Cesc Fabregas", teams: ["Barcelona"], aliases: ["fabregas", "cesc"] },
+      { name: "Neymar", teams: ["Barcelona"], aliases: ["neymar jr"] },
+      { name: "Zlatan Ibrahimovic", teams: ["Barcelona"], aliases: ["ibrahimovic", "ibra", "zlatan"] },
+      { name: "Ronaldinho", teams: ["Barcelona"], aliases: ["ronaldinho gaucho"] },
+      { name: "Thierry Henry", teams: ["Barcelona"], aliases: ["henry"] },
+      // Real Madrid
+      { name: "Raul Gonzalez", teams: ["Real Madrid"], aliases: ["raul"] },
+      { name: "Iker Casillas", teams: ["Real Madrid"], aliases: ["casillas"] },
+      { name: "Roberto Carlos", teams: ["Real Madrid"], aliases: ["roberto carlos"] },
+      { name: "Zinedine Zidane", teams: ["Real Madrid"], aliases: ["zidane", "zizou"] },
+      { name: "Cristiano Ronaldo", teams: ["Real Madrid"], aliases: ["cr7"] },
+      { name: "Marcelo", teams: ["Real Madrid"], aliases: ["marcelo vieira"] },
+      { name: "Casemiro", teams: ["Real Madrid"], aliases: ["carlos casemiro"] },
+      { name: "Karim Benzema", teams: ["Real Madrid"], aliases: ["benzema", "kb9"] },
+      { name: "Pepe Kepper", teams: ["Real Madrid"], aliases: ["pepe"] },
+      { name: "Mesut Ozil", teams: ["Real Madrid"], aliases: ["ozil"] },
+      { name: "Gonzalo Higuain", teams: ["Real Madrid"], aliases: ["higuain", "pipita"] },
+      { name: "Angel Di Maria", teams: ["Real Madrid"], aliases: ["di maria", "fideo"] },
+      { name: "Arjen Robben", teams: ["Real Madrid"], aliases: ["robben"] },
+      { name: "Emilio Butragueno", teams: ["Real Madrid"], aliases: ["butragueno", "el buitre"] },
+      { name: "Gareth Bale", teams: ["Real Madrid"], aliases: ["bale"] },
+      // Atletico Madrid
+      { name: "Fernando Torres", teams: ["Atletico Madrid"], aliases: ["torres", "el nino"] },
+      { name: "Radamel Falcao", teams: ["Atletico Madrid"], aliases: ["falcao", "el tigre"] },
+      { name: "Saul Niguez", teams: ["Atletico Madrid"], aliases: ["saul"] },
+      // Sevilla
+      { name: "Frederic Kanoute", teams: ["Sevilla"], aliases: ["kanoute"] },
+      { name: "Alberto Moreno", teams: ["Sevilla"], aliases: ["alberto moreno"] },
+      // Valencia
+      { name: "Juan Mata", teams: ["Valencia"], aliases: ["mata"] },
+      // Athletic Bilbao
+      { name: "Joseba Etxeberria", teams: ["Athletic Bilbao"], aliases: ["etxeberria"] },
+      { name: "Aritz Aduriz", teams: ["Athletic Bilbao"], aliases: ["aduriz"] },
+      // Mallorca
+      { name: "Dani Guiza", teams: ["Mallorca"], aliases: ["guiza"] },
+      // Osasuna
+      { name: "Savo Milosevic", teams: ["Osasuna"], aliases: ["milosevic"] },
+      // Villarreal
+      { name: "Robert Pires", teams: ["Villarreal"], aliases: ["pires"] },
+      { name: "Diego Forlan", teams: ["Villarreal", "Atletico Madrid"], aliases: ["forlan"] }
     ];
 
     const PLAYER_PROFILE = {
@@ -2225,7 +2275,48 @@
       "guille fernandez": { countryCode: "es", position: "MC" },
       "tomas marques": { countryCode: "es", position: "MC" },
       "daniel rodriguez barca": { countryCode: "es", position: "EI" },
-      "toni fernandez": { countryCode: "es", position: "DC" }
+      "toni fernandez": { countryCode: "es", position: "DC" },
+      // === Jugadors d'un sol club a La Liga ===
+      "lionel messi": { countryCode: "ar", position: "SD" },
+      "xavi hernandez": { countryCode: "es", position: "MC" },
+      "andres iniesta": { countryCode: "es", position: "MCO" },
+      "carles puyol": { countryCode: "es", position: "DFC" },
+      "victor valdes": { countryCode: "es", position: "POR" },
+      "gerard pique": { countryCode: "es", position: "DFC" },
+      "sergio busquets": { countryCode: "es", position: "MCD" },
+      "pedro rodriguez": { countryCode: "es", position: "ED" },
+      "cesc fabregas": { countryCode: "es", position: "MC" },
+      "neymar": { countryCode: "br", position: "EI" },
+      "zlatan ibrahimovic": { countryCode: "se", position: "DC" },
+      "ronaldinho": { countryCode: "br", position: "MCO" },
+      "thierry henry": { countryCode: "fr", position: "ED" },
+      "raul gonzalez": { countryCode: "es", position: "DC" },
+      "iker casillas": { countryCode: "es", position: "POR" },
+      "roberto carlos": { countryCode: "br", position: "LI" },
+      "zinedine zidane": { countryCode: "fr", position: "MCO" },
+      "cristiano ronaldo": { countryCode: "pt", position: "ED" },
+      "marcelo": { countryCode: "br", position: "LI" },
+      "casemiro": { countryCode: "br", position: "MCD" },
+      "karim benzema": { countryCode: "fr", position: "DC" },
+      "pepe kepper": { countryCode: "pt", position: "DFC" },
+      "mesut ozil": { countryCode: "de", position: "MCO" },
+      "gonzalo higuain": { countryCode: "ar", position: "DC" },
+      "angel di maria": { countryCode: "ar", position: "ED" },
+      "arjen robben": { countryCode: "nl", position: "ED" },
+      "emilio butragueno": { countryCode: "es", position: "DC" },
+      "gareth bale": { countryCode: "cy", position: "ED" },
+      "fernando torres": { countryCode: "es", position: "DC" },
+      "radamel falcao": { countryCode: "co", position: "DC" },
+      "saul niguez": { countryCode: "es", position: "MC" },
+      "frederic kanoute": { countryCode: "ml", position: "DC" },
+      "alberto moreno": { countryCode: "es", position: "LI" },
+      "juan mata": { countryCode: "es", position: "MCO" },
+      "joseba etxeberria": { countryCode: "es", position: "EI" },
+      "aritz aduriz": { countryCode: "es", position: "DC" },
+      "dani guiza": { countryCode: "es", position: "DC" },
+      "savo milosevic": { countryCode: "rs", position: "DC" },
+      "robert pires": { countryCode: "fr", position: "EI" },
+      "diego forlan": { countryCode: "uy", position: "DC" }
     };
 
     const COUNTRY_META = {
@@ -2295,7 +2386,8 @@
       eg: { name: "Egipte" },
       cz: { name: "Txèquia" },
       tg: { name: "Togo" },
-      ke: { name: "Kenya" }
+      ke: { name: "Kenya" },
+      cy: { name: "Gal·les" }
     };
 
     const STORAGE_KEY = "futbol-grid-v3";
