@@ -26,125 +26,72 @@ body {
     linear-gradient(180deg, #000b14, #00111f 70%, #001725);
 }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.app {
+  max-width: 980px;
+  margin: 14px auto;
+  background: linear-gradient(180deg, #001626, #001321);
+  border: 1px solid #174070;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.35);
 }
 
-.game-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.header-content h1 {
-  margin: 0;
-  font-size: clamp(24px, 5vw, 40px);
-  color: var(--gold);
-  text-shadow: 0 0 15px rgba(244, 193, 63, 0.3);
-}
-
-.header-stats {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 10px;
-}
-
-.score-badge, .meta-info {
-  background: rgba(0, 25, 44, 0.8);
-  padding: 5px 15px;
-  border-radius: 20px;
-  border: 1px solid var(--line);
-  font-size: 14px;
-}
-
-.game-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.board-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.grid-board {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  width: 100%;
-  max-width: 700px;
-  aspect-ratio: 1 / 1;
-}
-
-.controls-panel {
-  background: rgba(0, 25, 44, 0.8);
-  padding: 20px;
-  border-radius: 15px;
-  border: 1px solid var(--line);
-}
-
-.input-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.action-buttons {
+.toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+  background: rgba(0, 20, 35, 0.6);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-.primary-btn, .secondary-btn, .danger-btn, .outline-btn {
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  color: white;
+.toolbar button,
+.guess-submit,
+.choice-btn,
+.choice-cancel {
+  border: 1px solid #2d5386;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #032340;
   cursor: pointer;
-  font-weight: bold;
-  transition: all 0.2s;
+  font-weight: 600;
+  color: var(--ink);
 }
 
-.primary-btn {
-  background: var(--gold);
-  color: #000;
-  border: none;
+.toolbar button:hover,
+.guess-submit:hover,
+.choice-btn:hover,
+.choice-cancel:hover {
+  filter: brightness(1.12);
 }
 
-.danger-btn {
-  background: rgba(255, 90, 102, 0.2);
-  border-color: var(--bad);
-  color: var(--bad);
+.btn-accent {
+  border-color: #85652d;
+  background: #2d2517;
+  color: var(--gold);
 }
 
-.status-msg {
-  text-align: center;
-  min-height: 24px;
-  margin-bottom: 15px;
+.btn-danger {
+  border-color: #844150;
+  background: #351623;
+  color: #ff95a4;
 }
 
-#guessInput {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 12px 15px;
-  color: white;
-  outline: none;
+.meta {
+  margin-left: auto;
+  font-size: 14px;
+  color: #a4c7e8;
 }
 
-#guessInput:focus {
-  border-color: var(--cyan);
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 6px;
 }
 
 .tile {
@@ -164,12 +111,11 @@ body {
 }
 
 .brand {
-  font-weight: 900;
-  font-size: clamp(14px, 1.8vw, 22px);
-  line-height: 1.1;
+  font-weight: 800;
+  font-size: clamp(18px, 2.1vw, 28px);
+  line-height: 1.05;
   text-align: center;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .brand .a {
@@ -255,12 +201,11 @@ body {
 
 .player-name {
   font-weight: 700;
-  font-size: clamp(10px, 1.2vw, 15px);
-  line-height: 1.1;
+  font-size: clamp(12px, 1.35vw, 18px);
+  line-height: 1.2;
   color: #bfffe0;
   word-break: break-word;
   text-align: center;
-  margin-bottom: 4px;
 }
 
 .player-meta {
@@ -291,8 +236,10 @@ body {
 }
 
 .empty-mark {
-  color: rgba(185, 231, 255, 0.15);
-  font-size: clamp(24px, 4vw, 40px);
+  color: rgba(185, 231, 255, 0.24);
+  font-size: clamp(20px, 3.2vw, 46px);
+  letter-spacing: 2px;
+  line-height: 1;
   user-select: none;
 }
 
@@ -501,39 +448,123 @@ body {
   justify-content: flex-end;
 }
 
-@media (max-width: 600px) {
-  .grid-board {
-    gap: 4px;
+@media (min-width: 901px) {
+  .app {
+    max-width: min(900px, calc(100vh - 390px));
+    margin: 4px auto;
+    padding: 12px;
   }
-  
-  .action-buttons button {
-    flex: 1 1 40%;
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    margin: 4px 0 10px;
+    font-size: 14px;
+  }
+
+  .toolbar {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .toolbar button,
+  .guess-submit,
+  .choice-btn,
+  .choice-cancel {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .matrix {
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .guess-panel {
+    margin-top: 10px;
+    gap: 8px;
+  }
+
+  .guess-input {
+    font-size: clamp(14px, 1.1vw, 18px);
+    padding: 10px 14px;
+  }
+
+  .guess-submit {
+    min-height: 46px;
+    min-width: 56px;
+    font-size: 22px;
+  }
+
+  .status,
+  .score {
+    margin-top: 3px;
+    font-size: 13px;
   }
 }
 
-.choice-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 15px;
+@media (max-width: 900px) {
+  .app {
+    padding: 12px;
+  }
+
+  .matrix {
+    gap: 6px;
+  }
 }
 
-.config-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+@media (max-width: 680px) {
+  .app {
+    margin: 8px auto;
+  }
+
+  .toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .meta {
+    grid-column: 1 / -1;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .guess-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .guess-submit {
+    width: 100%;
+    min-height: 50px;
+  }
 }
 
-.form-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+@media (max-width: 460px) {
+  .tile {
+    border-width: 1.5px;
+  }
 
-.form-group select {
-  background: var(--tile);
-  color: white;
-  border: 1px solid var(--line);
-  padding: 5px;
-  border-radius: 5px;
+  .player-name {
+    font-size: 11px;
+  }
+
+  .player-meta {
+    gap: 5px;
+    padding: 2px 5px;
+  }
+
+  .flag-icon {
+    width: 16px;
+    height: 12px;
+  }
+
+  .pos-badge {
+    font-size: 10px;
+  }
+
+  .guess-input {
+    padding: 12px 14px;
+  }
 }

@@ -61,17 +61,17 @@ const TEAM_BACKUP_LOGO = {
   "Oviedo": "https://a.espncdn.com/i/teamlogos/soccer/500/92.png",
   "Rayo Vallecano": "https://a.espncdn.com/i/teamlogos/soccer/500/101.png",
   "Deportivo La Coruña": "https://a.espncdn.com/i/teamlogos/soccer/500/90.png",
-  "Zaragoza": "https://a.espncdn.com/i/teamlogos/soccer/500/95.png",
-  "Sporting de Gijón": "https://a.espncdn.com/i/teamlogos/soccer/500/91.png",
-  "Cadiz": "https://a.espncdn.com/i/teamlogos/soccer/500/3843.png",
-  "Granada": "https://a.espncdn.com/i/teamlogos/soccer/500/3377.png",
+  "Zaragoza": "https://a.espncdn.com/i/teamlogos/soccer/500/91.png",
+  "Sporting de Gijón": "https://a.espncdn.com/i/teamlogos/soccer/500/3788.png",
+  "Cadiz": "https://a.espncdn.com/i/teamlogos/soccer/500/3842.png",
+  "Granada": "https://a.espncdn.com/i/teamlogos/soccer/500/3747.png",
   "Racing Santander": "https://a.espncdn.com/i/teamlogos/soccer/500/87.png",
-  "Hércules": "https://a.espncdn.com/i/teamlogos/soccer/500/3375.png",
-  "Tenerife": "https://a.espncdn.com/i/teamlogos/soccer/500/174.png",
-  "Recreativo": "https://a.espncdn.com/i/teamlogos/soccer/500/3842.png",
-  "Numancia": "https://a.espncdn.com/i/teamlogos/soccer/500/4223.png",
-  "Albacete": "https://a.espncdn.com/i/teamlogos/soccer/500/3748.png",
-  "Murcia": "https://a.espncdn.com/i/teamlogos/soccer/500/2923.png"
+  "Hércules": "https://a.espncdn.com/i/teamlogos/soccer/500/6833.png",
+  "Tenerife": "https://a.espncdn.com/i/teamlogos/soccer/500/245.png",
+  "Recreativo": "https://a.espncdn.com/i/teamlogos/soccer/500/2571.png",
+  "Numancia": "https://a.espncdn.com/i/teamlogos/soccer/500/100.png",
+  "Albacete": "https://a.espncdn.com/i/teamlogos/soccer/500/2737.png",
+  "Murcia": "https://a.espncdn.com/i/teamlogos/soccer/500/2738.png"
 };
 
 const PLAYERS = [
