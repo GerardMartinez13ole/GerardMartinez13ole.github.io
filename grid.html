@@ -1724,6 +1724,34 @@
       { name: "Carlos Vela", teams: ["Real Sociedad"], aliases: ["vela"] },
       { name: "Gabi", teams: ["Atletico Madrid", "Zaragoza", "Getafe"], aliases: ["gabi"] },
       { name: "Antonio Lopez", teams: ["Atletico Madrid", "Mallorca"], aliases: ["antonio lopez"] },
+      // Real Madrid 2012/13
+      { name: "Michael Essien", teams: ["Real Madrid"], aliases: ["essien"] },
+      // Barca 2012/
+      { name: "Alex Song", teams: ["Barcelona"], aliases: ["song"] },
+      // Atletico 2012/13
+      { name: "Cebolla Rodriguez", teams: ["Atletico Madrid"], aliases: ["cebolla"] },
+      { name: "Emre Belozoglu", teams: ["Atletico Madrid"], aliases: ["emre"] },
+      // Valencia 2012/13
+      { name: "Joao Pereira", teams: ["Valencia"], aliases: ["joao pereira"] },
+      { name: "Aly Cissokho", teams: ["Valencia"], aliases: ["cissokho"] },
+      // Malaga 2012/13
+      { name: "Manuel Iturra", teams: ["Malaga", "Granada", "Rayo Vallecano", "Villarreal"], aliases: ["iturra"] },
+      // Rayo Vallecano 2012/13
+      { name: "Chori Dominguez", teams: ["Valencia", "Rayo Vallecano"], aliases: ["chori"] },
+      { name: "Leo Baptistao", teams: ["Rayo Vallecano", "Atletico Madrid", "Real Betis", "Villarreal", "Espanyol", "Almeria"], aliases: ["baptistao"] },
+      // Sevilla 2012/13
+      { name: "Beto", teams: ["Sevilla"], aliases: ["beto"] },
+      { name: "Kondogbia", teams: ["Sevilla", "Valencia", "Atletico Madrid"], aliases: ["kondogbia"] },
+      // Celta 2012/13
+      { name: "Michael Krohn-Dehli", teams: ["Celta Vigo", "Sevilla", "Deportivo La Coruña"], aliases: ["krohn-dehli"] },
+      // Valladolid 2012/13
+      { name: "Patrick Ebert", teams: ["Real Valladolid"], aliases: ["ebert"] },
+      // Deportivo 2012/13
+      { name: "Pizzi", teams: ["Atletico Madrid", "Deportivo La Coruña", "Espanyol"], aliases: ["pizzi"] },
+      { name: "Abel Aguilar", teams: ["Hercules", "Zaragoza", "Deportivo La Coruña"], aliases: ["aguilar"] },
+      // Real Sociedad 2012/13
+      { name: "Imanol Agirretxe", teams: ["Real Sociedad"], aliases: ["agirretxe"] },
+      { name: "Chory Castro", teams: ["Mallorca", "Real Sociedad", "Malaga"], aliases: ["chory castro"] },
       { name: "Santi Ezquerro", teams: ["Osasuna", "Athletic Bilbao", "Barcelona"], aliases: ["ezquerro"] },
       { name: "Asier del Horno", teams: ["Athletic Bilbao", "Valencia", "Real Valladolid", "Levante"], aliases: ["del horno"] },
       { name: "Andoni Zubizarreta", teams: ["Athletic Bilbao", "Barcelona", "Valencia"], aliases: ["zubizarreta"] },
@@ -2840,7 +2868,26 @@
       "luis milla legend": { countryCode: "es", position: "MC" },
       "ruben de la red": { countryCode: "es", position: "MC" },
       "thiago alcantara": { countryCode: "es", position: "MC" },
-      "jan oblak": { countryCode: "si", position: "POR" }
+      "inigo martinez": { countryCode: "es", position: "DFC" },
+      "luka modric": { countryCode: "hr", position: "MC" },
+      "michael essien": { countryCode: "gh", position: "MC" },
+      "alex song": { countryCode: "cm", position: "MCD" },
+      "cebolla rodriguez": { countryCode: "uy", position: "EI" },
+      "emre belozoglu": { countryCode: "tr", position: "MC" },
+      "joao pereira": { countryCode: "pt", position: "LD" },
+      "aly cissokho": { countryCode: "fr", position: "LI" },
+      "manuel iturra": { countryCode: "cl", position: "MCD" },
+      "chori dominguez": { countryCode: "ar", position: "MCO" },
+      "leo baptistao": { countryCode: "br", position: "DC" },
+      "beto": { countryCode: "pt", position: "POR" },
+      "kondogbia": { countryCode: "cf", position: "MCD" },
+      "michael krohndehli": { countryCode: "dk", position: "MC" },
+      "augusto fernandez": { countryCode: "ar", position: "MC" },
+      "patrick ebert": { countryCode: "de", position: "ED" },
+      "pizzi": { countryCode: "pt", position: "EI" },
+      "abel aguilar": { countryCode: "co", position: "MC" },
+      "imanol agirretxe": { countryCode: "es", position: "DC" },
+      "chory castro": { countryCode: "uy", position: "EI" },
 
 
 
@@ -3323,18 +3370,18 @@
             cols.push(...pickUnique(remainingPool, anySlots, random));
           }
         } else {
-            const countryPool = colPool.filter(c => parseConstraint(c).type === "country");
-            const posPool = colPool.filter(c => parseConstraint(c).type === "position");
-            if (countryPool.length < 1 || posPool.length < 1) continue;
+          const countryPool = colPool.filter(c => parseConstraint(c).type === "country");
+          const posPool = colPool.filter(c => parseConstraint(c).type === "position");
+          if (countryPool.length < 1 || posPool.length < 1) continue;
 
-            const pickedCountry = pickUnique(countryPool, 1, random);
-            const pickedPos = pickUnique(posPool, 1, random);
-            
-            const remainingPool = colPool.filter(c => c !== pickedCountry[0] && c !== pickedPos[0]);
-            if (remainingPool.length < 1) continue;
-            
-            const pickedOther = pickUnique(remainingPool, 1, random);
-            cols = [...pickedCountry, ...pickedPos, ...pickedOther];
+          const pickedCountry = pickUnique(countryPool, 1, random);
+          const pickedPos = pickUnique(posPool, 1, random);
+
+          const remainingPool = colPool.filter(c => c !== pickedCountry[0] && c !== pickedPos[0]);
+          if (remainingPool.length < 1) continue;
+
+          const pickedOther = pickUnique(remainingPool, 1, random);
+          cols = [...pickedCountry, ...pickedPos, ...pickedOther];
         }
 
         const hasCountry = cols.some((constraint) => parseConstraint(constraint).type === "country");
