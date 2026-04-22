@@ -1,663 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Futbol Grid</title>
-  <style>
-    :root {
-      --bg: #00111f;
-      --panel: #00192c;
-      --tile: #00162a;
-      --line: #2f4b86;
-      --ink: #e8f7ff;
-      --cyan: #21d8ff;
-      --gold: #f4c13f;
-      --ok: #2de47f;
-      --bad: #ff5a66;
-      --muted: #8ca6c0;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(1000px 520px at 10% -10%, #063f62 0%, transparent 65%),
-        radial-gradient(800px 420px at 100% 0%, #0c2f4f 0%, transparent 60%),
-        linear-gradient(180deg, #000b14, #00111f 70%, #001725);
-    }
-
-    .app {
-      max-width: 980px;
-      margin: 14px auto;
-      background: linear-gradient(180deg, #001626, #001321);
-      border: 1px solid #174070;
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 20px 36px rgba(0, 0, 0, 0.35);
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 20px;
-      background: rgba(0, 20, 35, 0.6);
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    }
-
-    .toolbar button,
-    .guess-submit,
-    .choice-btn,
-    .choice-cancel {
-      border: 1px solid #2d5386;
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: #032340;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
-    .toolbar button:hover,
-    .guess-submit:hover,
-    .choice-btn:hover,
-    .choice-cancel:hover {
-      filter: brightness(1.12);
-    }
-
-    .btn-accent {
-      border-color: #85652d;
-      background: #2d2517;
-      color: var(--gold);
-    }
-
-    .btn-danger {
-      border-color: #844150;
-      background: #351623;
-      color: #ff95a4;
-    }
-
-    .meta {
-      margin-left: auto;
-      font-size: 14px;
-      color: #a4c7e8;
-    }
-
-    .matrix {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .tile {
-      min-width: 0;
-      aspect-ratio: 1 / 1;
-      border: 2px solid var(--line);
-      background: var(--tile);
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .tile.corner {
-      display: grid;
-      place-items: center;
-      background: linear-gradient(145deg, #00182d, #001428);
-    }
-
-    .brand {
-      font-weight: 800;
-      font-size: clamp(18px, 2.1vw, 28px);
-      line-height: 1.05;
-      text-align: center;
-      letter-spacing: 1px;
-    }
-
-    .brand .a {
-      color: var(--gold);
-    }
-
-    .brand .b {
-      color: #90f0ff;
-      font-style: italic;
-    }
-
-    .tile.team {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding-top: 0;
-      background: linear-gradient(160deg, #001f38 0%, #001628 75%);
-    }
-
-    .crest-wrap {
-      flex: 1;
-      width: 100%;
-      display: grid;
-      place-items: center;
-      padding: 4px;
-    }
-
-    .crest-wrap img {
-      max-width: 72%;
-      max-height: 72%;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
-    }
-
-    .crest-fallback {
-      width: 60%;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      border: 2px solid #4aa6cb;
-      color: #9be9ff;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      font-size: clamp(10px, 1.5vw, 16px);
-      background: radial-gradient(circle at 30% 30%, #083a56, #041b2c);
-    }
-
-    .tile.play {
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 10px;
-      background: linear-gradient(150deg, #001324, #000e1b);
-    }
-
-    .tile.play.empty {
-      box-shadow: inset 0 0 0 1px rgba(33, 216, 255, 0.08);
-    }
-
-    .tile.play.filled {
-      border-color: #2e8066;
-      background: linear-gradient(160deg, #082f2a, #06201d);
-    }
-
-    .tile.play.candidate {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 2px rgba(244, 193, 63, 0.5) inset;
-      cursor: pointer;
-    }
-
-    .tile.play.candidate:hover {
-      background: rgba(244, 193, 63, 0.15);
-    }
-
-    .player-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      max-width: 100%;
-    }
-
-    .player-name {
-      font-weight: 700;
-      font-size: clamp(12px, 1.35vw, 18px);
-      line-height: 1.2;
-      color: #bfffe0;
-      word-break: break-word;
-      text-align: center;
-    }
-
-    .player-meta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(110, 165, 205, 0.45);
-      background: rgba(3, 22, 34, 0.6);
-    }
-
-    .flag-icon {
-      width: 18px;
-      height: 13px;
-      border-radius: 2px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      object-fit: cover;
-      display: block;
-    }
-
-    .pos-badge {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.4px;
-      color: #9be9ff;
-      line-height: 1;
-    }
-
-    .empty-mark {
-      color: rgba(185, 231, 255, 0.24);
-      font-size: clamp(20px, 3.2vw, 46px);
-      letter-spacing: 2px;
-      line-height: 1;
-      user-select: none;
-    }
-
-    .guess-panel {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .autocomplete-wrapper {
-      position: relative;
-      width: 100%;
-    }
-
-    .autocomplete-list {
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      width: 100%;
-      max-height: 250px;
-      overflow-y: auto;
-      background-color: #011526;
-      border: 2px solid #0097a7;
-      border-radius: 6px;
-      z-index: 1000;
-      padding: 0;
-      margin: 0;
-      list-style: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-
-    .autocomplete-list.hidden {
-      display: none;
-    }
-
-    .autocomplete-item {
-      padding: 12px 14px;
-      cursor: pointer;
-      color: #a0b5c9;
-      border-bottom: 1px solid #13263a;
-      font-size: 16px;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .autocomplete-item:last-child {
-      border-bottom: none;
-    }
-
-    .autocomplete-item:hover,
-    .autocomplete-item.active {
-      background-color: #0097a7;
-      color: #fff;
-    }
-
-    .autocomplete-match {
-      font-weight: bold;
-      color: #fff;
-      text-transform: uppercase;
-    }
-
-    .guess-input {
-      width: 100%;
-      border: 2px solid #6c8db1;
-      border-radius: 18px;
-      background: #d6d9e8;
-      color: #13263a;
-      font-size: clamp(17px, 2.1vw, 24px);
-      padding: 14px 18px;
-      outline: none;
-    }
-
-    .guess-input::placeholder {
-      color: #7c8393;
-    }
-
-    .guess-submit {
-      min-height: 56px;
-      min-width: 64px;
-      border-width: 4px;
-      border-color: var(--gold);
-      background: #01263f;
-      color: #fff;
-      font-size: 27px;
-      line-height: 1;
-      padding: 0 18px;
-    }
-
-    .status {
-      margin-top: 10px;
-      min-height: 24px;
-      font-size: 15px;
-      font-weight: 700;
-      color: #b3d8f5;
-    }
-
-    .status.ok {
-      color: var(--ok);
-    }
-
-    .status.bad {
-      color: var(--bad);
-    }
-
-    .score {
-      margin-top: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      color: #bbdcf6;
-    }
-
-    .choice-panel {
-      margin-top: 10px;
-      border: 1px solid #2f4f78;
-      border-radius: 10px;
-      background: rgba(0, 28, 48, 0.85);
-      padding: 10px;
-    }
-
-    .choice-panel.hidden {
-      display: none;
-    }
-
-    .choice-title {
-      margin: 0 0 8px;
-      font-size: 14px;
-      color: #9bd0f1;
-      font-weight: 700;
-    }
-
-    .choice-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .choice-btn {
-      border-radius: 10px;
-      background: #053055;
-      color: #d8f4ff;
-      font-weight: 700;
-      border-color: #2a6c9d;
-      padding: 8px 10px;
-    }
-
-    .choice-cancel {
-      margin-top: 8px;
-      border-radius: 10px;
-      background: #2a2030;
-      border-color: #6f557f;
-      color: #ffd6ff;
-    }
-
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 11, 20, 0.85);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      backdrop-filter: blur(3px);
-    }
-
-    .modal.hidden {
-      display: none;
-    }
-
-    .modal-content {
-      background: linear-gradient(180deg, #001626, #001321);
-      border: 1px solid #174070;
-      border-radius: 14px;
-      padding: 20px;
-      width: 90%;
-      max-width: 380px;
-      box-shadow: 0 20px 36px rgba(0, 0, 0, 0.6);
-    }
-
-    .custom-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      font-size: 16px;
-      color: var(--ink);
-    }
-
-    .custom-row select {
-      background: #01263f;
-      color: #e8f7ff;
-      border: 1px solid #2d5386;
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .modal-actions {
-      margin-top: 24px;
-      display: flex;
-      gap: 12px;
-      justify-content: flex-end;
-    }
-
-    @media (min-width: 901px) {
-      .app {
-        max-width: min(900px, calc(100vh - 390px));
-        margin: 4px auto;
-        padding: 12px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-
-      .subtitle {
-        margin: 4px 0 10px;
-        font-size: 14px;
-      }
-
-      .toolbar {
-        gap: 6px;
-        margin-bottom: 10px;
-      }
-
-      .toolbar button,
-      .guess-submit,
-      .choice-btn,
-      .choice-cancel {
-        padding: 6px 10px;
-        font-size: 13px;
-      }
-
-      .matrix {
-        gap: 6px;
-        margin-top: 4px;
-      }
-
-      .guess-panel {
-        margin-top: 10px;
-        gap: 8px;
-      }
-
-      .guess-input {
-        font-size: clamp(14px, 1.1vw, 18px);
-        padding: 10px 14px;
-      }
-
-      .guess-submit {
-        min-height: 46px;
-        min-width: 56px;
-        font-size: 22px;
-      }
-
-      .status,
-      .score {
-        margin-top: 3px;
-        font-size: 13px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .app {
-        padding: 12px;
-      }
-
-      .matrix {
-        gap: 6px;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .app {
-        margin: 8px auto;
-      }
-
-      .toolbar {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .meta {
-        grid-column: 1 / -1;
-        margin-left: 0;
-        text-align: center;
-      }
-
-      .guess-panel {
-        grid-template-columns: 1fr;
-      }
-
-      .guess-submit {
-        width: 100%;
-        min-height: 50px;
-      }
-    }
-
-    @media (max-width: 460px) {
-      .tile {
-        border-width: 1.5px;
-      }
-
-      .player-name {
-        font-size: 11px;
-      }
-
-      .player-meta {
-        gap: 5px;
-        padding: 2px 5px;
-      }
-
-      .flag-icon {
-        width: 16px;
-        height: 12px;
-      }
-
-      .pos-badge {
-        font-size: 10px;
-      }
-
-      .guess-input {
-        padding: 12px 14px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div id="site-navbar"></div>
-
-  <main class="app">
-    <div class="toolbar">
-      <button id="randomBtn" type="button">Grid aleatori</button>
-      <button id="customBtn" type="button" class="btn-accent">⚙️ Grid a mida</button>
-      <button id="repeatCustomBtn" type="button" class="btn-accent" style="display: none;">🔁 Repetir a mida</button>
-      <button id="clearBtn" type="button">Netejar</button>
-      <button id="surrenderBtn" class="btn-danger" type="button">Rendir-se / Mostrar solució</button>
-      <span class="meta" id="meta">Jugades: 0</span>
-    </div>
-
-    <div class="matrix" id="gridBoard"></div>
-
-    <div class="guess-panel">
-      <div class="autocomplete-wrapper">
-        <input id="guessInput" class="guess-input" type="text" placeholder="Escriu el futbolista aquí"
-          autocomplete="off" spellcheck="false">
-        <ul id="autocompleteList" class="autocomplete-list hidden"></ul>
-      </div>
-      <button id="guessBtn" class="guess-submit" type="button" aria-label="Col·locar jugador">&#9873;</button>
-    </div>
-
-    <div id="choicePanel" class="choice-panel hidden">
-      <p class="choice-title" id="choiceTitle">Tria una casella:</p>
-      <div class="choice-list" id="choiceList"></div>
-      <button id="choiceCancel" class="choice-cancel" type="button">Cancel·lar</button>
-    </div>
-
-    <div id="customGridModal" class="modal hidden">
-      <div class="modal-content">
-        <h2 style="margin-top:0;color:var(--gold);font-size:20px;">Crear Grid a Mida</h2>
-        <p style="font-size:14px;color:#a4c7e8;margin-bottom:16px;">Tria què vols que pugui aparèixer a les columnes:
-        </p>
-        <div class="custom-row">
-          <label>Equips:</label>
-          <select id="selTeams">
-            <option value="any">Qualsevol</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
-        </div>
-        <div class="custom-row">
-          <label>Banderes:</label>
-          <select id="selCountries">
-            <option value="any">Qualsevol</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
-        </div>
-        <div class="custom-row">
-          <label>Posicions:</label>
-          <select id="selPositions">
-            <option value="any">Qualsevol</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
-        </div>
-        <div class="modal-actions">
-          <button id="btnGenerateCustom" type="button" class="guess-submit"
-            style="min-height:40px;font-size:16px;padding:0 12px;border-width:2px;">Generar</button>
-          <button id="btnCancelCustom" type="button" class="choice-cancel" style="margin-top:0;">Cancel·lar</button>
-        </div>
-      </div>
-    </div>
-
-    <p class="status" id="status"></p>
-    <p class="score" id="score">Completades: 0/9</p>
-  </main>
-
-  <script src="navbar.js"></script>
-  <script>
+        const document = { getElementById: () => ({ addEventListener: () => {}, classList: { add: ()=>{}, remove: ()=>{} } }), addEventListener: () => {} };
+        const window = {};
+        const originalBoot = boot;
+        boot = () => {};
+        
     const TEAM_META = {
       "Alaves": { logo: "logos/alaves.png" },
       "Athletic Bilbao": { logo: "logos/athletic_bilbao.png" },
@@ -3323,22 +2669,15 @@
             cols.push(...pickUnique(remainingPool, anySlots, random));
           }
         } else {
-            const countryPool = colPool.filter(c => parseConstraint(c).type === "country");
-            const posPool = colPool.filter(c => parseConstraint(c).type === "position");
-            if (countryPool.length < 1 || posPool.length < 1) continue;
+          cols = pickUnique(colPool, 3, random);
+          if (cols.length < 3) continue;
 
-            const pickedCountry = pickUnique(countryPool, 1, random);
-            const pickedPos = pickUnique(posPool, 1, random);
-            
-            const remainingPool = colPool.filter(c => c !== pickedCountry[0] && c !== pickedPos[0]);
-            if (remainingPool.length < 1) continue;
-            
-            const pickedOther = pickUnique(remainingPool, 1, random);
-            cols = [...pickedCountry, ...pickedPos, ...pickedOther];
+          const hasCountry = cols.some((constraint) => parseConstraint(constraint).type === "country");
+          const hasPosition = cols.some((constraint) => parseConstraint(constraint).type === "position");
+          if (!hasCountry || !hasPosition) {
+            continue;
+          }
         }
-
-        const hasCountry = cols.some((constraint) => parseConstraint(constraint).type === "country");
-        const hasPosition = cols.some((constraint) => parseConstraint(constraint).type === "position");
 
         const countryCodesInCols = getCountryConstraints(cols)
           .map((constraint) => parseConstraint(constraint).value.toLowerCase());
@@ -4136,7 +3475,64 @@
     }
 
     boot();
-  </script>
-</body>
-
-</html>
+  
+        buildIndex();
+        
+        const originalGenerateBoard = generateBoard;
+        let ccc = 0;
+        
+        generateBoard = function(seed, blocked, config) {
+            const random = mulberry32(seed);
+            const maxTries = 2200;
+            for (let attempt = 0; attempt < maxTries; attempt += 1) {
+                const rows = pickUnique(state.teamConstraints, 3, random);
+                let colPool = state.constraints.filter((constraint) => !rows.includes(constraint));
+                
+                colPool = colPool.filter(col => {
+                    return optionsForPair(rows[0], col).length > 0 &&
+                           optionsForPair(rows[1], col).length > 0 &&
+                           optionsForPair(rows[2], col).length > 0;
+                });
+                
+                let cols = [];
+                if (config) {
+                  let teamsToPick = config.teams === 'any' ? 0 : config.teams;
+                  let countriesToPick = config.countries === 'any' ? 0 : config.countries;
+                  let positionsToPick = config.positions === 'any' ? 0 : config.positions;
+        
+                  const teamPool = colPool.filter(c => parseConstraint(c).type === "team");
+                  const countryPool = colPool.filter(c => parseConstraint(c).type === "country");
+                  const posPool = colPool.filter(c => parseConstraint(c).type === "position");
+        
+                  if (teamPool.length < teamsToPick || countryPool.length < countriesToPick || posPool.length < positionsToPick) {
+                    continue;
+                  }
+        
+                  let pickedTeams = pickUnique(teamPool, teamsToPick, random);
+                  let pickedCountries = pickUnique(countryPool, countriesToPick, random);
+                  let pickedPositions = pickUnique(posPool, positionsToPick, random);
+        
+                  cols = [...pickedTeams, ...pickedCountries, ...pickedPositions];
+        
+                  let anySlots = 3 - cols.length;
+                  if (anySlots > 0) {
+                    let remainingPool = [];
+                    if (config.teams === 'any') remainingPool.push(...teamPool.filter(c => !pickedTeams.includes(c)));
+                    if (config.countries === 'any') remainingPool.push(...countryPool.filter(c => !pickedCountries.includes(c)));
+                    if (config.positions === 'any') remainingPool.push(...posPool.filter(c => !pickedPositions.includes(c)));
+        
+                    if (remainingPool.length < anySlots) continue;
+        
+                    cols.push(...pickUnique(remainingPool, anySlots, random));
+                  }
+                }
+                
+                if (cols.length === 3 && ccc < 5) {
+                    console.log("Cols length:", cols.length);
+                    ccc++;
+                }
+            }
+        };
+        
+        generateBoard(Date.now(), [], {teams:0, countries:3, positions:0});
+    
