@@ -82,7 +82,7 @@ function getFlagUrls(countryCode) {
   const code = (countryCode || "").toLowerCase();
   if (!code) return [];
   return [
-    "flags/" + code + ".png",                                                                          // 1r: fitxer local
+    "../flags/" + code + ".png",                                                                          // 1r: fitxer local
     "https://flagcdn.com/48x36/" + code + ".png",                                                     // 2n: flagcdn CDN
     "https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/flags/4x3/" + code + ".svg",                  // 3r: jsDelivr CDN
     "https://flagpedia.net/data/flags/w80/" + code + ".webp"                                           // 4t: flagpedia CDN
@@ -178,7 +178,11 @@ function addLookupEntry(alias, playerKey) {
 }
 
 function getTeamLogo(team) {
-  return (TEAM_META[team] && TEAM_META[team].logo) || "";
+  const logo = (TEAM_META[team] && TEAM_META[team].logo) || "";
+  if (logo && logo.startsWith("logos/")) {
+    return "../" + logo;
+  }
+  return logo;
 }
 
 function getTeamBackupLogo(team) {

@@ -90,17 +90,26 @@
     document.head.appendChild(style);
   }
 
-  const fileName = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+  const path = window.location.pathname;
+  const inSubfolder = path.toLowerCase().includes("/grid/") || path.toLowerCase().includes("/top10/");
+  
+  const homeUrl = inSubfolder ? "../index.html" : "index.html";
+  const gridUrl = inSubfolder ? (path.includes("/grid/") ? "grid.html" : "../grid/grid.html") : "grid/grid.html";
+  const top10Url = inSubfolder ? (path.includes("/top10/") ? "index.html" : "../top10/index.html") : "top10/index.html";
+
+  const fileName = (path.split("/").pop() || "index.html").toLowerCase();
   const isHome = fileName === "index.html" || fileName === "";
-  const isGrid = fileName === "grid.html";
+  const isGrid = fileName === "grid.html" && path.includes("/grid/");
+  const isTop10 = (fileName === "index.html" || fileName === "") && path.includes("/top10/");
 
   mount.innerHTML = `
     <header class="site-navbar">
       <div class="site-nav-shell site-nav-inner">
-        <a class="site-nav-brand" href="index.html"><span>FUTBOL</span>GRID</a>
+        <a class="site-nav-brand" href="${homeUrl}"><span>FUTBOL</span>GRID</a>
         <nav class="site-nav-links" aria-label="Navegacion principal">
-          <a class="${isHome ? "active" : ""}" href="index.html">Inicio</a>
-          <a class="${isGrid ? "active" : ""}" href="grid.html">Jugar Grid</a>
+          <a class="${isHome ? "active" : ""}" href="${homeUrl}">Inicio</a>
+          <a class="${isGrid ? "active" : ""}" href="${gridUrl}">Jugar Grid</a>
+          <a class="${isTop10 ? "active" : ""}" href="${top10Url}">Top 10</a>
         </nav>
       </div>
     </header>

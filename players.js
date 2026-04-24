@@ -1195,7 +1195,17 @@ const PLAYERS = [
   {"name":"Lucas Lobos","teams":["Cadiz"],"aliases":["lobos"]},
   {"name":"Matias Pavoni","teams":["Cadiz"],"aliases":["pavoni"]},
   {"name":"Jose Julian de la Cuesta","teams":["Cadiz","Real Valladolid"],"aliases":["de la cuesta"]},
-  {"name":"Andres Fleurquin","teams":["Cadiz","Villarreal"],"aliases":["fleurquin"]}];
+  {"name":"Andres Fleurquin","teams":["Cadiz","Villarreal"],"aliases":["fleurquin"]},
+  {"name":"César Rodríguez","teams":["Barcelona"],"aliases":["cesar"]},
+  {"name":"László Kubala","teams":["Barcelona"],"aliases":["kubala"]},
+  {"name":"Patrick Kluivert","teams":["Barcelona","Valencia"],"aliases":["kluivert"]},
+  {"name":"Mariano Martín","teams":["Barcelona"],"aliases":["mariano martin"]},
+  {"name":"Carles Rexach","teams":["Barcelona"],"aliases":["rexach"]},
+  {"name":"Rivaldo","teams":["Barcelona","Deportivo La Coruña"],"aliases":["rivaldo"]},
+  {"name":"Alfredo Di Stéfano","teams":["Real Madrid","Espanyol"],"aliases":["di stefano"]},
+  {"name":"Carlos Santillana","teams":["Real Madrid"],"aliases":["santillana"]},
+  {"name":"Ferenc Puskás","teams":["Real Madrid"],"aliases":["puskas"]},
+  {"name":"Hugo Sánchez","teams":["Real Madrid","Atletico Madrid","Rayo Vallecano"],"aliases":["hugo sanchez"]}];
 
 const PLAYER_PROFILE = {
   "pedri": { countryCode: "es", position: "MC" },
@@ -2397,5 +2407,15 @@ const COUNTRY_META = {
   "lobos": {"countryCode":"ar","position":"MCO"},
   "pavoni": {"countryCode":"ar","position":"MCO"},
   "de la cuesta": {"countryCode":"co","position":"DFC"},
-  "fleurquin": {"countryCode":"uy","position":"MCD"}
+  "fleurquin": {"countryCode":"uy","position":"MCD"},
+  "cesar rodriguez": { "countryCode": "es", "position": "DC" },
+  "laszlo kubala": { "countryCode": "hu", "position": "DC" },
+  "patrick kluivert": { "countryCode": "nl", "position": "DC" },
+  "mariano martin": { "countryCode": "es", "position": "DC" },
+  "carles rexach": { "countryCode": "es", "position": "ED" },
+  "rivaldo": { "countryCode": "br", "position": "EI" },
+  "alfredo di stefano": { "countryCode": "es", "position": "DC" },
+  "carlos santillana": { "countryCode": "es", "position": "DC" },
+  "ferenc puskas": { "countryCode": "hu", "position": "DC" },
+  "hugo sanchez": { "countryCode": "mx", "position": "DC" }
 };

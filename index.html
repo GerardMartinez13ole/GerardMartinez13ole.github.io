@@ -59,6 +59,17 @@
       transition: transform 0.18s ease, filter 0.18s ease;
     }
 
+    .game-links {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .go-grid.top10 {
+      background: linear-gradient(180deg, #ffcc4d, #ffa000);
+      border-color: #ffeb3b;
+    }
+
     .go-grid:hover {
       transform: translateY(-2px);
       filter: brightness(1.08);
@@ -75,7 +86,10 @@
   <div id="site-navbar"></div>
 
   <main class="center-stage">
-    <a class="go-grid" href="grid.html">Ir al Grid</a>
+    <div class="game-links">
+      <a class="go-grid" href="grid/grid.html">Ir al Grid</a>
+      <a class="go-grid top10" href="top10/index.html">Top 10</a>
+    </div>
   </main>
 
   <script src="navbar.js"></script>
