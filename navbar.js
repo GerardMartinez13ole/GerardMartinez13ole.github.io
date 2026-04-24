@@ -98,7 +98,7 @@
   const top10Url = inSubfolder ? (path.includes("/top10/") ? "index.html" : "../top10/index.html") : "top10/index.html";
 
   const fileName = (path.split("/").pop() || "index.html").toLowerCase();
-  const isHome = fileName === "index.html" || fileName === "";
+  const isHome = (fileName === "index.html" || fileName === "") && !inSubfolder;
   const isGrid = fileName === "grid.html" && path.includes("/grid/");
   const isTop10 = (fileName === "index.html" || fileName === "") && path.includes("/top10/");
 
