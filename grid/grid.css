@@ -27,7 +27,7 @@ body {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 400px;
   margin: 0 auto;
   padding: 10px;
   display: flex;
@@ -42,7 +42,7 @@ body {
 
 .header-content h1 {
   margin: 0;
-  font-size: clamp(24px, 5vw, 40px);
+  font-size: clamp(22px, 5vw, 32px);
   color: var(--gold);
   text-shadow: 0 0 15px rgba(244, 193, 63, 0.3);
 }
@@ -56,10 +56,10 @@ body {
 
 .score-badge, .meta-info {
   background: rgba(0, 25, 44, 0.8);
-  padding: 5px 15px;
+  padding: 4px 12px;
   border-radius: 20px;
   border: 1px solid var(--line);
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .game-area {
@@ -86,8 +86,8 @@ body {
 
 .controls-panel {
   background: rgba(0, 25, 44, 0.8);
-  padding: 20px;
-  border-radius: 15px;
+  padding: 15px;
+  border-radius: 12px;
   border: 1px solid var(--line);
 }
 
@@ -105,13 +105,14 @@ body {
 }
 
 .primary-btn, .secondary-btn, .danger-btn, .outline-btn {
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 8px 15px;
+  border-radius: 8px;
   border: 1px solid var(--line);
   background: var(--panel);
   color: white;
   cursor: pointer;
   font-weight: bold;
+  font-size: 13px;
   transition: all 0.2s;
 }
 
@@ -137,9 +138,10 @@ body {
   flex: 1;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 12px 15px;
+  border-radius: 8px;
+  padding: 8px 12px;
   color: white;
+  font-size: 14px;
   outline: none;
 }
 
