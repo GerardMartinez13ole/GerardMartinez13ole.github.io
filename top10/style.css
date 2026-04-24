@@ -279,11 +279,20 @@ body {
 
 @media (max-width: 480px) {
   .container {
-    padding: 15px;
+    padding: 8px;
+  }
+
+  .header-content h1 {
+    font-size: 24px;
+  }
+
+  .list-item {
+    height: 30px;
+    padding: 0 8px;
   }
 
   .list-item .player-name {
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 

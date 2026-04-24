@@ -504,12 +504,27 @@ body {
 }
 
 @media (max-width: 600px) {
+  .container {
+    padding: 5px;
+  }
+
+  .header-content h1 {
+    font-size: 20px;
+  }
+
   .grid-board {
     gap: 4px;
   }
   
   .action-buttons button {
     flex: 1 1 40%;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .meta-info, .score-badge {
+    font-size: 10px;
+    padding: 3px 8px;
   }
 }
 
