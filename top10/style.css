@@ -27,9 +27,9 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 480px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 74px);
@@ -75,30 +75,30 @@ body {
   align-items: center;
   background: rgba(0, 25, 44, 0.6);
   border: 1px solid var(--line);
-  border-radius: 8px;
-  height: 54px;
-  padding: 0 15px;
+  border-radius: 6px;
+  height: 46px;
+  padding: 0 12px;
   position: relative;
   transition: all 0.3s ease;
 }
 
 .list-item.solved {
-  border-color: rgba(33, 216, 255, 0.4);
-  background: rgba(33, 216, 255, 0.05);
+  border-color: var(--ok);
+  background: rgba(45, 228, 127, 0.1);
 }
 
 .list-item .rank {
-  width: 40px;
+  width: 30px;
   font-weight: 900;
   color: var(--muted);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .list-item .flag-container {
-  width: 40px;
+  width: 35px;
   display: flex;
   justify-content: center;
-  margin-right: 15px;
+  margin-right: 12px;
 }
 
 .list-item .flag-icon {
@@ -112,7 +112,7 @@ body {
 .list-item .player-name {
   flex: 1;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--ink);
   opacity: 0;
   transform: translateX(-10px);
@@ -122,6 +122,7 @@ body {
 .list-item.solved .player-name {
   opacity: 1;
   transform: translateX(0);
+  color: var(--ok);
 }
 
 .list-item.unsolved .player-name {
@@ -137,16 +138,16 @@ body {
 /* Controls */
 .controls-panel {
   background: rgba(0, 25, 44, 0.8);
-  padding: 20px;
-  border-radius: 15px;
+  padding: 15px;
+  border-radius: 12px;
   border: 1px solid var(--line);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .input-section {
   display: flex;
-  gap: 12px;
-  margin-bottom: 15px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .autocomplete-wrapper {
@@ -158,10 +159,10 @@ body {
   width: 100%;
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid var(--line);
-  border-radius: 12px;
-  padding: 14px 18px;
+  border-radius: 10px;
+  padding: 10px 15px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   outline: none;
   transition: border-color 0.2s;
 }
@@ -173,9 +174,9 @@ body {
 .primary-btn {
   background: var(--gold);
   border: none;
-  border-radius: 12px;
-  width: 56px;
-  height: 54px;
+  border-radius: 10px;
+  width: 50px;
+  height: 44px;
   display: grid;
   place-items: center;
   cursor: pointer;
