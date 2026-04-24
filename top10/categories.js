@@ -1,4 +1,4 @@
-const TOP10_CATEGORIES = [
+var TOP10_CATEGORIES = [
   {
     id: "barca_scorers",
     title: "Máximos goleadores históricos del FC Barcelona",
