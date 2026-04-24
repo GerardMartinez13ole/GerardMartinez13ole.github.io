@@ -12,6 +12,8 @@
   const nextBtn = document.getElementById("nextBtn");
   const giveUpBtn = document.getElementById("giveUpBtn");
   const autocompleteListEl = document.getElementById("autocompleteList");
+  const resultFooterEl = document.getElementById("resultFooter");
+  const resultTextEl = document.getElementById("resultText");
 
   function init() {
     loadCategory(0);
@@ -48,6 +50,7 @@
     inputEl.value = "";
     inputEl.disabled = false;
     guessBtn.disabled = false;
+    resultFooterEl.classList.add("hidden");
   }
 
   function renderList() {
@@ -112,7 +115,8 @@
       renderList();
       inputEl.value = "";
       if (solvedCount === currentItems.length) {
-        writeStatus("Felicitats! Has completat la llista!", "ok");
+        writeStatus("Felicitats!", "ok");
+        showResults("Has guanyat! 🏆");
         inputEl.disabled = true;
         guessBtn.disabled = true;
       }
@@ -140,7 +144,14 @@
     renderList();
     inputEl.disabled = true;
     guessBtn.disabled = true;
-    writeStatus("T'has rendit. Aquí tens la llista completa.", "bad");
+    writeStatus("T'has rendit.", "bad");
+    showResults("T'has rendit 😅");
+  }
+
+  function showResults(message) {
+    const score = solvedCount * 10;
+    resultTextEl.innerHTML = `${message} La teva puntuació avui ha estat de <span class="score-highlight">${score} pts</span>.`;
+    resultFooterEl.classList.remove("hidden");
   }
 
   function writeStatus(msg, type) {
