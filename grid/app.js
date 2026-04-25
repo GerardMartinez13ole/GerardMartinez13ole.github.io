@@ -257,7 +257,10 @@ function buildIndex() {
   }
 
   state.teamConstraints = [...connectivity.entries()]
-    .filter((entry) => entry[1] >= 4 && (usageCount.get(entry[0]) || 0) >= 2)
+    .filter((entry) => {
+      const teamName = parseConstraint(entry[0]).value;
+      return TEAM_META.hasOwnProperty(teamName) && entry[1] >= 4 && (usageCount.get(entry[0]) || 0) >= 2;
+    })
     .map((entry) => entry[0])
     .sort((a, b) => getConstraintLabel(a).localeCompare(getConstraintLabel(b)));
 
