@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing XI - Adivina la Alineación</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Missing XI</h1>
+        
+        <div class="match-info" id="match-info">
+            <h2 id="competition">Competition</h2>
+            <div class="scoreline">
+                <span id="home-team">Home</span>
+                <span id="score">0 - 0</span>
+                <span id="away-team">Away</span>
+            </div>
+            <div class="date" id="date">00-00-0000</div>
+        </div>
+
+        <div class="field-container" id="field">
+            <div class="mid-line"></div>
+            <div class="center-circle"></div>
+            <div class="penalty-area-top"></div>
+            <div class="penalty-area-bottom"></div>
+            <!-- Players will be injected here -->
+        </div>
+
+        <div class="controls">
+            <div class="progress" id="progress">0 / 11</div>
+            
+            <button class="btn-nav" id="random-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3m0 13v5h-5m-1 0l-4-4M9 9L4 4"></path></svg>
+                ALEATORIA
+            </button>
+            
+            <button class="btn-giveup" id="giveup-btn">ME RINDO</button>
+        </div>
+    </div>
+
+    <script src="../players.js"></script>
+    <script src="lineups.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

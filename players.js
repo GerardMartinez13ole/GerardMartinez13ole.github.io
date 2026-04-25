@@ -1560,7 +1560,8 @@ const PLAYERS = [
   {"name": "Antonio Valentín Angelillo", "teams": ["Genoa", "Lecco", "AC Milan", "Roma", "Inter Milan", "Boca Juniors", "Racing Club"], "aliases": ["angelillo"]},
   {"name": "Felice Borel", "teams": ["Napoli", "Alessandria", "Torino", "Juventus"], "aliases": ["borel"]},
   {"name": "Ferenc Hirzer", "teams": ["Young Fellows Zurich", "MTK Budapest", "Juventus", "Sparta Prague"], "aliases": ["hirzer"]},
-  {"name": "Julio Libonatti", "teams": ["Genoa", "Torino", "Newell's Old Boys"], "aliases": ["libonatti"]}];
+  {"name": "Julio Libonatti", "teams": ["Genoa", "Torino", "Newell's Old Boys"], "aliases": ["libonatti"]},
+  {"name": "Tiago Mendes", "teams": ["Atletico Madrid", "Juventus", "Lyon", "Chelsea", "Benfica", "Braga"], "aliases": ["tiago", "tiago mendes"]}];
 
 const PLAYER_PROFILE = {
   "pedri": { countryCode: "es", position: "MC" },
@@ -3001,5 +3002,6 @@ const COUNTRY_META = {
   "antonio valentin angelillo": { "countryCode": "it", "position": "DC" },
   "felice borel": { "countryCode": "it", "position": "DC" },
   "ferenc hirzer": { "countryCode": "hu", "position": "DC" },
-  "julio libonatti": { "countryCode": "it", "position": "DC" }
+  "julio libonatti": { "countryCode": "it", "position": "DC" },
+  "tiago mendes": { "countryCode": "pt", "position": "MC" }
 };

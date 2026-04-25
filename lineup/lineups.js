@@ -1,0 +1,147 @@
+const LINEUPS = [
+  {
+    id: 1,
+    competition: "FA Cup 2021/22",
+    date: "20-03-2022",
+    home: "Southampton",
+    away: "Man City",
+    score: "1 - 4",
+    target: "away",
+    jerseyColor: "#6cabdd",
+    numberColor: "#ffffff",
+    players: [
+      { pos: "GK", number: 13, name: "Zack Steffen", top: 85, left: 50 },
+      { pos: "LD", number: 2, name: "Kyle Walker", top: 70, left: 85 },
+      { pos: "DFC", number: 5, name: "John Stones", top: 70, left: 62 },
+      { pos: "DFC", number: 14, name: "Aymeric Laporte", top: 70, left: 38 },
+      { pos: "LI", number: 27, name: "João Cancelo", top: 70, left: 15 },
+      { pos: "MCD", number: 16, name: "Rodri", top: 45, left: 50 },
+      { pos: "MC", number: 8, name: "İlkay Gündoğan", top: 45, left: 75 },
+      { pos: "MC", number: 17, name: "Kevin De Bruyne", top: 45, left: 25 },
+      { pos: "ED", number: 7, name: "Raheem Sterling", top: 20, left: 80 },
+      { pos: "DC", number: 9, name: "Gabriel Jesus", top: 20, left: 50 },
+      { pos: "EI", number: 10, name: "Jack Grealish", top: 20, left: 20 }
+    ]
+  },
+  {
+    id: 2,
+    competition: "Champions League Final 2009",
+    date: "27-05-2009",
+    home: "FC Barcelona",
+    away: "Man United",
+    score: "2 - 0",
+    target: "home",
+    jerseyColor: "#a50044",
+    numberColor: "#ffcc4d",
+    players: [
+      { pos: "GK", number: 1, name: "Víctor Valdés", top: 85, left: 50 },
+      { pos: "LD", number: 5, name: "Carles Puyol", top: 70, left: 85 },
+      { pos: "DFC", number: 24, name: "Yaya Touré", top: 70, left: 62 },
+      { pos: "DFC", number: 3, name: "Gerard Piqué", top: 70, left: 38 },
+      { pos: "LI", number: 16, name: "Sylvinho", top: 70, left: 15 },
+      { pos: "MCD", number: 28, name: "Sergio Busquets", top: 45, left: 50 },
+      { pos: "MC", number: 6, name: "Xavi Hernández", top: 45, left: 75 },
+      { pos: "MC", number: 8, name: "Andrés Iniesta", top: 45, left: 25 },
+      { pos: "ED", number: 10, name: "Lionel Messi", top: 20, left: 80 },
+      { pos: "DC", number: 9, name: "Samuel Eto'o", top: 20, left: 50 },
+      { pos: "EI", number: 14, name: "Thierry Henry", top: 20, left: 20 }
+    ]
+  },
+  {
+    id: 3,
+    competition: "World Cup Final 2010",
+    date: "11-07-2010",
+    home: "Países Bajos",
+    away: "España",
+    score: "0 - 1",
+    target: "away",
+    jerseyColor: "#c60b1e",
+    numberColor: "#ffcc4d",
+    players: [
+      { pos: "GK", number: 1, name: "Iker Casillas", top: 85, left: 50 },
+      { pos: "LD", number: 15, name: "Sergio Ramos", top: 70, left: 85 },
+      { pos: "DFC", number: 3, name: "Gerard Piqué", top: 70, left: 62 },
+      { pos: "DFC", number: 5, name: "Carles Puyol", top: 70, left: 38 },
+      { pos: "LI", number: 11, name: "Joan Capdevila", top: 70, left: 15 },
+      { pos: "MCD", number: 16, name: "Sergio Busquets", top: 55, left: 35 },
+      { pos: "MCD", number: 14, name: "Xabi Alonso", top: 55, left: 65 },
+      { pos: "ED", number: 6, name: "Andrés Iniesta", top: 35, left: 80 },
+      { pos: "MCO", number: 8, name: "Xavi Hernández", top: 35, left: 50 },
+      { pos: "EI", number: 18, name: "Pedro Rodríguez", top: 35, left: 20 },
+      { pos: "DC", number: 7, name: "David Villa", top: 15, left: 50 }
+    ]
+  },
+  {
+    id: 4,
+    competition: "Champions League Final 2022",
+    date: "28-05-2022",
+    home: "Liverpool",
+    away: "Real Madrid",
+    score: "0 - 1",
+    target: "away",
+    jerseyColor: "#ffffff",
+    numberColor: "#000000",
+    players: [
+      { pos: "GK", number: 1, name: "Thibaut Courtois", top: 85, left: 50 },
+      { pos: "LD", number: 2, name: "Dani Carvajal", top: 70, left: 85 },
+      { pos: "DFC", number: 3, name: "Éder Militão", top: 70, left: 62 },
+      { pos: "DFC", number: 4, name: "David Alaba", top: 70, left: 38 },
+      { pos: "LI", number: 23, name: "Ferland Mendy", top: 70, left: 15 },
+      { pos: "MCD", number: 14, name: "Casemiro", top: 45, left: 50 },
+      { pos: "MC", number: 8, name: "Toni Kroos", top: 45, left: 75 },
+      { pos: "MC", number: 10, name: "Luka Modrić", top: 45, left: 25 },
+      { pos: "ED", number: 15, name: "Federico Valverde", top: 20, left: 80 },
+      { pos: "DC", number: 9, name: "Karim Benzema", top: 20, left: 50 },
+      { pos: "EI", number: 20, name: "Vinícius Júnior", top: 20, left: 20 }
+    ]
+  },
+  {
+    id: 5,
+    competition: "World Cup Final 2022",
+    date: "18-12-2022",
+    home: "Argentina",
+    away: "Francia",
+    score: "3 - 3 (4-2 p.)",
+    target: "home",
+    jerseyColor: "#75aadb",
+    numberColor: "#ffffff",
+    players: [
+      { pos: "GK", number: 23, name: "Emiliano Martínez", top: 85, left: 50 },
+      { pos: "LD", number: 26, name: "Nahuel Molina", top: 70, left: 85 },
+      { pos: "DFC", number: 13, name: "Cristian Romero", top: 70, left: 62 },
+      { pos: "DFC", number: 19, name: "Nicolás Otamendi", top: 70, left: 38 },
+      { pos: "LI", number: 3, name: "Nicolás Tagliafico", top: 70, left: 15 },
+      { pos: "MCD", number: 24, name: "Enzo Fernández", top: 45, left: 50 },
+      { pos: "MC", number: 7, name: "Rodrigo De Paul", top: 45, left: 75 },
+      { pos: "MC", number: 20, name: "Alexis Mac Allister", top: 45, left: 25 },
+      { pos: "ED", number: 10, name: "Lionel Messi", top: 20, left: 80 },
+      { pos: "DC", number: 9, name: "Julián Álvarez", top: 20, left: 50 },
+      { pos: "EI", number: 11, name: "Ángel Di María", top: 20, left: 20 }
+    ]
+  },
+  {
+    id: 6,
+    competition: "Champions League Final 2014",
+    date: "24-05-2014",
+    home: "Real Madrid",
+    away: "Atlético Madrid",
+    score: "4 - 1 (t.e.)",
+    target: "away",
+    jerseyColor: "#cb3524",
+    numberColor: "#ffffff",
+    players: [
+      { pos: "GK", number: 13, name: "Thibaut Courtois", top: 85, left: 50 },
+      { pos: "LD", number: 20, name: "Juanfran Torres", top: 70, left: 85 },
+      { pos: "DFC", number: 23, name: "Miranda", top: 70, left: 62 },
+      { pos: "DFC", number: 2, name: "Diego Godín", top: 70, left: 38 },
+      { pos: "LI", number: 3, name: "Filipe Luís", top: 70, left: 15 },
+      { pos: "MCD", number: 5, name: "Tiago Mendes", top: 45, left: 35 },
+      { pos: "MCD", number: 14, name: "Gabi Fernández", top: 45, left: 65 },
+      { pos: "ED", number: 8, name: "Raúl García", top: 30, left: 85 },
+      { pos: "MC", number: 6, name: "Koke", top: 30, left: 15 },
+      { pos: "DC", number: 9, name: "David Villa", top: 15, left: 35 },
+      { pos: "DC", number: 19, name: "Diego Costa", top: 15, left: 65 }
+    ]
+  }
+];
+
