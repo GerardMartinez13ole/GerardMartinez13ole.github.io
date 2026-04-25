@@ -1205,7 +1205,15 @@ const PLAYERS = [
   {"name":"Alfredo Di Stéfano","teams":["Real Madrid","Espanyol"],"aliases":["di stefano"]},
   {"name":"Carlos Santillana","teams":["Real Madrid"],"aliases":["santillana"]},
   {"name":"Ferenc Puskás","teams":["Real Madrid"],"aliases":["puskas"]},
-  {"name":"Hugo Sánchez","teams":["Real Madrid","Atletico Madrid","Rayo Vallecano"],"aliases":["hugo sanchez"]}];
+  {"name":"Hugo Sánchez","teams":["Real Madrid","Atletico Madrid","Rayo Vallecano"],"aliases":["hugo sanchez"]},
+  {"name":"Josep Samitier","teams":["Barcelona","Real Madrid"],"aliases":["samitier"]},
+  {"name":"Josep Escolà","teams":["Barcelona"],"aliases":["escola"]},
+  {"name":"Paulino Alcántara","teams":["Barcelona"],"aliases":["alcantara"]},
+  {"name":"Telmo Zarra","teams":["Athletic Bilbao"],"aliases":["zarra"]},
+  {"name":"Quini","teams":["Sporting de Gijón","Barcelona"],"aliases":["quini","enrique castro"]},
+  {"name":"Pahiño","teams":["Celta Vigo","Real Madrid","Deportivo La Coruña"],"aliases":["pahino","manuel fernandez"]},
+  {"name":"Fernando Hierro","teams":["Real Madrid","Real Valladolid"],"aliases":["hierro"]},
+  {"name":"Fernando Morientes","teams":["Real Madrid","Zaragoza","Valencia","Albacete"],"aliases":["morientes"]}];
 
 const PLAYER_PROFILE = {
   "pedri": { countryCode: "es", position: "MC" },
@@ -2263,7 +2271,15 @@ const PLAYER_PROFILE = {
   "jonathan dos santos": { countryCode: "mx", position: "MC" },
   "victor vazquez": { countryCode: "es", position: "MCO" },
   "jeffren suarez": { countryCode: "ve", position: "ED" },
-  "jonathan soriano": { countryCode: "es", position: "DC" }
+  "jonathan soriano": { countryCode: "es", position: "DC" },
+  "josep samitier": { countryCode: "es", position: "DC" },
+  "josep escola": { countryCode: "es", position: "DC" },
+  "paulino alcantara": { countryCode: "es", position: "DC" },
+  "telmo zarra": { countryCode: "es", position: "DC" },
+  "quini": { countryCode: "es", position: "DC" },
+  "pahino": { countryCode: "es", position: "DC" },
+  "fernando hierro": { countryCode: "es", position: "DFC" },
+  "fernando morientes": { countryCode: "es", position: "DC" }
 };
 
 const COUNTRY_META = {

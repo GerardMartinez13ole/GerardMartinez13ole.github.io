@@ -34,7 +34,16 @@
     guessBtn.onclick = submitGuess;
     
     nextBtn.onclick = function() {
-      currentCategoryIndex = (currentCategoryIndex + 1) % TOP10_CATEGORIES.length;
+      if (TOP10_CATEGORIES.length <= 1) {
+        loadCategory(0);
+        return;
+      }
+      var newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * TOP10_CATEGORIES.length);
+      } while (newIndex === currentCategoryIndex);
+      
+      currentCategoryIndex = newIndex;
       loadCategory(currentCategoryIndex);
     };
     
