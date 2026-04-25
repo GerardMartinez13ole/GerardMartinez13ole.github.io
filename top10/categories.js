@@ -638,5 +638,533 @@ var TOP10_CATEGORIES = [
       { name: "Raúl Jiménez", country: "mx" },
       { name: "Andrés Guardado", country: "mx" }
     ]
+  },
+  {
+    id: "madrid_expensive",
+    title: "Fichajes más caros de la historia del Real Madrid",
+    items: [
+      { name: "Eden Hazard", country: "be" },
+      { name: "Jude Bellingham", country: "gb-eng" },
+      { name: "Gareth Bale", country: "gb-wls" },
+      { name: "Cristiano Ronaldo", country: "pt" },
+      { name: "Aurélien Tchouaméni", country: "fr" },
+      { name: "Zinedine Zidane", country: "fr" },
+      { name: "James Rodríguez", country: "co" },
+      { name: "Kaká", country: "br" },
+      { name: "Luka Jović", country: "rs" },
+      { name: "Éder Militão", country: "br" }
+    ]
+  },
+  {
+    id: "belgium_scorers",
+    title: "Máximos goleadores históricos de la Selección de Bélgica",
+    items: [
+      { name: "Romelu Lukaku", country: "be" },
+      { name: "Eden Hazard", country: "be" },
+      { name: "Bernard Voorhoof", country: "be" },
+      { name: "Paul Van Himst", country: "be" },
+      { name: "Marc Wilmots", country: "be" },
+      { name: "Jan Vertonghen", country: "be" },
+      { name: "Kevin De Bruyne", country: "be" },
+      { name: "Dries Mertens", country: "be" },
+      { name: "Michy Batshuayi", country: "be" },
+      { name: "Leandro Trossard", country: "be" }
+    ]
+  },
+  {
+    id: "colombia_scorers",
+    title: "Máximos goleadores históricos de la Selección de Colombia",
+    items: [
+      { name: "Radamel Falcao", country: "co" },
+      { name: "James Rodríguez", country: "co" },
+      { name: "Arnoldo Iguarán", country: "co" },
+      { name: "Faustino Asprilla", country: "co" },
+      { name: "Freddy Rincón", country: "co" },
+      { name: "Carlos Bacca", country: "co" },
+      { name: "Teófilo Gutiérrez", country: "co" },
+      { name: "Víctor Aristizábal", country: "co" },
+      { name: "Adolfo Valencia", country: "co" },
+      { name: "Luis Díaz", country: "co" }
+    ]
+  },
+  {
+    id: "atletico_expensive",
+    title: "Fichajes más caros de la historia del Atlético de Madrid",
+    items: [
+      { name: "João Félix", country: "pt" },
+      { name: "Julián Alvarez", country: "ar" },
+      { name: "Thomas Lemar", country: "fr" },
+      { name: "Diego Costa", country: "es" },
+      { name: "Antoine Griezmann", country: "fr" },
+      { name: "Álvaro Morata", country: "es" },
+      { name: "Rodri", country: "es" },
+      { name: "Conor Gallagher", country: "gb-eng" },
+      { name: "Jackson Martínez", country: "co" },
+      { name: "Vitolo", country: "es" }
+    ]
+  },
+  {
+    id: "chile_scorers",
+    title: "Máximos goleadores históricos de la Selección de Chile",
+    items: [
+      { name: "Alexis Sánchez", country: "cl" },
+      { name: "Eduardo Vargas", country: "cl" },
+      { name: "Marcelo Salas", country: "cl" },
+      { name: "Iván Zamorano", country: "cl" },
+      { name: "Arturo Vidal", country: "cl" },
+      { name: "Carlos Caszely", country: "cl" },
+      { name: "Leonel Sánchez", country: "cl" },
+      { name: "Jorge Aravena", country: "cl" },
+      { name: "Matías Fernández", country: "cl" },
+      { name: "Esteban Paredes", country: "cl" }
+    ]
+  },
+  {
+    id: "sweden_scorers",
+    title: "Máximos goleadores históricos de la Selección de Suecia",
+    items: [
+      { name: "Zlatan Ibrahimović", country: "se" },
+      { name: "Sven Rydell", country: "se" },
+      { name: "Gunnar Nordahl", country: "se" },
+      { name: "Henrik Larsson", country: "se" },
+      { name: "Gunnar Gren", country: "se" },
+      { name: "Thomas Brolin", country: "se" },
+      { name: "Agne Simonsson", country: "se" },
+      { name: "Marcus Berg", country: "se" },
+      { name: "Kennet Andersson", country: "se" },
+      { name: "Emil Forsberg", country: "se" }
+    ]
+  },
+  {
+    id: "premier_expensive",
+    title: "Fichajes más caros de la historia de la Premier League",
+    items: [
+      { name: "Enzo Fernández", country: "ar" },
+      { name: "Moisés Caicedo", country: "ec" },
+      { name: "Declan Rice", country: "gb-eng" },
+      { name: "Jack Grealish", country: "gb-eng" },
+      { name: "Romelu Lukaku", country: "be" },
+      { name: "Paul Pogba", country: "fr" },
+      { name: "Antony", country: "br" },
+      { name: "Harry Maguire", country: "gb-eng" },
+      { name: "Joško Gvardiol", country: "hr" },
+      { name: "Darwin Núñez", country: "uy" }
+    ]
+  },
+  {
+    id: "croatia_scorers",
+    title: "Máximos goleadores históricos de la Selección de Croacia",
+    items: [
+      { name: "Davor Šuker", country: "hr" },
+      { name: "Ivan Perišić", country: "hr" },
+      { name: "Mario Mandžukić", country: "hr" },
+      { name: "Andrej Kramarić", country: "hr" },
+      { name: "Luka Modrić", country: "hr" },
+      { name: "Eduardo da Silva", country: "hr" },
+      { name: "Darijo Srna", country: "hr" },
+      { name: "Ivica Olić", country: "hr" },
+      { name: "Niko Kranjčar", country: "hr" },
+      { name: "Goran Vlaović", country: "hr" }
+    ]
+  },
+  {
+    id: "poland_scorers",
+    title: "Máximos goleadores históricos de la Selección de Polonia",
+    items: [
+      { name: "Robert Lewandowski", country: "pl" },
+      { name: "Włodzimierz Lubański", country: "pl" },
+      { name: "Grzegorz Lato", country: "pl" },
+      { name: "Kazimierz Deyna", country: "pl" },
+      { name: "Ernest Pohl", country: "pl" },
+      { name: "Andrzej Szarmach", country: "pl" },
+      { name: "Gerard Cieślik", country: "pl" },
+      { name: "Zbigniew Boniek", country: "pl" },
+      { name: "Jakub Błaszczykowski", country: "pl" },
+      { name: "Arkadiusz Milik", country: "pl" }
+    ]
+  },
+  {
+    id: "seriea_expensive",
+    title: "Fichajes más caros de la historia de la Serie A",
+    items: [
+      { name: "Cristiano Ronaldo", country: "pt" },
+      { name: "Gonzalo Higuaín", country: "ar" },
+      { name: "Matthijs de Ligt", country: "nl" },
+      { name: "Dušan Vlahović", country: "rs" },
+      { name: "Arthur Melo", country: "br" },
+      { name: "Victor Osimhen", country: "ng" },
+      { name: "Romelu Lukaku", country: "be" },
+      { name: "Hernán Crespo", country: "ar" },
+      { name: "Gianluigi Buffon", country: "it" },
+      { name: "Gaizka Mendieta", country: "es" }
+    ]
+  },
+  {
+    id: "morocco_scorers",
+    title: "Máximos goleadores históricos de la Selección de Marruecos",
+    items: [
+      { name: "Ahmed Faras", country: "ma" },
+      { name: "Salaheddine Bassir", country: "ma" },
+      { name: "Youssef En-Nesyri", country: "ma" },
+      { name: "Hakim Ziyech", country: "ma" },
+      { name: "Marouane Chamakh", country: "ma" },
+      { name: "Abdeljalil Hadda", country: "ma" },
+      { name: "Hassan Amchrat", country: "ma" },
+      { name: "Ayoub El Kaabi", country: "ma" },
+      { name: "Aziz Bouderbala", country: "ma" },
+      { name: "Sofiane Boufal", country: "ma" }
+    ]
+  },
+  {
+    id: "ivory_coast_scorers",
+    title: "Máximos goleadores históricos de la Selección de Costa de Marfil",
+    items: [
+      { name: "Didier Drogba", country: "ci" },
+      { name: "Abdoulaye Traoré", country: "ci" },
+      { name: "Salomon Kalou", country: "ci" },
+      { name: "Gervinho", country: "ci" },
+      { name: "Ibrahima Bakayoko", country: "ci" },
+      { name: "Wilfried Bony", country: "ci" },
+      { name: "Yaya Touré", country: "ci" },
+      { name: "Laurent Pokou", country: "ci" },
+      { name: "Aruna Dindane", country: "ci" },
+      { name: "Sébastien Haller", country: "ci" }
+    ]
+  },
+  {
+    id: "bundesliga_expensive",
+    title: "Fichajes más caros de la historia de la Bundesliga",
+    items: [
+      { name: "Harry Kane", country: "gb-eng" },
+      { name: "Lucas Hernandez", country: "fr" },
+      { name: "Matthijs de Ligt", country: "nl" },
+      { name: "Kim Min-jae", country: "kr" },
+      { name: "Leroy Sané", country: "de" },
+      { name: "Dayot Upamecano", country: "fr" },
+      { name: "Michael Olise", country: "fr" },
+      { name: "João Palhinha", country: "pt" },
+      { name: "Corentin Tolisso", country: "fr" },
+      { name: "Javi Martínez", country: "es" }
+    ]
+  },
+  {
+    id: "nigeria_scorers",
+    title: "Máximos goleadores históricos de la Selección de Nigeria",
+    items: [
+      { name: "Rashidi Yekini", country: "ng" },
+      { name: "Segun Odegbami", country: "ng" },
+      { name: "Yakubu Ayegbeni", country: "ng" },
+      { name: "Victor Osimhen", country: "ng" },
+      { name: "Ikechukwu Uche", country: "ng" },
+      { name: "Obafemi Martins", country: "ng" },
+      { name: "Samson Siasia", country: "ng" },
+      { name: "Odion Ighalo", country: "ng" },
+      { name: "Ahmed Musa", country: "ng" },
+      { name: "Julius Aghahowa", country: "ng" }
+    ]
+  },
+  {
+    id: "cameroon_scorers",
+    title: "Máximos goleadores históricos de la Selección de Camerún",
+    items: [
+      { name: "Samuel Eto'o", country: "cm" },
+      { name: "Roger Milla", country: "cm" },
+      { name: "Patrick M'Boma", country: "cm" },
+      { name: "Vincent Aboubakar", country: "cm" },
+      { name: "Eric Maxim Choupo-Moting", country: "cm" },
+      { name: "François Omam-Biyik", country: "cm" },
+      { name: "Alphonse Tchami", country: "cm" },
+      { name: "Geremi Njitap", country: "cm" },
+      { name: "Karl Toko Ekambi", country: "cm" },
+      { name: "Pierre Webó", country: "cm" }
+    ]
+  },
+  {
+    id: "seriea_clean_sheets",
+    title: "Porteros con más porterías a cero en la historia de la Serie A",
+    items: [
+      { name: "Gianluigi Buffon", country: "it" },
+      { name: "Samir Handanović", country: "si" },
+      { name: "Dino Zoff", country: "it" },
+      { name: "Enrico Albertosi", country: "it" },
+      { name: "Giovanni Galli", country: "it" },
+      { name: "Gianluca Pagliuca", country: "it" },
+      { name: "Luca Marchegiani", country: "it" },
+      { name: "Morgan De Sanctis", country: "it" },
+      { name: "Angelo Peruzzi", country: "it" },
+      { name: "Christian Abbiati", country: "it" }
+    ]
+  },
+  {
+    id: "senegal_scorers",
+    title: "Máximos goleadores históricos de la Selección de Senegal",
+    items: [
+      { name: "Sadio Mané", country: "sn" },
+      { name: "Henri Camara", country: "sn" },
+      { name: "Mamadou Niang", country: "sn" },
+      { name: "El Hadji Diouf", country: "sn" },
+      { name: "Moussa Sow", country: "sn" },
+      { name: "Papiss Cissé", country: "sn" },
+      { name: "Boulaye Dia", country: "sn" },
+      { name: "Habib Diallo", country: "sn" },
+      { name: "Famara Diédhiou", country: "sn" },
+      { name: "Ismaïla Sarr", country: "sn" }
+    ]
+  },
+  {
+    id: "ghana_scorers",
+    title: "Máximos goleadores históricos de la Selección de Ghana",
+    items: [
+      { name: "Asamoah Gyan", country: "gh" },
+      { name: "Edward Acquah", country: "gh" },
+      { name: "Kwasi Owusu", country: "gh" },
+      { name: "André Ayew", country: "gh" },
+      { name: "Jordan Ayew", country: "gh" },
+      { name: "Karim Abdul Razak", country: "gh" },
+      { name: "Tony Yeboah", country: "gh" },
+      { name: "Abedi Pelé", country: "gh" },
+      { name: "Mubarak Wakaso", country: "gh" },
+      { name: "Sulley Muntari", country: "gh" }
+    ]
+  },
+  {
+    id: "ligue1_expensive",
+    title: "Fichajes más caros de la historia de la Ligue 1",
+    items: [
+      { name: "Neymar", country: "br" },
+      { name: "Kylian Mbappé", country: "fr" },
+      { name: "Randal Kolo Muani", country: "fr" },
+      { name: "Achraf Hakimi", country: "ma" },
+      { name: "Gonçalo Ramos", country: "pt" },
+      { name: "Ousmane Dembélé", country: "fr" },
+      { name: "Manuel Ugarte", country: "uy" },
+      { name: "Edinson Cavani", country: "uy" },
+      { name: "Ángel Di María", country: "ar" },
+      { name: "Bradley Barcola", country: "fr" }
+    ]
+  },
+  {
+    id: "algeria_scorers",
+    title: "Máximos goleadores históricos de la Selección de Argelia",
+    items: [
+      { name: "Islam Slimani", country: "dz" },
+      { name: "Abdelhafid Tasfaout", country: "dz" },
+      { name: "Riyad Mahrez", country: "dz" },
+      { name: "Baghdad Bounedjah", country: "dz" },
+      { name: "Lakhdar Belloumi", country: "dz" },
+      { name: "Hillel Soudani", country: "dz" },
+      { name: "Djamel Menad", country: "dz" },
+      { name: "Sofiane Feghouli", country: "dz" },
+      { name: "Rabah Madjer", country: "dz" },
+      { name: "Mustapha Dahleb", country: "dz" }
+    ]
+  },
+  {
+    id: "egypt_scorers",
+    title: "Máximos goleadores históricos de la Selección de Egipto",
+    items: [
+      { name: "Mohamed Salah", country: "eg" },
+      { name: "Hossam Hassan", country: "eg" },
+      { name: "Hassan El-Shazly", country: "eg" },
+      { name: "Mohamed Aboutrika", country: "eg" },
+      { name: "Ahmed Hassan", country: "eg" },
+      { name: "Amr Zaki", country: "eg" },
+      { name: "Emad Moteab", country: "eg" },
+      { name: "Ahmed El-Kass", country: "eg" },
+      { name: "Mahmoud El Khatib", country: "eg" },
+      { name: "Mohamed Zidan", country: "eg" }
+    ]
+  },
+  {
+    id: "laliga_assists_season",
+    title: "Máximos asistentes en una temporada de La Liga",
+    items: [
+      { name: "Lionel Messi", country: "ar" },
+      { name: "Mesut Özil", country: "de" },
+      { name: "Xavi Hernández", country: "es" },
+      { name: "Luis Figo", country: "pt" },
+      { name: "Cristiano Ronaldo", country: "pt" },
+      { name: "Luis Suárez", country: "uy" },
+      { name: "Ángel Di María", country: "ar" },
+      { name: "Neymar", country: "br" },
+      { name: "Koke", country: "es" },
+      { name: "Ivan Rakitić", country: "hr" }
+    ]
+  },
+  {
+    id: "premier_scorers_season",
+    title: "Máximos goleadores en una temporada de la Premier League",
+    items: [
+      { name: "Erling Haaland", country: "no" },
+      { name: "Mohamed Salah", country: "eg" },
+      { name: "Alan Shearer", country: "gb-eng" },
+      { name: "Andy Cole", country: "gb-eng" },
+      { name: "Luis Suárez", country: "uy" },
+      { name: "Cristiano Ronaldo", country: "pt" },
+      { name: "Kevin Phillips", country: "gb-eng" },
+      { name: "Thierry Henry", country: "fr" },
+      { name: "Robin van Persie", country: "nl" },
+      { name: "Harry Kane", country: "gb-eng" }
+    ]
+  },
+  {
+    id: "city_expensive",
+    title: "Fichajes más caros de la historia del Manchester City",
+    items: [
+      { name: "Jack Grealish", country: "gb-eng" },
+      { name: "Kevin De Bruyne", country: "be" },
+      { name: "Rúben Dias", country: "pt" },
+      { name: "Rodri", country: "es" },
+      { name: "Joško Gvardiol", country: "hr" },
+      { name: "Riyad Mahrez", country: "dz" },
+      { name: "João Cancelo", country: "pt" },
+      { name: "Aymeric Laporte", country: "es" },
+      { name: "Raheem Sterling", country: "gb-eng" },
+      { name: "Erling Haaland", country: "no" }
+    ]
+  },
+  {
+    id: "liverpool_expensive",
+    title: "Fichajes más caros de la historia del Liverpool",
+    items: [
+      { name: "Darwin Núñez", country: "uy" },
+      { name: "Virgil van Dijk", country: "nl" },
+      { name: "Alisson Becker", country: "br" },
+      { name: "Dominik Szoboszlai", country: "hu" },
+      { name: "Naby Keïta", country: "gn" },
+      { name: "Luis Díaz", country: "co" },
+      { name: "Alexis Mac Allister", country: "ar" },
+      { name: "Mohamed Salah", country: "eg" },
+      { name: "Diogo Jota", country: "pt" },
+      { name: "Cody Gakpo", country: "nl" }
+    ]
+  },
+  {
+    id: "laliga_scorers_season",
+    title: "Máximos goleadores en una temporada de La Liga",
+    items: [
+      { name: "Lionel Messi", country: "ar" },
+      { name: "Cristiano Ronaldo", country: "pt" },
+      { name: "Luis Suárez", country: "uy" },
+      { name: "Baltazar", country: "br" },
+      { name: "Hugo Sánchez", country: "mx" },
+      { name: "Telmo Zarra", country: "es" },
+      { name: "Diego Forlán", country: "uy" },
+      { name: "Ricardo Oliveira", country: "br" },
+      { name: "Ronaldo Nazário", country: "br" },
+      { name: "Samuel Eto'o", country: "cm" }
+    ]
+  },
+  {
+    id: "united_expensive",
+    title: "Fichajes más caros de la historia del Manchester United",
+    items: [
+      { name: "Paul Pogba", country: "fr" },
+      { name: "Antony", country: "br" },
+      { name: "Harry Maguire", country: "gb-eng" },
+      { name: "Jadon Sancho", country: "gb-eng" },
+      { name: "Romelu Lukaku", country: "be" },
+      { name: "Ángel Di María", country: "ar" },
+      { name: "Casemiro", country: "br" },
+      { name: "Rasmus Højlund", country: "dk" },
+      { name: "Bruno Fernandes", country: "pt" },
+      { name: "Mason Mount", country: "gb-eng" }
+    ]
+  },
+  {
+    id: "chelsea_expensive",
+    title: "Fichajes más caros de la historia del Chelsea",
+    items: [
+      { name: "Enzo Fernández", country: "ar" },
+      { name: "Moisés Caicedo", country: "ec" },
+      { name: "Romelu Lukaku", country: "be" },
+      { name: "Wesley Fofana", country: "fr" },
+      { name: "Mykhailo Mudryk", country: "ua" },
+      { name: "Marc Cucurella", country: "es" },
+      { name: "Kai Havertz", country: "de" },
+      { name: "Kepa Arrizabalaga", country: "es" },
+      { name: "Álvaro Morata", country: "es" },
+      { name: "Christian Pulisic", country: "us" }
+    ]
+  },
+  {
+    id: "premier_assists_season",
+    title: "Máximos asistentes en una temporada de la Premier League",
+    items: [
+      { name: "Kevin De Bruyne", country: "be" },
+      { name: "Thierry Henry", country: "fr" },
+      { name: "Mesut Özil", country: "de" },
+      { name: "Cesc Fàbregas", country: "es" },
+      { name: "Frank Lampard", country: "gb-eng" },
+      { name: "Christian Eriksen", country: "dk" },
+      { name: "David Silva", country: "es" },
+      { name: "Mohamed Salah", country: "eg" },
+      { name: "Trent Alexander-Arnold", country: "gb-eng" },
+      { name: "Leroy Sané", country: "de" }
+    ]
+  },
+  {
+    id: "arsenal_expensive",
+    title: "Fichajes más caros de la historia del Arsenal",
+    items: [
+      { name: "Declan Rice", country: "gb-eng" },
+      { name: "Nicolas Pépé", country: "ci" },
+      { name: "Kai Havertz", country: "de" },
+      { name: "Pierre-Emerick Aubameyang", country: "ga" },
+      { name: "Ben White", country: "gb-eng" },
+      { name: "Alexandre Lacazette", country: "fr" },
+      { name: "Gabriel Jesus", country: "br" },
+      { name: "Thomas Partey", country: "gh" },
+      { name: "Mesut Özil", country: "de" },
+      { name: "Jurriën Timber", country: "nl" }
+    ]
+  },
+  {
+    id: "realmadrid_expensive",
+    title: "Fichajes más caros de la historia del Real Madrid",
+    items: [
+      { name: "Jude Bellingham", country: "gb-eng" },
+      { name: "Eden Hazard", country: "be" },
+      { name: "Gareth Bale", country: "gb-wls" },
+      { name: "Cristiano Ronaldo", country: "pt" },
+      { name: "Aurélien Tchouaméni", country: "fr" },
+      { name: "Zinedine Zidane", country: "fr" },
+      { name: "James Rodríguez", country: "co" },
+      { name: "Kaká", country: "br" },
+      { name: "Luka Jović", country: "rs" },
+      { name: "Éder Militão", country: "br" }
+    ]
+  },
+  {
+    id: "seriea_scorers_season",
+    title: "Máximos goleadores en una temporada de la Serie A",
+    items: [
+      { name: "Gonzalo Higuaín", country: "ar" },
+      { name: "Ciro Immobile", country: "it" },
+      { name: "Gino Rossetti", country: "it" },
+      { name: "Gunnar Nordahl", country: "se" },
+      { name: "Antonio Valentín Angelillo", country: "it" },
+      { name: "Giuseppe Meazza", country: "it" },
+      { name: "Felice Borel", country: "it" },
+      { name: "Ferenc Hirzer", country: "hu" },
+      { name: "Julio Libonatti", country: "it" },
+      { name: "Cristiano Ronaldo", country: "pt" }
+    ]
+  },
+  {
+    id: "bayern_expensive",
+    title: "Fichajes más caros de la historia del Bayern Munich",
+    items: [
+      { name: "Harry Kane", country: "gb-eng" },
+      { name: "Lucas Hernandez", country: "fr" },
+      { name: "Matthijs de Ligt", country: "nl" },
+      { name: "Kim Min-jae", country: "kr" },
+      { name: "Leroy Sané", country: "de" },
+      { name: "Dayot Upamecano", country: "fr" },
+      { name: "Michael Olise", country: "fr" },
+      { name: "João Palhinha", country: "pt" },
+      { name: "Corentin Tolisso", country: "fr" },
+      { name: "Javi Martínez", country: "es" }
+    ]
   }
 ];
