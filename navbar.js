@@ -91,20 +91,20 @@
   }
 
   const path = decodeURIComponent(window.location.pathname);
-  const inSubfolder = path.toLowerCase().includes("/grid/") || path.toLowerCase().includes("/top10/") || path.toLowerCase().includes("/lineup/") || path.toLowerCase().includes("/kit creator pro/");
+  const inSubfolder = path.toLowerCase().includes("/grid/") || path.toLowerCase().includes("/top10/") || path.toLowerCase().includes("/lineup/") || path.toLowerCase().includes("/kit-creator-3d-pro/");
   
   const homeUrl = inSubfolder ? "../index.html" : "index.html";
   const gridUrl = inSubfolder ? (path.toLowerCase().includes("/grid/") ? "grid.html" : "../grid/grid.html") : "grid/grid.html";
   const top10Url = inSubfolder ? (path.toLowerCase().includes("/top10/") ? "index.html" : "../top10/index.html") : "top10/index.html";
   const lineupUrl = inSubfolder ? (path.toLowerCase().includes("/lineup/") ? "lineup.html" : "../lineup/lineup.html") : "lineup/lineup.html";
-  const kitCreatorUrl = inSubfolder ? (path.toLowerCase().includes("/kit creator pro/") ? "index.html" : "../Kit Creator Pro/index.html") : "Kit Creator Pro/index.html";
+  const kitCreatorUrl = inSubfolder ? (path.toLowerCase().includes("/kit-creator-3d-pro/") ? "index.html" : "../Kit-Creator-3D-Pro/index.html") : "Kit-Creator-3D-Pro/index.html";
 
   const fileName = (path.split("/").pop() || "index.html").toLowerCase();
   const isHome = (fileName === "index.html" || fileName === "") && !inSubfolder;
   const isGrid = fileName === "grid.html" && path.toLowerCase().includes("/grid/");
   const isTop10 = (fileName === "index.html" || fileName === "") && path.toLowerCase().includes("/top10/");
   const isLineup = (fileName === "lineup.html" || fileName === "") && path.toLowerCase().includes("/lineup/");
-  const isKitCreator = (fileName === "index.html" || fileName === "") && path.toLowerCase().includes("/kit creator pro/");
+  const isKitCreator = (fileName === "index.html" || fileName === "") && path.toLowerCase().includes("/kit-creator-3d-pro/");
 
   mount.innerHTML = `
     <header class="site-navbar">
@@ -115,7 +115,7 @@
           <a class="${isGrid ? "active" : ""}" href="${gridUrl}">Jugar Grid</a>
           <a class="${isTop10 ? "active" : ""}" href="${top10Url}">Top 10</a>
           <a class="${isLineup ? "active" : ""}" href="${lineupUrl}">Missing XI</a>
-          <a class="${isKitCreator ? "active" : ""}" href="${kitCreatorUrl}">Kit Creator Pro</a>
+          <a class="${isKitCreator ? "active" : ""}" href="${kitCreatorUrl}">Kit Creator 3D Pro</a>
         </nav>
       </div>
     </header>
