@@ -147,7 +147,7 @@ export class ThreeScene {
       100
     );
     // Position camera much closer and lower for better framing
-    this.camera.position.set(1.0, 2.0, 1.8);
+    this.camera.position.set(0.0, 1.1, 2.0);
     // Look at center area to show shirt properly framed
   }
 
@@ -194,14 +194,14 @@ export class ThreeScene {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.08; // Un poco más de amortiguación para control suave
-    this.controls.autoRotate = true;
+    this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = 0.3; // Más lento para mejor apreciación
     this.controls.enableZoom = true;
     this.controls.zoomSpeed = 0.8;
     this.controls.minDistance = 2.0;
     this.controls.maxDistance = 6.0;
     // El objetivo es el centro de la camisa (ajustado para mostrar más parte inferior)
-    this.controls.target.set(0, 0.0, 0);
+    this.controls.target.set(0, 1.1, 0);
     this.controls.minPolarAngle = Math.PI / 6; // 30 grados
     this.controls.maxPolarAngle = Math.PI * 0.8; // 144 grados
     this.controls.update();
@@ -520,10 +520,10 @@ _computeCustomUVs(geo) {
   /** Anima la cámara a una posición preset */
   setCameraPreset(name) {
     const targets = {
-      front: new THREE.Vector3(0, 0.3, 5.5),
-      back:  new THREE.Vector3(0, 0.3, -5.5),
-      left:  new THREE.Vector3(-5.5, 0.3, 0),
-      right: new THREE.Vector3(5.5, 0.3, 0),
+      front: new THREE.Vector3(0, 1.4, 5.5),
+      back:  new THREE.Vector3(0, 1.4, -5.5),
+      left:  new THREE.Vector3(-5.5, 1.4, 0),
+      right: new THREE.Vector3(5.5, 1.4, 0),
     };
     const target = targets[name];
     if (!target) return;
@@ -543,8 +543,8 @@ _computeCustomUVs(geo) {
 
   /** Reinicia cámara a posición inicial */
   resetCamera() {
-    this.camera.position.set(1.0, 2.0, 1.8);
-    this.controls.target.set(0, 0.0, 0);
+    this.camera.position.set(0.0, 1.1, 2.4);
+    this.controls.target.set(0, 1.1, 0);
     this.controls.update();
   }
 

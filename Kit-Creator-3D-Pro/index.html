@@ -49,7 +49,7 @@
         <h1>KIT CREATOR HOLAAAAAAA</h1>
       </div>
       <div class="top-actions">
-        <button id="btn-rotate" class="btn btn-ghost btn-sm active" title="Auto-Rotación">🔄 Rotar aaaaa</button>
+        <button id="btn-rotate" class="btn btn-ghost btn-sm" title="Auto-Rotación">🔄 Rotar aaaaa</button>
         <button id="btn-change-model" class="btn btn-ghost btn-sm" title="Cambiar Modelo 3D">👕 Modelo</button>
         <button id="btn-reset-cam" class="btn btn-ghost btn-sm" title="Reset Cámara">📷 Reset</button>
         <button id="btn-export-3d" class="btn btn-export btn-sm" title="Descargar vista 3D">⬇ Descargar PNG</button>
@@ -244,14 +244,22 @@
       <button class="btn btn-ghost btn-icon btn-sm" data-view="right" title="Derecha">▸</button>
     </div>
 
-    <!-- ──── Camera Movement Controls (Arrow Keys) ──── -->
-    <div id="camera-move-controls" class="camera-controls">
-      <div class="controls-row">
+    <!-- ──── Camera Movement Controls ──── -->
+    <div id="camera-move-controls" class="camera-controls" style="background: rgba(10, 15, 28, 0.88); padding: 8px; border-radius: 8px; border: 1px solid var(--border);">
+      <div class="controls-row" style="justify-content: space-between; width: 100%;">
+        <input type="number" id="step-up" value="0.1" step="0.1" title="Mover arriba" style="width: 45px; height: 24px; padding: 0 4px; font-size: 0.75rem; text-align: center; border-radius: 4px; border: 1px solid var(--border); background: var(--input); color: var(--t1);">
         <button class="btn btn-ghost btn-icon btn-sm" id="btn-move-up" title="Mover Arriba (↑)">▲</button>
       </div>
-      <div class="controls-row">
-        <button class="btn btn-ghost btn-icon btn-sm" id="btn-move-left" title="Mover Izquierda (←)">◀</button>
+      <div class="controls-row" style="justify-content: space-between; width: 100%;">
+        <input type="number" id="step-down" value="0.1" step="0.1" title="Mover abajo" style="width: 45px; height: 24px; padding: 0 4px; font-size: 0.75rem; text-align: center; border-radius: 4px; border: 1px solid var(--border); background: var(--input); color: var(--t1);">
         <button class="btn btn-ghost btn-icon btn-sm" id="btn-move-down" title="Mover Abajo (↓)">▼</button>
+      </div>
+      <div class="controls-row" style="justify-content: space-between; width: 100%;">
+        <input type="number" id="step-left" value="0.1" step="0.1" title="Mover izquierda" style="width: 45px; height: 24px; padding: 0 4px; font-size: 0.75rem; text-align: center; border-radius: 4px; border: 1px solid var(--border); background: var(--input); color: var(--t1);">
+        <button class="btn btn-ghost btn-icon btn-sm" id="btn-move-left" title="Mover Izquierda (←)">◀</button>
+      </div>
+      <div class="controls-row" style="justify-content: space-between; width: 100%;">
+        <input type="number" id="step-right" value="0.1" step="0.1" title="Mover derecha" style="width: 45px; height: 24px; padding: 0 4px; font-size: 0.75rem; text-align: center; border-radius: 4px; border: 1px solid var(--border); background: var(--input); color: var(--t1);">
         <button class="btn btn-ghost btn-icon btn-sm" id="btn-move-right" title="Mover Derecha (→)">▶</button>
       </div>
     </div>

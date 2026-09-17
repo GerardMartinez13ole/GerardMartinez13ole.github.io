@@ -485,7 +485,7 @@ function bindTextControls() {
 // ════════════════════════════════════════════
 
 function bindSceneControls() {
-  let autoRotate = true;
+  let autoRotate = false;
   const btnRotate = document.getElementById('btn-rotate');
 
   btnRotate.addEventListener('click', () => {
@@ -503,10 +503,15 @@ function bindSceneControls() {
   });
 
   // Camera movement controls (arrow buttons)
-  document.getElementById('btn-move-up').addEventListener('click', () => scene.moveUp(0.1));
-  document.getElementById('btn-move-down').addEventListener('click', () => scene.moveDown(0.1));
-  document.getElementById('btn-move-left').addEventListener('click', () => scene.moveLeft(0.1));
-  document.getElementById('btn-move-right').addEventListener('click', () => scene.moveRight(0.1));
+  const getStep = (id) => {
+    const input = document.getElementById(id);
+    const val = parseFloat(input?.value);
+    return !isNaN(val) && val > 0 ? val : 0.1;
+  };
+  document.getElementById('btn-move-up').addEventListener('click', () => scene.moveUp(getStep('step-up')));
+  document.getElementById('btn-move-down').addEventListener('click', () => scene.moveDown(getStep('step-down')));
+  document.getElementById('btn-move-left').addEventListener('click', () => scene.moveLeft(getStep('step-left')));
+  document.getElementById('btn-move-right').addEventListener('click', () => scene.moveRight(getStep('step-right')));
 
   // Cambiar modelo 3D
   const btnChangeModel = document.getElementById('btn-change-model');
@@ -780,19 +785,23 @@ function bindExportControls() {
     }
 
     // Mover cámara con flechas
-    const moveAmount = 0.1; // Cantidad de movimiento por pulsación
+    const getStepAmount = (id) => {
+      const val = parseFloat(document.getElementById(id)?.value);
+      return !isNaN(val) && val > 0 ? val : 0.1;
+    };
+
     switch (e.key) {
       case 'ArrowLeft':
-        scene.moveLeft(moveAmount);
+        scene.moveLeft(getStepAmount('step-left'));
         break;
       case 'ArrowRight':
-        scene.moveRight(moveAmount);
+        scene.moveRight(getStepAmount('step-right'));
         break;
       case 'ArrowUp':
-        scene.moveUp(moveAmount);
+        scene.moveUp(getStepAmount('step-up'));
         break;
       case 'ArrowDown':
-        scene.moveDown(moveAmount);
+        scene.moveDown(getStepAmount('step-down'));
         break;
       // Zoom con + y -
       case '+':
