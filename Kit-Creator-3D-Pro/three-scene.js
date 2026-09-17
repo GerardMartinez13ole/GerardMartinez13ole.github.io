@@ -520,10 +520,10 @@ _computeCustomUVs(geo) {
   /** Anima la cámara a una posición preset */
   setCameraPreset(name) {
     const targets = {
-      front: new THREE.Vector3(0, 1.4, 5.5),
-      back:  new THREE.Vector3(0, 1.4, -5.5),
-      left:  new THREE.Vector3(-5.5, 1.4, 0),
-      right: new THREE.Vector3(5.5, 1.4, 0),
+      front: new THREE.Vector3(0, 1.4, 2.4),
+      back:  new THREE.Vector3(0, 1.4, -2.4),
+      left:  new THREE.Vector3(-2.4, 1.4, 0),
+      right: new THREE.Vector3(2.4, 1.4, 0),
     };
     const target = targets[name];
     if (!target) return;
