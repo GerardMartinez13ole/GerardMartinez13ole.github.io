@@ -209,37 +209,13 @@ export class TextureEditor {
   }
 
   _drawSleeves(ctx, w, h) {
-    const c = this.state.secondaryColor;
-    if (c === this.state.baseColor) return;
-
-    ctx.fillStyle = c;
-    // Manga izquierda
-    ctx.beginPath();
-    ctx.moveTo(0,         h * 0.10);
-    ctx.lineTo(w * 0.18,  h * 0.04);
-    ctx.lineTo(w * 0.20,  h * 0.22);
-    ctx.lineTo(0,         h * 0.28);
-    ctx.closePath();
-    ctx.fill();
-    // Manga derecha
-    ctx.beginPath();
-    ctx.moveTo(w,         h * 0.10);
-    ctx.lineTo(w * 0.82,  h * 0.04);
-    ctx.lineTo(w * 0.80,  h * 0.22);
-    ctx.lineTo(w,         h * 0.28);
-    ctx.closePath();
-    ctx.fill();
+    // Eliminado temporalmente a petición del usuario
+    return;
   }
 
   _drawCollar(ctx, w, h) {
-    ctx.fillStyle = this.state.collarColor;
-    ctx.beginPath();
-    ctx.moveTo(w * 0.37, h * 0.065);
-    ctx.quadraticCurveTo(w * 0.5, h * 0.12, w * 0.63, h * 0.065);
-    ctx.lineTo(w * 0.60, h * 0.035);
-    ctx.quadraticCurveTo(w * 0.5, h * 0.085, w * 0.40, h * 0.035);
-    ctx.closePath();
-    ctx.fill();
+    // Eliminado temporalmente a petición del usuario
+    return;
   }
 
   _drawPattern(ctx, w, h) {
@@ -300,6 +276,63 @@ export class TextureEditor {
     const ph = this.preview.height;
     this.previewCtx.clearRect(0, 0, pw, ph);
     this.previewCtx.drawImage(this.canvas, 0, 0, pw, ph);
+
+    // DIBUJAR SILUETAS DE GUÍA (Frente y Espalda separados)
+    const ctx = this.previewCtx;
+    ctx.save();
+    ctx.beginPath();
+    
+    // --- SILUETA FRENTE (Mitad Izquierda: 0 a 0.5) ---
+    // El torso nativo del GLB ocupa la parte inferior (v = 0 a 0.75), que corresponde a Y = 0.25 a 1.0
+    ctx.moveTo(pw * 0.05, ph);
+    ctx.lineTo(pw * 0.05, ph * 0.475);
+    ctx.lineTo(pw * 0.0, ph * 0.475);
+    ctx.lineTo(pw * 0.0, ph * 0.325);
+    ctx.lineTo(pw * 0.15, ph * 0.287);
+    ctx.lineTo(pw * 0.2, ph * 0.287);
+    ctx.quadraticCurveTo(pw * 0.25, ph * 0.362, pw * 0.3, ph * 0.287); // Escote profundo
+    ctx.lineTo(pw * 0.35, ph * 0.287);
+    ctx.lineTo(pw * 0.5, ph * 0.325);
+    ctx.lineTo(pw * 0.5, ph * 0.475);
+    ctx.lineTo(pw * 0.45, ph * 0.475);
+    ctx.lineTo(pw * 0.45, ph);
+    
+    // --- SILUETA ESPALDA (Mitad Derecha: 0.5 a 1.0) ---
+    ctx.moveTo(pw * 0.55, ph);
+    ctx.lineTo(pw * 0.55, ph * 0.475);
+    ctx.lineTo(pw * 0.5, ph * 0.475);
+    ctx.lineTo(pw * 0.5, ph * 0.325);
+    ctx.lineTo(pw * 0.65, ph * 0.287);
+    ctx.lineTo(pw * 0.7, ph * 0.287);
+    ctx.quadraticCurveTo(pw * 0.75, ph * 0.31, pw * 0.8, ph * 0.287); // Escote alto
+    ctx.lineTo(pw * 0.85, ph * 0.287);
+    ctx.lineTo(pw * 1.0, ph * 0.325);
+    ctx.lineTo(pw * 1.0, ph * 0.475);
+    ctx.lineTo(pw * 0.95, ph * 0.475);
+    ctx.lineTo(pw * 0.95, ph);
+
+    ctx.closePath();
+    
+    // Estilo de la línea guía
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.stroke();
+    
+    // Sombrear el fondo fuera de las siluetas
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.rect(0, 0, pw, ph);
+    ctx.fill('evenodd');
+    
+    // Añadir textos guía
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('FRENTE', pw * 0.25, ph * 0.95);
+    ctx.fillText('ESPALDA', pw * 0.75, ph * 0.95);
+    
+    ctx.restore();
 
     // Dibujar marcos de selección sobre logos
     const sel = this._selectedLogoId;

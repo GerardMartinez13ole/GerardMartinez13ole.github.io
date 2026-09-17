@@ -274,9 +274,18 @@ export class ThreeScene {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
-
+            
             // Aplicar nuestro material personalizado con la textura
             child.material = this.material;
+
+            // El modelo GLB tiene un mapeo UV distinto al canvas 2D.
+            // Usamos las UVs nativas del modelo sin modificarlas para evitar roturas de malla
+            if (child.geometry && child.geometry.attributes.position && child.geometry.attributes.uv) {
+               // Ya no modificamos las UVs. El layout nativo es:
+               // Frente: u=[0, 0.5], v=[0, 0.75]
+               // Espalda: u=[0.5, 1.0], v=[0, 0.75]
+               // Mangas/Cuello: v=[0.75, 1.0]
+            }
           }
         });
 
@@ -407,17 +416,9 @@ _computeCustomUVs(geo) {
     // Normalizamos las coordenadas a 0-1 para cada eje
     const u = (x - minX) / safeRangeX;
     const v = (y - minY) / safeRangeY;
-    const zNorm = (z - minZ) / safeRangeZ;
 
-    // CORRECCIÓN ALTERNATIVA:
-    // Para mangas: SIN inversión de V
-    // Para torso/cuello: CON inversión de V (lo contrario de antes)
-    if (Math.abs(x) > maxX * 0.4) { // Mangas (lados izquierdo y derecho)
-      uv.setXY(i, u, v); // SIN invertir V
-    } else {
-      // Torso, cuello y otras áreas: CON inversión estándar
-      uv.setXY(i, u, 1.0 - v); // INVERTIR V
-    }
+    // Con flipY = false, 1.0 - v alinea correctamente el top del canvas con el top del modelo
+    uv.setXY(i, u, 1.0 - v);
   }
 
   uv.needsUpdate = true;

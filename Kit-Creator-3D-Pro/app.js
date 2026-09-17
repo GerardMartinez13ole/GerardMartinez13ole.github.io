@@ -232,14 +232,15 @@ function bindColorPresets() {
 
 function bindBaseControls() {
   colorHook('base-color',      'base-color-hex',      (c) => editor.setBaseColor(c));
-  colorHook('secondary-color', 'secondary-color-hex', (c) => editor.setSecondaryColor(c));
-  colorHook('collar-color',    'collar-color-hex',    (c) => editor.setCollarColor(c));
+  // colorHook('secondary-color', 'secondary-color-hex', (c) => editor.setSecondaryColor(c));
+  // colorHook('collar-color',    'collar-color-hex',    (c) => editor.setCollarColor(c));
 }
 
 /** Atajo: vincula un input color + hex label a un setter */
 function colorHook(inputId, hexId, setter) {
   const inp = document.getElementById(inputId);
   const hex = document.getElementById(hexId);
+  if (!inp || !hex) return;
   inp.addEventListener('input', (e) => {
     hex.textContent = e.target.value.toUpperCase();
     setter(e.target.value);
