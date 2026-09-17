@@ -1,0 +1,19 @@
+{
+  "name": "Kit Creator 3D Pro",
+  "short_name": "KitCreator",
+  "description": "Creador de camisetas de fútbol 3D — 100% Offline",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#0a0e1a",
+  "background_color": "#0a0e1a",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["design", "sports", "utilities"]
+}
