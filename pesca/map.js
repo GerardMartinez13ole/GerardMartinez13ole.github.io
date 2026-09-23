@@ -104,52 +104,41 @@ async function loadMapMarkers() {
   const mapType = document.getElementById('map-type-selector').value;
 
   try {
-    let snapshot;
-
-    if (mapType === 'publico' || mapType === 'tiendas') {
-      // Cargar puntos de la comunidad
-      let query = window.db.collection('mapa_puntos');
-      
-      if (mapType === 'tiendas') {
-        query = query.where('tipo', '==', 'tienda');
-      } else {
-        query = query.where('tipo', 'in', ['pescar', 'investigar', 'dificil']);
-      }
-      
-      snapshot = await query.get();
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const emoji = icons[data.tipo] || '📍';
-        
-        const customIcon = L.divIcon({
-          className: 'custom-map-marker',
-          html: `<div style="font-size:24px; text-shadow: 0 0 5px rgba(255,255,255,0.8);">${emoji}</div>`,
-          iconSize: [30, 30],
-          iconAnchor: [15, 15]
-        });
-
-        const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(map);
-        
-        let popupContent = `
-          <h3 style="margin:0 0 5px 0; color:#0b1320;">${emoji} ${data.nombre}</h3>
-          <p style="margin:0; font-size:14px; color:#333;">${data.descripcion || ''}</p>
-          <small style="color:#666; display:block; margin-top:5px;">Añadido por: ${data.usuarioNombre}</small>
-        `;
-        marker.bindPopup(popupContent);
-        currentMarkers.push(marker);
-      });
-    } else if (mapType === 'privado') {
-      // Cargar MIS capturas en el mapa (En el futuro, cuando tengan coordenadas)
-      // Por ahora mostraremos un mensaje
-      alert("Para ver tus capturas en el mapa, en la siguiente actualización añadiremos el selector de mapa en el formulario de Nueva Captura.");
-      document.getElementById('map-type-selector').value = 'publico';
+    let query = window.db.collection('mapa_puntos');
+    
+    // Filtrar si no es "todos"
+    if (mapType !== 'todos') {
+      query = query.where('tipo', '==', mapType);
     }
+    
+    const snapshot = await query.get();
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const emoji = icons[data.tipo] || '📍';
+      
+      const customIcon = L.divIcon({
+        className: 'custom-map-marker',
+        html: `<div style="font-size:24px; text-shadow: 0 0 5px rgba(255,255,255,0.8);">${emoji}</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+      });
+
+      const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(map);
+      
+      let popupContent = `
+        <h3 style="margin:0 0 5px 0; color:#0b1320;">${emoji} ${data.nombre}</h3>
+        <p style="margin:0; font-size:14px; color:#333;">${data.descripcion || ''}</p>
+        <small style="color:#666; display:block; margin-top:5px;">Añadido por: ${data.usuarioNombre}</small>
+      `;
+      marker.bindPopup(popupContent);
+      currentMarkers.push(marker);
+    });
 
   } catch (error) {
     console.error("Error cargando marcadores:", error);
     if(error.message.includes('index')) {
-      alert("Requiere un índice de Firestore para filtrar por tipo.");
+      alert("Requiere un índice de Firestore para filtrar por tipo. Revisa la consola.");
     }
   }
 }

@@ -135,8 +135,11 @@ window.loadMuro = async () => {
     }
 
     snapshot.forEach(doc => {
-      const card = window.createCapturaCard(doc.data());
+      const data = doc.data();
+      data.id = doc.id;
+      const card = window.createCapturaCard(data);
       feed.appendChild(card);
+      if (window.cargarComentarios) window.cargarComentarios(data.id);
     });
   } catch (error) {
     console.error("Error leyendo muro:", error);
@@ -164,8 +167,11 @@ window.loadPersonalRegistro = async () => {
     }
 
     snapshot.forEach(doc => {
-      const card = window.createCapturaCard(doc.data());
+      const data = doc.data();
+      data.id = doc.id;
+      const card = window.createCapturaCard(data);
       feed.appendChild(card);
+      if (window.cargarComentarios) window.cargarComentarios(data.id);
     });
   } catch (error) {
     console.error("Error leyendo registro personal:", error);
@@ -283,41 +289,50 @@ window.loadEquiposToSelect = async () => {
   }
 };
 
+// Cargar sitios del mapa en el desplegable de Nueva Captura
+window.loadSitiosToSelect = async () => {
+  if (!window.db) return;
+  const select = document.getElementById('cap-sitio');
+  
+  const defaultOption = '<option value="">Selecciona una ubicación del mapa...</option>';
+  select.innerHTML = defaultOption;
+
+  try {
+    // Cargamos todos los puntos (así no hace falta índice) y filtramos en frontend
+    const snapshot = await window.db.collection('mapa_puntos').get();
+    
+    // Agrupar por tipos
+    const optionsHtml = [];
+    
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      // No incluimos tiendas en los sitios de pesca
+      if(data.tipo !== 'tienda') {
+        let emoji = '📍';
+        if(data.tipo === 'pescar') emoji = '🎣';
+        else if(data.tipo === 'investigar') emoji = '🔍';
+        else if(data.tipo === 'dificil') emoji = '⚠️';
+        
+        optionsHtml.push(`<option value="${data.nombre}">${emoji} ${data.nombre}</option>`);
+      }
+    });
+    
+    if(optionsHtml.length > 0) {
+      select.innerHTML += optionsHtml.join('');
+    } else {
+      select.innerHTML = '<option value="">(No hay zonas en el mapa comunitario)</option>';
+    }
+
+  } catch(error) {
+    console.error("Error cargando sitios al select:", error);
+  }
+};
+
 // ==============================
 // FASE 4: PEIXDEX Y RANKING
 // ==============================
 
-window.loadPeixdex = async () => {
-  if (!window.db) return;
-  const list = document.getElementById('peixdex-list');
-  list.innerHTML = '<p class="loading">Cargando...</p>';
 
-  try {
-    const snapshot = await window.db.collection('peixdex').get();
-    list.innerHTML = '';
-    
-    if (snapshot.empty) {
-      list.innerHTML = '<p style="text-align:center;">Todavía no se ha descubierto ninguna especie.</p>';
-      return;
-    }
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.style = 'background:var(--bg-color); padding:15px; border-radius:12px; border-left:4px solid var(--accent); display:flex; justify-content:space-between; align-items:center;';
-      div.innerHTML = `
-        <div>
-          <h4 style="margin:0; font-size:1.1rem;">${data.nombreOficial}</h4>
-          <small style="color:var(--text-muted)">Descubierto por: ${data.descubridor}</small>
-        </div>
-        <i class="fas fa-check-circle" style="color:var(--primary); font-size:1.5rem;"></i>
-      `;
-      list.appendChild(div);
-    });
-  } catch(error) {
-    console.error("Error cargando peixdex", error);
-  }
-};
 
 window.loadRanking = async () => {
   if (!window.db) return;
@@ -382,31 +397,165 @@ window.loadRanking = async () => {
 
 window.openPerfil = async (userId, userName) => {
   if (!window.db) return;
-  document.getElementById('modal-perfil').style.display = 'flex';
-  document.getElementById('perfil-title').innerHTML = `<i class="fas fa-user-circle"></i> ${userName}`;
   
-  const feed = document.getElementById('perfil-feed');
-  feed.innerHTML = '<p class="loading">Cargando...</p>';
+  // Usar switchTab en lugar del modal
+  window.switchTab('perfil', `Perfil de ${userName}`);
+  document.getElementById('perfil-title').textContent = userName;
+  
+  const feedCapturas = document.getElementById('perfil-feed-capturas');
+  const feedEquipos = document.getElementById('perfil-feed-equipos');
+  
+  feedCapturas.innerHTML = '<p class="loading">Cargando peixdex...</p>';
+  feedEquipos.innerHTML = '<p class="loading">Cargando cañadex...</p>';
+  document.getElementById('perfil-total').textContent = '...';
 
   try {
-    const snapshot = await window.db.collection('capturas')
+    // 1. Cargar Peixdex (Capturas)
+    const snapCapturas = await window.db.collection('capturas')
       .where('usuarioId', '==', userId)
       .orderBy('createdAt', 'desc')
       .get();
       
-    feed.innerHTML = '';
-    document.getElementById('perfil-total').textContent = snapshot.size;
+    feedCapturas.innerHTML = '';
+    document.getElementById('perfil-total').textContent = snapCapturas.size;
+    
+    if (snapCapturas.empty) {
+      feedCapturas.innerHTML = '<p style="text-align:center; color:var(--text-muted);">Sin capturas aún.</p>';
+    } else {
+      snapCapturas.forEach(doc => {
+        const data = doc.data();
+        data.id = doc.id;
+        feedCapturas.appendChild(window.createCapturaCard(data));
+        if (window.cargarComentarios) window.cargarComentarios(data.id);
+      });
+    }
+
+    // 2. Cargar Cañadex (Equipos)
+    const snapEquipos = await window.db.collection('canadex')
+      .where('usuarioId', '==', userId)
+      .orderBy('createdAt', 'desc')
+      .get();
+      
+    feedEquipos.innerHTML = '';
+    
+    if (snapEquipos.empty) {
+      feedEquipos.innerHTML = '<p style="text-align:center; color:var(--text-muted);">No tiene equipos registrados.</p>';
+    } else {
+      snapEquipos.forEach(doc => {
+        feedEquipos.appendChild(window.createCanadexCard(doc.data()));
+      });
+    }
+
+  } catch (error) {
+    console.error("Error leyendo perfil:", error);
+    feedCapturas.innerHTML = '<p class="error-msg">Error cargando datos del perfil.</p>';
+    feedEquipos.innerHTML = '';
+  }
+};
+
+// ==============================
+// FASE 5: SOCIAL Y GESTIÓN
+// ==============================
+
+// Borrar una captura propia
+window.borrarCaptura = async (capturaId) => {
+  if (!window.db || !window.currentUser) return;
+  const confirmar = confirm("¿Estás seguro de que quieres borrar esta captura? Esta acción no se puede deshacer.");
+  if (!confirmar) return;
+
+  try {
+    await window.db.collection('capturas').doc(capturaId).delete();
+    alert("Captura eliminada correctamente.");
+    // Recargar vistas para reflejar los cambios
+    if (document.getElementById('tab-muro').classList.contains('active')) {
+      window.loadMuro();
+    } else if (document.getElementById('tab-registro').classList.contains('active')) {
+      window.loadPersonalRegistro();
+    }
+  } catch (error) {
+    console.error("Error borrando captura:", error);
+    alert("Error al borrar. Comprueba que tengas permisos.");
+  }
+};
+
+// Alternar panel de comentarios y cargar
+window.toggleComentarios = (capturaId) => {
+  const container = document.getElementById(`comentarios-${capturaId}`);
+  if (container.style.display === 'none') {
+    container.style.display = 'block';
+    window.cargarComentarios(capturaId);
+  } else {
+    container.style.display = 'none';
+  }
+};
+
+// Cargar comentarios
+window.cargarComentarios = async (capturaId) => {
+  if (!window.db) return;
+  const lista = document.getElementById(`lista-comentarios-${capturaId}`);
+  lista.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Cargando...</p>';
+
+  try {
+    const snapshot = await window.db.collection('capturas').doc(capturaId).collection('comentarios')
+      .orderBy('createdAt', 'asc')
+      .get();
+      
+    lista.innerHTML = '';
     
     if (snapshot.empty) {
-      feed.innerHTML = '<p style="text-align:center;">Sin capturas.</p>';
+      lista.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">No hay comentarios aún. ¡Escribe algo!</p>';
       return;
     }
 
     snapshot.forEach(doc => {
-      feed.appendChild(window.createCapturaCard(doc.data()));
+      const cData = doc.data();
+      const div = document.createElement('div');
+      div.style = 'background: rgba(255,255,255,0.05); padding:8px; border-radius:8px;';
+      div.innerHTML = `
+        <div style="font-size:0.8rem; color:var(--accent); margin-bottom:2px;">
+          <i class="fas fa-user"></i> <strong>${cData.usuarioNombre}</strong>
+        </div>
+        <div style="font-size:0.9rem; color:var(--text-main);">${cData.texto}</div>
+      `;
+      lista.appendChild(div);
     });
+    
+    // Auto-scroll al fondo
+    lista.scrollTop = lista.scrollHeight;
+  } catch(error) {
+    console.error("Error cargando comentarios:", error);
+    lista.innerHTML = '<p class="error-msg" style="font-size:0.85rem;">Error al cargar comentarios.</p>';
+  }
+};
+
+// Enviar un comentario
+window.enviarComentario = async (capturaId) => {
+  if (!window.db || !window.currentUser) {
+    alert("Debes iniciar sesión para comentar.");
+    return;
+  }
+  
+  const input = document.getElementById(`input-comentario-${capturaId}`);
+  const texto = input.value.trim();
+  if (!texto) return;
+  
+  // Deshabilitar input temporalmente
+  input.disabled = true;
+
+  try {
+    await window.db.collection('capturas').doc(capturaId).collection('comentarios').add({
+      usuarioId: window.currentUser.uid,
+      usuarioNombre: window.currentUser.displayName || window.currentUser.email.split('@')[0],
+      texto: texto,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    input.value = '';
+    window.cargarComentarios(capturaId); // Recargar
   } catch (error) {
-    console.error("Error leyendo perfil:", error);
-    feed.innerHTML = '<p class="error-msg">Requiere índice de Firestore.</p>';
+    console.error("Error enviando comentario:", error);
+    alert("No se pudo enviar el comentario.");
+  } finally {
+    input.disabled = false;
   }
 };

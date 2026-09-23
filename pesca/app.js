@@ -5,22 +5,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs = document.querySelectorAll('.tab-content');
   const topTitle = document.getElementById('top-title');
 
+  // Función global para cambiar tabs desde cualquier botón
+  window.switchTab = (target, title) => {
+    navBtns.forEach(b => b.classList.remove('active'));
+    tabs.forEach(t => t.style.display = 'none');
+    
+    const activeNav = document.querySelector(`.nav-item[data-target="${target}"]`);
+    if(activeNav) activeNav.classList.add('active');
+
+    topTitle.textContent = title || 'PescaApp';
+    const targetId = 'tab-' + target;
+    const tabEl = document.getElementById(targetId);
+    if(tabEl) tabEl.style.display = 'block';
+  };
+
   // Navegación Bottom Navigation
   navBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Remover active
-      navBtns.forEach(b => b.classList.remove('active'));
-      tabs.forEach(t => t.style.display = 'none');
-
-      // Añadir active
-      btn.classList.add('active');
-
-      // Actualizar Título Superior
-      topTitle.textContent = btn.getAttribute('data-title') || 'PescaApp';
-
-      // Mostrar Tab
-      const targetId = 'tab-' + btn.getAttribute('data-target');
-      document.getElementById(targetId).style.display = 'block';
+      const target = btn.getAttribute('data-target');
+      const title = btn.getAttribute('data-title');
+      window.switchTab(target, title);
 
       // Disparar carga si corresponde
       if (btn.getAttribute('data-target') === 'muro') {
@@ -31,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.loadCanadex) window.loadCanadex();
       } else if (btn.getAttribute('data-target') === 'nuevo') {
         if (window.loadEquiposToSelect) window.loadEquiposToSelect();
+        if (window.loadSitiosToSelect) window.loadSitiosToSelect();
       } else if (btn.getAttribute('data-target') === 'mapas') {
         if (window.initMap) window.initMap();
       }
@@ -74,24 +79,40 @@ window.createCapturaCard = (data) => {
   div.className = 'captura-card';
   
   // Parsear fecha
+  let timestamp = 0;
   let dateStr = 'Fecha desconocida';
   if (data.fecha) {
     // Manejar Timestamp de Firestore o string ISO
     const dateObj = data.fecha.seconds ? new Date(data.fecha.seconds * 1000) : new Date(data.fecha);
+    timestamp = dateObj.getTime();
     dateStr = dateObj.toLocaleDateString() + (data.horaStr ? ' ' + data.horaStr : '');
   }
   
+  // Asignar atributos de datos para poder ordenar
+  div.dataset.fecha = timestamp;
+  div.dataset.peso = data.peso || 0;
+  div.dataset.longitud = data.longitud || 0;
+  div.dataset.especie = (data.especie || '').toLowerCase();
+  div.dataset.sitio = (data.sitio || '').toLowerCase();
+
   // Imagen (si hay) o placeholder
   const imgHtml = data.fotoUrl 
     ? `<img src="${data.fotoUrl}" class="captura-img" alt="Foto de la captura">`
     : `<div class="captura-img-placeholder"><i class="fas fa-fish"></i></div>`;
+
+  // Determinar si es del usuario actual para mostrar botón de eliminar
+  const isOwner = window.currentUser && window.currentUser.uid === data.usuarioId;
+  const deleteBtnHtml = isOwner ? `<button onclick="window.borrarCaptura('${data.id}')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.1rem;"><i class="fas fa-trash-alt"></i></button>` : '';
 
   div.innerHTML = `
     <div class="captura-header">
       <div class="captura-user" style="cursor:pointer;" onclick="window.openPerfil('${data.usuarioId}', '${data.usuarioNombre}')">
         <i class="fas fa-user-circle"></i> ${data.usuarioNombre}
       </div>
-      <div class="captura-date">${dateStr}</div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="captura-date">${dateStr}</div>
+        ${deleteBtnHtml}
+      </div>
     </div>
     ${imgHtml}
     <div class="captura-body">
@@ -111,6 +132,20 @@ window.createCapturaCard = (data) => {
       </div>
 
       ${data.descripcion ? `<div class="captura-desc">"${data.descripcion}"</div>` : ''}
+      
+      <!-- Sección de Comentarios -->
+      <div style="margin-top: 15px; border-top: 1px solid #334155; padding-top: 10px;">
+        <h4 style="margin: 0 0 10px 0; color:var(--accent); font-size:0.95rem;"><i class="fas fa-comment"></i> Comentarios</h4>
+        <div id="comentarios-${data.id}">
+          <div id="lista-comentarios-${data.id}" style="max-height: 150px; overflow-y: auto; display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
+            <p style="color:var(--text-muted); font-size:0.85rem;">Cargando comentarios...</p>
+          </div>
+          <div style="display:flex; gap:5px;">
+            <input type="text" id="input-comentario-${data.id}" placeholder="Escribe un comentario..." style="flex:1; padding:8px; border-radius:8px; border:1px solid #334155; background:var(--bg-color); color:var(--text-main);">
+            <button onclick="window.enviarComentario('${data.id}')" class="btn btn-primary" style="padding:8px 15px;"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
     </div>
   `;
   return div;
@@ -142,4 +177,31 @@ window.createCanadexCard = (data) => {
     </div>
   `;
   return div;
+};
+
+// Función para ordenar la Peixdex
+window.ordenarPeixdex = () => {
+  const criterio = document.getElementById('sort-peixdex').value;
+  const feed = document.getElementById('feed-personal');
+  const cards = Array.from(feed.getElementsByClassName('captura-card'));
+  
+  cards.sort((a, b) => {
+    if (criterio === 'fecha-desc') {
+      return parseFloat(b.dataset.fecha) - parseFloat(a.dataset.fecha);
+    } else if (criterio === 'fecha-asc') {
+      return parseFloat(a.dataset.fecha) - parseFloat(b.dataset.fecha);
+    } else if (criterio === 'peso') {
+      return parseFloat(b.dataset.peso) - parseFloat(a.dataset.peso);
+    } else if (criterio === 'longitud') {
+      return parseFloat(b.dataset.longitud) - parseFloat(a.dataset.longitud);
+    } else if (criterio === 'especie') {
+      return a.dataset.especie.localeCompare(b.dataset.especie);
+    } else if (criterio === 'sitio') {
+      return a.dataset.sitio.localeCompare(b.dataset.sitio);
+    }
+    return 0;
+  });
+  
+  // Reinsertar ordenados
+  cards.forEach(card => feed.appendChild(card));
 };
