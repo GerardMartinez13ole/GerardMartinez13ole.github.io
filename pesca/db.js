@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descripcion: descripcion || null,
         fotoUrl: fotoUrl, // Puede ser null
         usuarioId: window.currentUser.uid,
-        usuarioNombre: window.currentUser.email.split('@')[0],
+        usuarioNombre: window.currentUser.displayName || window.currentUser.email.split('@')[0],
         fecha: fechaFinal,
         horaStr: horaStr,
         createdAt: firebase.firestore.FieldValue.serverTimestamp() // Para orden interno
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Si no existe, la creamos
           await peixdexRef.set({
             nombreOficial: especie,
-            descubridor: window.currentUser.email.split('@')[0],
+            descubridor: window.currentUser.displayName || window.currentUser.email.split('@')[0],
             fechaDescubrimiento: firebase.firestore.FieldValue.serverTimestamp()
           });
           console.log("Nueva especie añadida a la Peixdex:", especie);

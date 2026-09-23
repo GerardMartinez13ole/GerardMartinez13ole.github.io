@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
           nombre: nombre,
           descripcion: desc,
           usuarioId: window.currentUser.uid,
-          usuarioNombre: window.currentUser.email.split('@')[0],
+          usuarioNombre: window.currentUser.displayName || window.currentUser.email.split('@')[0],
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         

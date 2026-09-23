@@ -27,7 +27,8 @@
       <h2>🎣 PescaApp Pro</h2>
       <p class="subtitle">Tu red social de pesca</p>
       <div id="auth-error" class="error-msg" style="display: none;"></div>
-      <form id="auth-form">
+      <form id="auth-form" style="display:flex; flex-direction:column; gap:15px; max-width:300px; margin:0 auto;">
+        <input type="text" id="username" placeholder="Tu Nombre o Apodo (Solo al registrarse)">
         <input type="email" id="email" placeholder="Correo electrónico" required>
         <input type="password" id="password" placeholder="Contraseña" required>
         <button type="submit" class="btn btn-primary" id="btn-login">Iniciar Sesión</button>

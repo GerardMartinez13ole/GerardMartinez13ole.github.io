@@ -13,14 +13,22 @@ document.addEventListener('DOMContentLoaded', () => {
   btnRegister.addEventListener('click', async () => {
     if (!window.auth) return window.showAuthError('Firebase no está configurado aún.');
     
+    const usernameInput = document.getElementById('username');
     const email = emailInput.value;
     const password = passwordInput.value;
+    const username = usernameInput ? usernameInput.value.trim() : '';
     
     if (!email || !password) return window.showAuthError('Rellena email y contraseña');
+    if (!username) return window.showAuthError('Debes escribir un Nombre o Apodo para registrarte.');
 
     try {
-      await window.auth.createUserWithEmailAndPassword(email, password);
-      // El observador onAuthStateChanged manejará el cambio de pantalla
+      const userCredential = await window.auth.createUserWithEmailAndPassword(email, password);
+      // Actualizar el perfil del usuario con su nombre
+      await userCredential.user.updateProfile({
+        displayName: username
+      });
+      // Actualizar variable global por si acaso
+      window.currentUser = userCredential.user;
     } catch (error) {
       window.showAuthError(error.message);
     }
