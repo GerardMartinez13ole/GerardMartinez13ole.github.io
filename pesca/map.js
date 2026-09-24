@@ -12,8 +12,8 @@ window.initMap = () => {
     return;
   }
 
-  // Inicializar mapa (Centrado en España por defecto)
-  map = L.map('map-container').setView([40.4168, -3.7038], 6);
+  // Inicializar mapa (Centrado en Tortosa, Tarragona por defecto)
+  map = L.map('map-container').setView([40.8125, 0.5216], 12);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -129,7 +129,10 @@ async function loadMapMarkers() {
       let popupContent = `
         <h3 style="margin:0 0 5px 0; color:#0b1320;">${emoji} ${data.nombre}</h3>
         <p style="margin:0; font-size:14px; color:#333;">${data.descripcion || ''}</p>
-        <small style="color:#666; display:block; margin-top:5px;">Añadido por: ${data.usuarioNombre}</small>
+        <small style="color:#666; display:block; margin-top:5px; margin-bottom:10px;">Añadido por: ${data.usuarioNombre}</small>
+        <a href="https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}" target="_blank" style="display:block; text-align:center; background:#3b82f6; color:white; padding:5px 10px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:14px;">
+          <i class="fas fa-directions"></i> Cómo llegar
+        </a>
       `;
       marker.bindPopup(popupContent);
       currentMarkers.push(marker);
