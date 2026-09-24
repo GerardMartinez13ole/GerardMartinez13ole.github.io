@@ -1,4 +1,4 @@
-// app.js - Manejo de la interfaz de usuario
+﻿// app.js - Manejo de la interfaz de usuario
 
 document.addEventListener('DOMContentLoaded', () => {
   const navBtns = document.querySelectorAll('.nav-item:not(.disabled)');
@@ -7,6 +7,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Función global para cambiar tabs desde cualquier botón
   window.switchTab = (target, title) => {
+    if (target !== 'nuevo' && window.editingCapturaId) {
+      window.editingCapturaId = null;
+      const form = document.getElementById('form-captura');
+      if (form) form.reset();
+      const btn = document.getElementById('btn-guardar-captura');
+      if (btn) btn.innerHTML = '<i class="fas fa-save"></i> Guardar Captura';
+      const fp = document.getElementById('foto-preview');
+      if (fp) fp.style.display = 'none';
+      const ft = document.getElementById('foto-text');
+      if (ft) ft.textContent = 'Pujar foto del peix';
+      const btnCancel = document.getElementById('btn-cancelar-edicion');
+      if (btnCancel) btnCancel.style.display = 'none';
+    }
+
     navBtns.forEach(b => b.classList.remove('active'));
     tabs.forEach(t => t.style.display = 'none');
     
@@ -55,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.onload = function(e) {
           fotoPreview.src = e.target.result;
           fotoPreview.style.display = 'block';
-          fotoText.textContent = 'Cambiar foto';
+          fotoText.textContent = 'Canviar foto';
         }
         reader.readAsDataURL(file);
       }
@@ -80,7 +94,7 @@ window.createCapturaCard = (data) => {
   
   // Parsear fecha
   let timestamp = 0;
-  let dateStr = 'Fecha desconocida';
+  let dateStr = 'Data desconeguda';
   if (data.fecha) {
     // Manejar Timestamp de Firestore o string ISO
     const dateObj = data.fecha.seconds ? new Date(data.fecha.seconds * 1000) : new Date(data.fecha);
@@ -101,8 +115,14 @@ window.createCapturaCard = (data) => {
     : `<div class="captura-img-placeholder"><i class="fas fa-fish"></i></div>`;
 
   // Determinar si es del usuario actual para mostrar botón de eliminar
+  if(!window.capturasData) window.capturasData = {};
+  window.capturasData[data.id] = data;
+
   const isOwner = window.currentUser && window.currentUser.uid === data.usuarioId;
-  const deleteBtnHtml = isOwner ? `<button onclick="window.borrarCaptura('${data.id}')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.1rem;"><i class="fas fa-trash-alt"></i></button>` : '';
+  const actionsHtml = isOwner ? `
+    <button onclick="window.iniciarEdicionCaptura('${data.id}')" style="background:none; border:none; color:#3b82f6; cursor:pointer; font-size:1.1rem;" title="Editar"><i class="fas fa-edit"></i></button>
+    <button onclick="window.borrarCaptura('${data.id}')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.1rem;" title="Esborrar"><i class="fas fa-trash-alt"></i></button>
+  ` : '';
 
   div.innerHTML = `
     <div class="captura-header">
@@ -111,7 +131,7 @@ window.createCapturaCard = (data) => {
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
         <div class="captura-date">${dateStr}</div>
-        ${deleteBtnHtml}
+        ${actionsHtml}
       </div>
     </div>
     ${imgHtml}
@@ -119,9 +139,9 @@ window.createCapturaCard = (data) => {
       <h3 class="captura-title">${data.especie}</h3>
       
       <div class="captura-stats">
-        <div class="stat-badge" title="Peso"><i class="fas fa-weight-hanging"></i> ${data.peso ? data.peso + ' kg' : '-'}</div>
+        <div class="stat-badge" title="Pes"><i class="fas fa-weight-hanging"></i> ${data.peso ? data.peso + ' kg' : '-'}</div>
         <div class="stat-badge" title="Longitud"><i class="fas fa-ruler-horizontal"></i> ${data.longitud ? data.longitud + ' cm' : '-'}</div>
-        <div class="stat-badge" title="Sitio"><i class="fas fa-map-marker-alt"></i> ${data.sitio}</div>
+        <div class="stat-badge" title="Lloc"><i class="fas fa-map-marker-alt"></i> ${data.sitio}</div>
       </div>
 
       <div class="captura-stats" style="margin-bottom: 10px;">
@@ -135,13 +155,13 @@ window.createCapturaCard = (data) => {
       
       <!-- Sección de Comentarios -->
       <div style="margin-top: 15px; border-top: 1px solid #334155; padding-top: 10px;">
-        <h4 style="margin: 0 0 10px 0; color:var(--accent); font-size:0.95rem;"><i class="fas fa-comment"></i> Comentarios</h4>
+        <h4 style="margin: 0 0 10px 0; color:var(--accent); font-size:0.95rem;"><i class="fas fa-comment"></i> Comentaris</h4>
         <div id="comentarios-${data.id}">
           <div id="lista-comentarios-${data.id}" style="max-height: 150px; overflow-y: auto; display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
-            <p style="color:var(--text-muted); font-size:0.85rem;">Cargando comentarios...</p>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Carregant comentaris...</p>
           </div>
           <div style="display:flex; gap:5px;">
-            <input type="text" id="input-comentario-${data.id}" placeholder="Escribe un comentario..." style="flex:1; padding:8px; border-radius:8px; border:1px solid #334155; background:var(--bg-color); color:var(--text-main);">
+            <input type="text" id="input-comentario-${data.id}" placeholder="Escriu un comentari..." style="flex:1; padding:8px; border-radius:8px; border:1px solid #334155; background:var(--bg-color); color:var(--text-main);">
             <button onclick="window.enviarComentario('${data.id}')" class="btn btn-primary" style="padding:8px 15px;"><i class="fas fa-paper-plane"></i></button>
           </div>
         </div>
@@ -151,7 +171,7 @@ window.createCapturaCard = (data) => {
   return div;
 };
 
-// Crear elemento HTML para un equipo de la Cañadex
+// Crear elemento HTML para un equipo de la Canyadex
 window.createCanadexCard = (data) => {
   const div = document.createElement('div');
   div.className = 'captura-card';
@@ -163,17 +183,17 @@ window.createCanadexCard = (data) => {
       <i class="fas fa-toolbox"></i> ${data.nombre}
     </h3>
     <div style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-main);">
-      ${data.cana ? `<div><strong>Caña:</strong> ${data.cana}</div>` : ''}
-      ${data.carrete ? `<div><strong>Carrete:</strong> ${data.carrete}</div>` : ''}
-      ${data.hilo ? `<div><strong>Hilo:</strong> ${data.hilo}</div>` : ''}
-      ${data.plomo ? `<div><strong>Plomo/Montaje:</strong> ${data.plomo}</div>` : ''}
+      ${data.cana ? `<div><strong>Canya:</strong> ${data.cana}</div>` : ''}
+      ${data.carrete ? `<div><strong>Carret:</strong> ${data.carrete}</div>` : ''}
+      ${data.hilo ? `<div><strong>Fil:</strong> ${data.hilo}</div>` : ''}
+      ${data.plomo ? `<div><strong>Plom/Muntatge:</strong> ${data.plomo}</div>` : ''}
     </div>
     
     <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
       <span style="font-weight:bold; color:var(--primary); font-size:1.1rem;">
         ${data.precio ? data.precio + ' €' : ''}
       </span>
-      ${data.enlace ? `<a href="${data.enlace}" target="_blank" class="btn btn-secondary btn-small" style="text-decoration:none;"><i class="fas fa-shopping-cart"></i> Ver Tienda</a>` : ''}
+      ${data.enlace ? `<a href="${data.enlace}" target="_blank" class="btn btn-secondary btn-small" style="text-decoration:none;"><i class="fas fa-shopping-cart"></i> Veure Botiga</a>` : ''}
     </div>
   `;
   return div;
@@ -204,4 +224,57 @@ window.ordenarPeixdex = () => {
   
   // Reinsertar ordenados
   cards.forEach(card => feed.appendChild(card));
+};
+
+
+// Iniciar edición de captura
+window.iniciarEdicionCaptura = async (id) => {
+  const data = window.capturasData[id];
+  if(!data) return;
+
+  window.editingCapturaId = id;
+  
+  document.getElementById('cap-especie').value = data.especie || '';
+  document.getElementById('cap-peso').value = data.peso || '';
+  document.getElementById('cap-longitud').value = data.longitud || '';
+  document.getElementById('cap-modalidad').value = data.modalidad || 'Altre';
+  document.getElementById('cap-cebo').value = data.cebo || '';
+  
+  // Forzar carga de desplegables esperando a que terminen
+  if (window.loadEquiposToSelect) await window.loadEquiposToSelect();
+  if (window.loadSitiosToSelect) await window.loadSitiosToSelect();
+  
+  // Asignar los valores una vez cargados
+  document.getElementById('cap-equipo').value = data.equipo || '';
+  document.getElementById('cap-sitio').value = data.sitio || '';
+  
+  document.getElementById('cap-tiempo').value = data.tiempoLucha || '';
+  document.getElementById('cap-desc').value = data.descripcion || '';
+  
+  if (data.fecha) {
+    const d = data.fecha.seconds ? new Date(data.fecha.seconds * 1000) : new Date(data.fecha);
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    const localISOTime = (new Date(d - tzoffset)).toISOString().slice(0,16);
+    document.getElementById('cap-fecha').value = localISOTime;
+  } else {
+    document.getElementById('cap-fecha').value = '';
+  }
+
+  const fotoPreview = document.getElementById('foto-preview');
+  const fotoText = document.getElementById('foto-text');
+  if (data.fotoUrl) {
+    fotoPreview.src = data.fotoUrl;
+    fotoPreview.style.display = 'block';
+    fotoText.textContent = 'Canviar foto';
+  } else {
+    fotoPreview.src = '';
+    fotoPreview.style.display = 'none';
+    fotoText.textContent = 'Pujar foto del peix';
+  }
+
+  document.getElementById('btn-guardar-captura').innerHTML = '<i class="fas fa-save"></i> Guardar Canvis';
+  const btnCancel = document.getElementById('btn-cancelar-edicion');
+  if (btnCancel) btnCancel.style.display = 'block';
+  
+  window.switchTab('nuevo', 'Editar Captura');
 };

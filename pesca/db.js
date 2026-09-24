@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
   formCaptura.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!window.db || !window.currentUser) {
-      alert("Error: Base de datos no conectada o usuario no logueado.");
+      alert("Error: Base de dades no connectada o usuari no loguejat.");
       return;
     }
 
     // Cambiar estado del botón
     const originalBtnHTML = btnGuardar.innerHTML;
-    btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+    btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardant...';
     btnGuardar.disabled = true;
 
     try {
@@ -35,8 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let fotoUrl = null;
 
-      // 2. Subir foto a Firebase Storage (Deshabilitado temporalmente)
-      /*
+      // 2. Subir foto a Firebase Storage
       if (file && window.firebase && firebase.storage) {
         const storageRef = firebase.storage().ref();
         const fileName = `capturas/${window.currentUser.uid}/${Date.now()}_${file.name}`;
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const snapshot = await imageRef.put(file);
         fotoUrl = await snapshot.ref.getDownloadURL();
       }
-      */
 
       // Procesar fecha y hora custom si el usuario la puso
       let fechaFinal = firebase.firestore.FieldValue.serverTimestamp();
@@ -56,57 +54,80 @@ document.addEventListener('DOMContentLoaded', () => {
         horaStr = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
       }
 
-      // 3. Crear objeto de captura
-      const captura = {
-        especie: especie,
-        peso: peso || null,
-        longitud: longitud || null,
-        modalidad: modalidad || null,
-        cebo: cebo || null,
-        equipo: equipo || null,
-        tiempoLucha: tiempo || null,
-        sitio: sitio,
-        descripcion: descripcion || null,
-        fotoUrl: fotoUrl, // Puede ser null
-        usuarioId: window.currentUser.uid,
-        usuarioNombre: window.currentUser.displayName || window.currentUser.email.split('@')[0],
-        fecha: fechaFinal,
-        horaStr: horaStr,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp() // Para orden interno
-      };
-
-      // 4. Guardar en Firestore (Colección 'capturas')
-      await window.db.collection('capturas').add(captura);
-
-      // 5. Lógica Peixdex: Añadir especie si no existe
-      if (especie) {
-        // Normalizar nombre para el ID (minúsculas, sin espacios extra)
-        const especieId = especie.toLowerCase().replace(/\s+/g, '-');
-        const peixdexRef = window.db.collection('peixdex').doc(especieId);
+      if (window.editingCapturaId) {
+        // EDICIÓN
+        const updateData = {
+          especie: especie,
+          peso: peso || null,
+          longitud: longitud || null,
+          modalidad: modalidad || null,
+          cebo: cebo || null,
+          equipo: equipo || null,
+          tiempoLucha: tiempo || null,
+          sitio: sitio,
+          descripcion: descripcion || null
+        };
         
-        const doc = await peixdexRef.get();
-        if (!doc.exists) {
-          // Si no existe, la creamos
-          await peixdexRef.set({
-            nombreOficial: especie,
-            descubridor: window.currentUser.displayName || window.currentUser.email.split('@')[0],
-            fechaDescubrimiento: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          console.log("Nueva especie añadida a la Peixdex:", especie);
+        if (fotoUrl) updateData.fotoUrl = fotoUrl;
+        
+        if (fechaInput) {
+          updateData.fecha = fechaFinal;
+          updateData.horaStr = horaStr;
         }
-      }
 
-      alert('¡Captura guardada con éxito!');
+        await window.db.collection('capturas').doc(window.editingCapturaId).update(updateData);
+        alert('Captura actualitzada amb èxit!');
+        
+        // Limpiar estado
+        window.editingCapturaId = null;
+        document.getElementById('btn-guardar-captura').innerHTML = '<i class="fas fa-save"></i> Guardar Captura';
+      } else {
+        // NUEVA CAPTURA
+        const captura = {
+          especie: especie,
+          peso: peso || null,
+          longitud: longitud || null,
+          modalidad: modalidad || null,
+          cebo: cebo || null,
+          equipo: equipo || null,
+          tiempoLucha: tiempo || null,
+          sitio: sitio,
+          descripcion: descripcion || null,
+          fotoUrl: fotoUrl, // Puede ser null
+          usuarioId: window.currentUser.uid,
+          usuarioNombre: window.currentUser.displayName || window.currentUser.email.split('@')[0],
+          fecha: fechaFinal,
+          horaStr: horaStr,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp() // Para orden interno
+        };
+
+        await window.db.collection('capturas').add(captura);
+
+        // Lógica Peixdex: Añadir especie si no existe
+        if (especie) {
+          const especieId = especie.toLowerCase().replace(/\s+/g, '-');
+          const peixdexRef = window.db.collection('peixdex').doc(especieId);
+          const doc = await peixdexRef.get();
+          if (!doc.exists) {
+            await peixdexRef.set({
+              nombreOficial: especie,
+              descubridor: window.currentUser.displayName || window.currentUser.email.split('@')[0],
+              fechaDescubrimiento: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          }
+        }
+        alert('Captura guardada amb èxit!');
+      }
       formCaptura.reset();
       document.getElementById('foto-preview').style.display = 'none';
-      document.getElementById('foto-text').textContent = 'Subir foto del pez';
+      document.getElementById('foto-text').textContent = 'Pujar foto del peix';
       
       // Volver al muro
       document.querySelector('[data-target="muro"]').click();
 
     } catch (error) {
       console.error("Error guardando captura: ", error);
-      alert("Hubo un error al guardar. Asegúrate de tener configurado Firebase Storage si intentaste subir foto.");
+      alert("Hi ha hagut un error al guardar. Assegura't de tenir configurat Firebase Storage si has intentat pujar foto.");
     } finally {
       btnGuardar.innerHTML = originalBtnHTML;
       btnGuardar.disabled = false;
@@ -114,11 +135,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Cargar Muro Público
+// Cargar Mur Públic
 window.loadMuro = async () => {
   if (!window.db) return;
   const feed = document.getElementById('feed-muro');
-  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando capturas...</p>';
+  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant captures...</p>';
 
   try {
     // Usamos createdAt para ordenar de forma segura
@@ -130,7 +151,7 @@ window.loadMuro = async () => {
     feed.innerHTML = ''; 
     
     if (snapshot.empty) {
-      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">No hay capturas aún. ¡Sé el primero!</p>';
+      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">No hi ha captures encara. Sigues el primer!</p>';
       return;
     }
 
@@ -143,7 +164,7 @@ window.loadMuro = async () => {
     });
   } catch (error) {
     console.error("Error leyendo muro:", error);
-    feed.innerHTML = '<p class="error-msg">Error al cargar. Asegúrate de que las reglas de Firestore permiten lectura.</p>';
+    feed.innerHTML = "<p class='error-msg'>Error al carregar. Assegura't que les regles de Firestore permeten lectura.</p>";
   }
 };
 
@@ -151,7 +172,7 @@ window.loadMuro = async () => {
 window.loadPersonalRegistro = async () => {
   if (!window.db || !window.currentUser) return;
   const feed = document.getElementById('feed-personal');
-  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando tus capturas...</p>';
+  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant les teves captures...</p>';
 
   try {
     const snapshot = await window.db.collection('capturas')
@@ -162,7 +183,7 @@ window.loadPersonalRegistro = async () => {
     feed.innerHTML = '';
     
     if (snapshot.empty) {
-      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">Aún no has registrado nada. ¡Vete de pesca!</p>';
+      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">Encara no has registrat res. Ves a pescar!</p>';
       return;
     }
 
@@ -176,9 +197,9 @@ window.loadPersonalRegistro = async () => {
   } catch (error) {
     console.error("Error leyendo registro personal:", error);
     if (error.message.includes('index')) {
-       feed.innerHTML = '<p class="error-msg">Requiere un índice en Firestore para ordenar por createdAt. <a href="https://console.firebase.google.com/" target="_blank" style="color:white">Revisa la consola</a>.</p>';
+       feed.innerHTML = '<p class="error-msg">Requereix un índex a Firestore per ordenar per createdAt. <a href="https://console.firebase.google.com/" target="_blank" style="color:white">Revisa la consola</a>.</p>';
     } else {
-       feed.innerHTML = '<p class="error-msg">Error al cargar capturas. Revisa consola.</p>';
+       feed.innerHTML = '<p class="error-msg">Error al carregar captures. Revisa consola.</p>';
     }
   }
 };
@@ -187,7 +208,7 @@ window.loadPersonalRegistro = async () => {
 // FASE 2: CAÑADEX
 // ==============================
 
-// Guardar nueva Caña/Equipo
+// Guardar nueva Canya/Equipo
 document.addEventListener('DOMContentLoaded', () => {
   const formCanadex = document.getElementById('form-canadex');
   if(formCanadex) {
@@ -197,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const btnGuardar = document.getElementById('btn-guardar-cana');
       const originalHtml = btnGuardar.innerHTML;
-      btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+      btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardant...';
       btnGuardar.disabled = true;
 
       const equipoData = {
@@ -220,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.loadCanadex(); // Recargar la lista
       } catch(error) {
         console.error("Error guardando equipo:", error);
-        alert("Hubo un error al guardar tu equipo.");
+        alert("Hi ha hagut un error al guardar el teu equip.");
       } finally {
         btnGuardar.innerHTML = originalHtml;
         btnGuardar.disabled = false;
@@ -229,11 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Cargar Mis Equipos en la pestaña Cañadex
+// Cargar Els meus Equips en la pestaña Canyadex
 window.loadCanadex = async () => {
   if (!window.db || !window.currentUser) return;
   const feed = document.getElementById('feed-canadex');
-  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando tus equipos...</p>';
+  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant els teus equips...</p>';
 
   try {
     const snapshot = await window.db.collection('canadex')
@@ -244,7 +265,7 @@ window.loadCanadex = async () => {
     feed.innerHTML = '';
     
     if (snapshot.empty) {
-      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">Aún no tienes ningún equipo registrado.</p>';
+      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">Encara no tens cap equip registrat.</p>';
       return;
     }
 
@@ -255,20 +276,20 @@ window.loadCanadex = async () => {
   } catch (error) {
     console.error("Error leyendo canadex:", error);
     if (error.message.includes('index')) {
-       feed.innerHTML = '<p class="error-msg">Requiere índice para createdAt en canadex.</p>';
+       feed.innerHTML = '<p class="error-msg">Requereix índex per createdAt a canadex.</p>';
     } else {
-       feed.innerHTML = '<p class="error-msg">Error al cargar equipos.</p>';
+       feed.innerHTML = '<p class="error-msg">Error al carregar equips.</p>';
     }
   }
 };
 
-// Cargar mis equipos en el desplegable de Nueva Captura
+// Cargar mis equipos en el desplegable de Nova Captura
 window.loadEquiposToSelect = async () => {
   if (!window.db || !window.currentUser) return;
   const select = document.getElementById('cap-equipo');
   
   // Guardamos la primera opción
-  const defaultOption = '<option value="">Ninguno / Selecciona uno...</option>';
+  const defaultOption = '<option value="">Cap / Selecciona un...</option>';
   select.innerHTML = defaultOption;
 
   try {
@@ -289,12 +310,12 @@ window.loadEquiposToSelect = async () => {
   }
 };
 
-// Cargar sitios del mapa en el desplegable de Nueva Captura
+// Cargar sitios del mapa en el desplegable de Nova Captura
 window.loadSitiosToSelect = async () => {
   if (!window.db) return;
   const select = document.getElementById('cap-sitio');
   
-  const defaultOption = '<option value="">Selecciona una ubicación del mapa...</option>';
+  const defaultOption = '<option value="">Selecciona una ubicació del mapa...</option>';
   select.innerHTML = defaultOption;
 
   try {
@@ -320,7 +341,7 @@ window.loadSitiosToSelect = async () => {
     if(optionsHtml.length > 0) {
       select.innerHTML += optionsHtml.join('');
     } else {
-      select.innerHTML = '<option value="">(No hay zonas en el mapa comunitario)</option>';
+      select.innerHTML = '<option value="">(No hi ha zones al mapa comunitari)</option>';
     }
 
   } catch(error) {
@@ -337,7 +358,7 @@ window.loadSitiosToSelect = async () => {
 window.loadRanking = async () => {
   if (!window.db) return;
   const list = document.getElementById('ranking-list');
-  list.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Calculando rankings...</p>';
+  list.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Calculant classificacions...</p>';
 
   try {
     const snapshot = await window.db.collection('capturas').get();
@@ -369,23 +390,23 @@ window.loadRanking = async () => {
     
     let html = `
       <div>
-        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;">🏆 Top Pescadores</h3>
+        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;">🏆 Top Pescadors</h3>
         ${sortedUsers.map((u, i) => `
           <div style="display:flex; justify-content:space-between; padding:8px 0;">
             <span><strong>${i+1}.</strong> ${u[0]}</span>
-            <span style="background:var(--primary); padding:2px 8px; border-radius:12px; font-size:0.8rem;">${u[1]} peces</span>
+            <span style="background:var(--primary); padding:2px 8px; border-radius:12px; font-size:0.8rem;">${u[1]} peixos</span>
           </div>
         `).join('')}
       </div>
       
       <div>
-        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;">⚖️ Récord de Peso</h3>
-        <p>${maxPeso.user} con un <strong>${maxPeso.especie}</strong> de <strong>${maxPeso.peso} kg</strong></p>
+        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;">⚖️ Rècord de Pes</h3>
+        <p>${maxPeso.user} amb un <strong>${maxPeso.especie}</strong> de <strong>${maxPeso.peso} kg</strong></p>
       </div>
 
       <div>
-        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;">📏 Récord de Longitud</h3>
-        <p>${maxLong.user} con un <strong>${maxLong.especie}</strong> de <strong>${maxLong.longitud} cm</strong></p>
+        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;">📏 Rècord de Longitud</h3>
+        <p>${maxLong.user} amb un <strong>${maxLong.especie}</strong> de <strong>${maxLong.longitud} cm</strong></p>
       </div>
     `;
 
@@ -405,8 +426,8 @@ window.openPerfil = async (userId, userName) => {
   const feedCapturas = document.getElementById('perfil-feed-capturas');
   const feedEquipos = document.getElementById('perfil-feed-equipos');
   
-  feedCapturas.innerHTML = '<p class="loading">Cargando peixdex...</p>';
-  feedEquipos.innerHTML = '<p class="loading">Cargando cañadex...</p>';
+  feedCapturas.innerHTML = '<p class="loading">Carregant peixdex...</p>';
+  feedEquipos.innerHTML = '<p class="loading">Carregant canyadex...</p>';
   document.getElementById('perfil-total').textContent = '...';
 
   try {
@@ -420,7 +441,7 @@ window.openPerfil = async (userId, userName) => {
     document.getElementById('perfil-total').textContent = snapCapturas.size;
     
     if (snapCapturas.empty) {
-      feedCapturas.innerHTML = '<p style="text-align:center; color:var(--text-muted);">Sin capturas aún.</p>';
+      feedCapturas.innerHTML = '<p style="text-align:center; color:var(--text-muted);">Sense captures encara.</p>';
     } else {
       snapCapturas.forEach(doc => {
         const data = doc.data();
@@ -430,7 +451,7 @@ window.openPerfil = async (userId, userName) => {
       });
     }
 
-    // 2. Cargar Cañadex (Equipos)
+    // 2. Cargar Canyadex (Equipos)
     const snapEquipos = await window.db.collection('canadex')
       .where('usuarioId', '==', userId)
       .orderBy('createdAt', 'desc')
@@ -439,7 +460,7 @@ window.openPerfil = async (userId, userName) => {
     feedEquipos.innerHTML = '';
     
     if (snapEquipos.empty) {
-      feedEquipos.innerHTML = '<p style="text-align:center; color:var(--text-muted);">No tiene equipos registrados.</p>';
+      feedEquipos.innerHTML = '<p style="text-align:center; color:var(--text-muted);">No té equips registrats.</p>';
     } else {
       snapEquipos.forEach(doc => {
         feedEquipos.appendChild(window.createCanadexCard(doc.data()));
@@ -448,7 +469,7 @@ window.openPerfil = async (userId, userName) => {
 
   } catch (error) {
     console.error("Error leyendo perfil:", error);
-    feedCapturas.innerHTML = '<p class="error-msg">Error cargando datos del perfil.</p>';
+    feedCapturas.innerHTML = '<p class="error-msg">Error carregant dades del perfil.</p>';
     feedEquipos.innerHTML = '';
   }
 };
@@ -460,12 +481,12 @@ window.openPerfil = async (userId, userName) => {
 // Borrar una captura propia
 window.borrarCaptura = async (capturaId) => {
   if (!window.db || !window.currentUser) return;
-  const confirmar = confirm("¿Estás seguro de que quieres borrar esta captura? Esta acción no se puede deshacer.");
+  const confirmar = confirm("Estàs segur que vols esborrar aquesta captura? Aquesta acció no es pot desfer.");
   if (!confirmar) return;
 
   try {
     await window.db.collection('capturas').doc(capturaId).delete();
-    alert("Captura eliminada correctamente.");
+    alert("Captura eliminada correctament.");
     // Recargar vistas para reflejar los cambios
     if (document.getElementById('tab-muro').classList.contains('active')) {
       window.loadMuro();
@@ -474,7 +495,7 @@ window.borrarCaptura = async (capturaId) => {
     }
   } catch (error) {
     console.error("Error borrando captura:", error);
-    alert("Error al borrar. Comprueba que tengas permisos.");
+    alert("Error a l'esborrar. Comprova que tinguis permisos.");
   }
 };
 
@@ -493,7 +514,7 @@ window.toggleComentarios = (capturaId) => {
 window.cargarComentarios = async (capturaId) => {
   if (!window.db) return;
   const lista = document.getElementById(`lista-comentarios-${capturaId}`);
-  lista.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Cargando...</p>';
+  lista.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Carregant...</p>';
 
   try {
     const snapshot = await window.db.collection('capturas').doc(capturaId).collection('comentarios')
@@ -503,7 +524,7 @@ window.cargarComentarios = async (capturaId) => {
     lista.innerHTML = '';
     
     if (snapshot.empty) {
-      lista.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">No hay comentarios aún. ¡Escribe algo!</p>';
+      lista.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">No hi ha comentaris encara. Escriu alguna cosa!</p>';
       return;
     }
 
@@ -524,14 +545,14 @@ window.cargarComentarios = async (capturaId) => {
     lista.scrollTop = lista.scrollHeight;
   } catch(error) {
     console.error("Error cargando comentarios:", error);
-    lista.innerHTML = '<p class="error-msg" style="font-size:0.85rem;">Error al cargar comentarios.</p>';
+    lista.innerHTML = '<p class="error-msg" style="font-size:0.85rem;">Error al carregar comentaris.</p>';
   }
 };
 
 // Enviar un comentario
 window.enviarComentario = async (capturaId) => {
   if (!window.db || !window.currentUser) {
-    alert("Debes iniciar sesión para comentar.");
+    alert("Has d'iniciar sessió per comentar.");
     return;
   }
   
@@ -554,7 +575,7 @@ window.enviarComentario = async (capturaId) => {
     window.cargarComentarios(capturaId); // Recargar
   } catch (error) {
     console.error("Error enviando comentario:", error);
-    alert("No se pudo enviar el comentario.");
+    alert("No s'ha pogut enviar el comentari.");
   } finally {
     input.disabled = false;
   }

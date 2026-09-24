@@ -74,12 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('form-marker-container').style.display = 'none';
         if (tempMarker) map.removeLayer(tempMarker);
         
-        alert("Punto añadido al mapa.");
+        alert("Punt afegit al mapa.");
         loadMapMarkers();
 
       } catch (error) {
         console.error("Error guardando punto:", error);
-        alert("Error al guardar en el mapa.");
+        alert("Error al guardar al mapa.");
       }
     });
   }
@@ -129,9 +129,9 @@ async function loadMapMarkers() {
       let popupContent = `
         <h3 style="margin:0 0 5px 0; color:#0b1320;">${emoji} ${data.nombre}</h3>
         <p style="margin:0; font-size:14px; color:#333;">${data.descripcion || ''}</p>
-        <small style="color:#666; display:block; margin-top:5px; margin-bottom:10px;">Añadido por: ${data.usuarioNombre}</small>
+        <small style="color:#666; display:block; margin-top:5px; margin-bottom:10px;">Afegit per: ${data.usuarioNombre}</small>
         <a href="https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}" target="_blank" style="display:block; text-align:center; background:#3b82f6; color:white; padding:5px 10px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:14px;">
-          <i class="fas fa-directions"></i> Cómo llegar
+          <i class="fas fa-directions"></i> Com arribar
         </a>
       `;
       marker.bindPopup(popupContent);
@@ -141,7 +141,7 @@ async function loadMapMarkers() {
   } catch (error) {
     console.error("Error cargando marcadores:", error);
     if(error.message.includes('index')) {
-      alert("Requiere un índice de Firestore para filtrar por tipo. Revisa la consola.");
+      alert("Requereix un índex de Firestore per filtrar per tipus. Revisa la consola.");
     }
   }
 }

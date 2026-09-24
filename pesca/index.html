@@ -25,14 +25,14 @@
   <div id="auth-screen" class="screen">
     <div class="auth-box">
       <h2>🎣 PescaApp Pro</h2>
-      <p class="subtitle">Tu red social de pesca</p>
+      <p class="subtitle">La teva xarxa social de pesca</p>
       <div id="auth-error" class="error-msg" style="display: none;"></div>
       <form id="auth-form" style="display:flex; flex-direction:column; gap:15px; max-width:300px; margin:0 auto;">
-        <input type="text" id="username" placeholder="Tu Nombre o Apodo (Solo al registrarse)">
-        <input type="email" id="email" placeholder="Correo electrónico" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
-        <button type="submit" class="btn btn-primary" id="btn-login">Iniciar Sesión</button>
-        <button type="button" class="btn btn-secondary" id="btn-register">Crear Cuenta</button>
+        <input type="text" id="username" placeholder="El teu Nom o Sobrenom (Només al registrar-se)">
+        <input type="email" id="email" placeholder="Correu electrònic" required>
+        <input type="password" id="password" placeholder="Contrasenya" required>
+        <button type="submit" class="btn btn-primary" id="btn-login">Iniciar Sessió</button>
+        <button type="button" class="btn btn-secondary" id="btn-register">Crear Compte</button>
       </form>
     </div>
   </div>
@@ -42,10 +42,10 @@
     
     <!-- Top Header -->
     <header class="top-bar">
-      <h1 id="top-title">Muro Público</h1>
+      <h1 id="top-title">Mur Públic</h1>
       <div style="display:flex; gap:15px; align-items:center;">
-        <button class="btn-icon" title="Ranking" onclick="window.switchTab('ranking', 'Clasificación General'); window.loadRanking();"><i class="fas fa-trophy"></i></button>
-        <button id="btn-logout" class="btn-icon" title="Cerrar sesión"><i class="fas fa-sign-out-alt"></i></button>
+        <button class="btn-icon" title="Ranking" onclick="window.switchTab('ranking', 'Classificació General'); window.loadRanking();"><i class="fas fa-trophy"></i></button>
+        <button id="btn-logout" class="btn-icon" title="Tancar sessió"><i class="fas fa-sign-out-alt"></i></button>
       </div>
     </header>
 
@@ -55,26 +55,26 @@
       <!-- TAB: MURO PUBLICO -->
       <section id="tab-muro" class="tab-content active">
         <div id="feed-muro" class="feed">
-          <p class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando capturas...</p>
+          <p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant captures...</p>
         </div>
       </section>
 
       <!-- TAB: MI PEIXDEX -->
       <section id="tab-registro" class="tab-content" style="display: none;">
-        <h2 style="color:var(--primary); margin-top:0; text-align:center;"><i class="fas fa-book-open"></i> Mi Peixdex</h2>
+        <h2 style="color:var(--primary); margin-top:0; text-align:center;"><i class="fas fa-book-open"></i> La meva Peixdex</h2>
         <div class="form-group" style="margin-bottom: 15px; display:flex; gap:10px; align-items:center;">
-          <label for="sort-peixdex" style="white-space:nowrap; color:var(--text-muted);"><i class="fas fa-sort"></i> Ordenar por:</label>
+          <label for="sort-peixdex" style="white-space:nowrap; color:var(--text-muted);"><i class="fas fa-sort"></i> Ordenar per:</label>
           <select id="sort-peixdex" onchange="ordenarPeixdex()" style="padding:8px; border-radius:8px;">
-            <option value="fecha-desc">Más recientes primero</option>
-            <option value="fecha-asc">Más antiguos primero</option>
-            <option value="peso">Mayor peso</option>
-            <option value="longitud">Mayor longitud</option>
-            <option value="especie">Especie (A-Z)</option>
-            <option value="sitio">Sitio (A-Z)</option>
+            <option value="fecha-desc">Més recents primer</option>
+            <option value="fecha-asc">Més antics primer</option>
+            <option value="peso">Major pes</option>
+            <option value="longitud">Major longitud</option>
+            <option value="especie">Espècie (A-Z)</option>
+            <option value="sitio">Lloc (A-Z)</option>
           </select>
         </div>
         <div id="feed-personal" class="feed">
-          <p class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando tus capturas...</p>
+          <p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant les teves captures...</p>
         </div>
       </section>
 
@@ -82,10 +82,10 @@
       <section id="tab-nuevo" class="tab-content" style="display: none;">
         <form id="form-captura" class="form-captura">
           
-          <div class="form-group photo-upload" style="display:none;">
+          <div class="form-group photo-upload" style="display:block;">
             <label for="cap-foto" class="photo-label">
               <i class="fas fa-camera"></i>
-              <span id="foto-text">Subir foto del pez (Próximamente)</span>
+              <span id="foto-text">Pujar foto del peix</span>
             </label>
             <input type="file" id="cap-foto" accept="image/*" style="display:none">
             <img id="foto-preview" src="" style="display:none; width:100%; border-radius:8px; margin-top:10px;">
@@ -93,14 +93,14 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Especie (Peixdex)*</label>
-              <input type="text" id="cap-especie" required placeholder="Ej: Black Bass">
+              <label>Espècie (Peixdex)*</label>
+              <input type="text" id="cap-especie" required placeholder="Ex: Black Bass">
             </div>
           </div>
 
           <div class="form-row split">
             <div class="form-group">
-              <label>Peso (kg)</label>
+              <label>Pes (kg)</label>
               <input type="number" step="0.01" id="cap-peso" placeholder="0.00">
             </div>
             <div class="form-group">
@@ -111,7 +111,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Modalidad</label>
+              <label>Modalitat</label>
               <select id="cap-modalidad">
                 <option value="Spinning">Spinning</option>
                 <option value="Carpfishing">Carpfishing</option>
@@ -119,106 +119,111 @@
                 <option value="Feeder">Feeder</option>
                 <option value="Surfcasting">Surfcasting</option>
                 <option value="Mosca">Mosca</option>
-                <option value="Currican">Curricán</option>
-                <option value="Eging">Eging (Cefalópodos)</option>
-                <option value="Otro">Otro</option>
+                <option value="Currican">Curricà</option>
+                <option value="Eging">Eging (Cefalòpodes)</option>
+                <option value="Altre">Altre</option>
               </select>
             </div>
           </div>
 
           <div class="form-row split">
             <div class="form-group">
-              <label>Cebo / Señuelo</label>
-              <input type="text" id="cap-cebo" placeholder="Ej: Vinilo cangrejo">
+              <label>Esquer / Cimbell</label>
+              <input type="text" id="cap-cebo" placeholder="Ex: Vinil cranc">
             </div>
             <div class="form-group">
-              <label>Equipo (Cañadex)</label>
+              <label>Equip (Canyadex)</label>
               <select id="cap-equipo">
-                <option value="">Ninguno / Selecciona uno...</option>
+                <option value="">Cap / Selecciona un...</option>
               </select>
             </div>
           </div>
 
           <div class="form-row split">
             <div class="form-group">
-              <label>Día y Hora</label>
+              <label>Dia i Hora</label>
               <input type="datetime-local" id="cap-fecha">
             </div>
             <div class="form-group">
-              <label>Tiempo de lucha</label>
-              <input type="text" id="cap-tiempo" placeholder="Ej: 5 mins">
+              <label>Temps de lluita</label>
+              <input type="text" id="cap-tiempo" placeholder="Ex: 5 mins">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Ubicación (Del Mapa)</label>
+              <label>Ubicació (Del Mapa)</label>
               <select id="cap-sitio" required>
-                <option value="">Cargando zonas...</option>
+                <option value="">Carregant zones...</option>
               </select>
-              <small style="color:var(--text-muted); display:block; margin-top:5px;">Si el lugar no aparece, ve a la pestaña de Mapas y añádelo con doble clic.</small>
+              <small style="color:var(--text-muted); display:block; margin-top:5px;">Si el lloc no apareix, ves a la pestanya de Mapes i afegeix-lo amb doble clic.</small>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Descripción / Comentarios</label>
-            <textarea id="cap-desc" rows="3" placeholder="¿Cómo fue la picada?"></textarea>
+            <label>Descripció / Comentaris</label>
+            <textarea id="cap-desc" rows="3" placeholder="Com va ser la picada?"></textarea>
           </div>
           
-          <button type="submit" class="btn btn-primary btn-block" id="btn-guardar-captura">
-            <i class="fas fa-save"></i> Guardar Captura
-          </button>
+          <div style="display:flex; gap:10px; flex-direction:column;">
+            <button type="submit" class="btn btn-primary btn-block" id="btn-guardar-captura">
+              <i class="fas fa-save"></i> Guardar Captura
+            </button>
+            <button type="button" class="btn btn-secondary btn-block" id="btn-cancelar-edicion" style="display:none;" onclick="window.switchTab('muro', 'Mur Públic')">
+              Cancel·lar Edició
+            </button>
+          </div>
         </form>
       </section>
 
       <!-- TAB: CAÑADEX -->
       <section id="tab-canadex" class="tab-content" style="display: none;">
         <div class="top-actions" style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
-          <h2 style="margin:0; font-size:1.1rem; color:var(--text-muted)">Mis Equipos</h2>
-          <button class="btn btn-secondary btn-small" id="btn-nueva-cana" onclick="document.getElementById('form-canadex-container').style.display='block'; this.style.display='none';"><i class="fas fa-plus"></i> Añadir Equipo</button>
+          <h2 style="margin:0; font-size:1.1rem; color:var(--text-muted)">Els meus Equips</h2>
+          <button class="btn btn-secondary btn-small" id="btn-nueva-cana" onclick="document.getElementById('form-canadex-container').style.display='block'; this.style.display='none';"><i class="fas fa-plus"></i> Afegir Equip</button>
         </div>
 
         <!-- Formulario oculto para añadir caña -->
         <div id="form-canadex-container" style="display:none; background:var(--panel-bg); padding:15px; border-radius:12px; margin-bottom:20px; border:1px solid var(--primary);">
           <form id="form-canadex" class="form-captura">
-            <h3 style="margin-top:0; color:var(--accent)">Nuevo Equipo</h3>
+            <h3 style="margin-top:0; color:var(--accent)">Nou Equip</h3>
             <div class="form-group">
-              <label>Nombre del conjunto (Ej: Mi Equipo de Lucio)</label>
+              <label>Nom del conjunt (Ex: El meu equip de Lluç)</label>
               <input type="text" id="can-nombre" required>
             </div>
             <div class="form-row split">
               <div class="form-group">
-                <label>Caña</label>
+                <label>Canya</label>
                 <input type="text" id="can-cana" placeholder="Ej: Shimano Zodias">
               </div>
               <div class="form-group">
-                <label>Carrete</label>
+                <label>Carret</label>
                 <input type="text" id="can-carrete" placeholder="Ej: Daiwa BG">
               </div>
             </div>
             <div class="form-row split">
               <div class="form-group">
-                <label>Hilo (Sedal)</label>
-                <input type="text" id="can-hilo" placeholder="Ej: Trenzado 0.20">
+                <label>Fil (Sedal)</label>
+                <input type="text" id="can-hilo" placeholder="Ex: Trenat 0.20">
               </div>
               <div class="form-group">
-                <label>Plomo / Montaje</label>
-                <input type="text" id="can-plomo" placeholder="Ej: Texas 10g">
+                <label>Plom / Muntatge</label>
+                <input type="text" id="can-plomo" placeholder="Ex: Texas 10g">
               </div>
             </div>
             <div class="form-row split">
               <div class="form-group">
-                <label>Precio Total (€)</label>
+                <label>Preu Total (€)</label>
                 <input type="number" id="can-precio" placeholder="150">
               </div>
               <div class="form-group">
-                <label>Enlace de compra</label>
+                <label>Enllaç de compra</label>
                 <input type="url" id="can-link" placeholder="https://...">
               </div>
             </div>
             <div style="display:flex; gap:10px;">
               <button type="submit" class="btn btn-primary btn-block" id="btn-guardar-cana"><i class="fas fa-save"></i> Guardar</button>
-              <button type="button" class="btn btn-secondary" onclick="document.getElementById('form-canadex-container').style.display='none'; document.getElementById('btn-nueva-cana').style.display='inline-block';">Cancelar</button>
+              <button type="button" class="btn btn-secondary" onclick="document.getElementById('form-canadex-container').style.display='none'; document.getElementById('btn-nueva-cana').style.display='inline-block';">Cancel·lar</button>
             </div>
           </form>
         </div>
@@ -232,52 +237,52 @@
       <section id="tab-mapas" class="tab-content" style="display: none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <select id="map-type-selector" style="width:auto; padding:8px; border-radius:8px; font-weight:bold;">
-            <option value="todos">🌍 Ver Todos los Puntos</option>
-            <option value="pescar">🎣 Zonas para Pescar</option>
-            <option value="investigar">🔍 Zonas a Investigar</option>
-            <option value="dificil">⚠️ Zonas Difíciles</option>
-            <option value="tienda">🏬 Tiendas de Pesca</option>
+            <option value="todos">🌍 Veure Tots els Punts</option>
+            <option value="pescar">🎣 Zones per Pescar</option>
+            <option value="investigar">🔍 Zones a Investigar</option>
+            <option value="dificil">⚠️ Zones Difícils</option>
+            <option value="tienda">🏬 Botigues de Pesca</option>
           </select>
-          <button class="btn btn-primary btn-small" id="btn-add-marker" style="display:none;"><i class="fas fa-map-marker-alt"></i> Añadir Punto</button>
+          <button class="btn btn-primary btn-small" id="btn-add-marker" style="display:none;"><i class="fas fa-map-marker-alt"></i> Afegir Punt</button>
         </div>
 
         <div id="map-container" style="height: 60vh; width: 100%; border-radius: 12px; border: 2px solid var(--accent); z-index:1;"></div>
         
         <p style="text-align:center; color:var(--text-muted); font-size:0.9rem; margin-top:10px;">
-          * Haz doble clic o mantén presionado en el mapa para añadir un nuevo marcador de zona o tienda.
+          * Fes doble clic o mantén pressionat al mapa per afegir un nou marcador de zona o botiga.
         </p>
 
         <!-- Formulario oculto para nuevo marcador -->
         <div id="form-marker-container" style="display:none; background:var(--panel-bg); padding:15px; border-radius:12px; margin-top:15px; border:1px solid var(--primary);">
           <form id="form-marker" class="form-captura">
-            <h3 style="margin-top:0; color:var(--accent)">Nuevo Punto en el Mapa</h3>
+            <h3 style="margin-top:0; color:var(--accent)">Nou Punt al Mapa</h3>
             
             <input type="hidden" id="marker-lat">
             <input type="hidden" id="marker-lng">
 
             <div class="form-group">
-              <label>Tipo de punto</label>
+              <label>Tipus de punt</label>
               <select id="marker-type">
-                <option value="pescar">🎣 Zona para Pescar</option>
+                <option value="pescar">🎣 Zona per Pescar</option>
                 <option value="investigar">🔍 Zona a Investigar</option>
                 <option value="dificil">⚠️ Zona Difícil</option>
-                <option value="tienda">🏬 Tienda de Pesca</option>
+                <option value="tienda">🏬 Botiga de Pesca</option>
               </select>
             </div>
             
             <div class="form-group">
-              <label>Nombre del Lugar / Tienda</label>
+              <label>Nom del Lloc / Botiga</label>
               <input type="text" id="marker-nombre" required>
             </div>
             
             <div class="form-group">
-              <label>Descripción / Horarios</label>
+              <label>Descripció / Horaris</label>
               <textarea id="marker-desc" rows="2"></textarea>
             </div>
             
             <div style="display:flex; gap:10px;">
               <button type="submit" class="btn btn-primary btn-block" id="btn-guardar-marker"><i class="fas fa-save"></i> Guardar</button>
-              <button type="button" class="btn btn-secondary" onclick="document.getElementById('form-marker-container').style.display='none';">Cancelar</button>
+              <button type="button" class="btn btn-secondary" onclick="document.getElementById('form-marker-container').style.display='none';">Cancel·lar</button>
             </div>
           </form>
         </div>
@@ -286,9 +291,9 @@
       <!-- TAB: RANKING -->
       <section id="tab-ranking" class="tab-content" style="display: none;">
         <div style="background:var(--panel-bg); border-radius:16px; padding:20px;">
-          <h2 style="margin-top:0; color:#fbbf24; text-align:center;"><i class="fas fa-trophy"></i> Los Mejores Pescadores</h2>
+          <h2 style="margin-top:0; color:#fbbf24; text-align:center;"><i class="fas fa-trophy"></i> Els Millors Pescadors</h2>
           <div id="ranking-list" style="display:flex; flex-direction:column; gap:20px; margin-top:20px;">
-            <p class="loading">Calculando rankings...</p>
+            <p class="loading">Calculant classificacions...</p>
           </div>
         </div>
       </section>
@@ -299,43 +304,43 @@
           <i class="fas fa-user-circle" style="font-size:4rem; color:var(--accent); margin-bottom:10px;"></i>
           <h2 id="perfil-title" style="margin:0; color:var(--primary);">Usuario</h2>
           <div style="margin-top:10px; font-size:1.5rem; color:var(--accent); font-weight:bold;">🎣 <span id="perfil-total">0</span></div>
-          <div style="color:var(--text-muted); font-size:0.9rem;">Capturas totales</div>
+          <div style="color:var(--text-muted); font-size:0.9rem;">Captures totals</div>
         </div>
 
-        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px; margin-top:20px;"><i class="fas fa-book-open"></i> Su Peixdex</h3>
+        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px; margin-top:20px;"><i class="fas fa-book-open"></i> La seva Peixdex</h3>
         <div id="perfil-feed-capturas" class="feed" style="margin-bottom:40px;">
-          <p class="loading">Cargando...</p>
+          <p class="loading">Carregant...</p>
         </div>
 
-        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;"><i class="fas fa-toolbox"></i> Su Cañadex</h3>
+        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;"><i class="fas fa-toolbox"></i> Su Canyadex</h3>
         <div id="perfil-feed-equipos" class="feed" style="margin-bottom:40px;">
-          <p class="loading">Cargando...</p>
+          <p class="loading">Carregant...</p>
         </div>
       </section>
 
     </main>
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
-      <button class="nav-item active" data-target="muro" data-title="Muro Público">
+      <button class="nav-item active" data-target="muro" data-title="Mur Públic">
         <i class="fas fa-globe"></i>
-        <span>Muro</span>
+        <span>Mur</span>
       </button>
-      <button class="nav-item" data-target="registro" data-title="Mi Peixdex">
+      <button class="nav-item" data-target="registro" data-title="La meva Peixdex">
         <i class="fas fa-book-open"></i>
         <span>Peixdex</span>
       </button>
-      <button class="nav-item fab-btn" data-target="nuevo" data-title="Nueva Captura">
+      <button class="nav-item fab-btn" data-target="nuevo" data-title="Nova Captura">
         <div class="fab">
           <i class="fas fa-plus"></i>
         </div>
       </button>
-      <button class="nav-item" data-target="canadex" data-title="Mi Cañadex">
+      <button class="nav-item" data-target="canadex" data-title="Mi Canyadex">
         <i class="fas fa-toolbox"></i>
-        <span>Cañadex</span>
+        <span>Canyadex</span>
       </button>
-      <button class="nav-item" data-target="mapas" data-title="Mapas Interactivos">
+      <button class="nav-item" data-target="mapas" data-title="Mapes Interactius">
         <i class="fas fa-map-marked-alt"></i>
-        <span>Mapas</span>
+        <span>Mapes</span>
       </button>
     </nav>
   </div>

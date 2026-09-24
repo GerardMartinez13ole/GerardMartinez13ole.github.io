@@ -11,15 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Registrar Nuevo Usuario
   btnRegister.addEventListener('click', async () => {
-    if (!window.auth) return window.showAuthError('Firebase no está configurado aún.');
+    if (!window.auth) return window.showAuthError('Firebase no està configurat encara.');
     
     const usernameInput = document.getElementById('username');
     const email = emailInput.value;
     const password = passwordInput.value;
     const username = usernameInput ? usernameInput.value.trim() : '';
     
-    if (!email || !password) return window.showAuthError('Rellena email y contraseña');
-    if (!username) return window.showAuthError('Debes escribir un Nombre o Apodo para registrarte.');
+    if (!email || !password) return window.showAuthError('Emplena email i contrasenya');
+    if (!username) return window.showAuthError("Has d'escriure un Nom o Sobrenom per registrar-te.");
 
     try {
       const userCredential = await window.auth.createUserWithEmailAndPassword(email, password);
@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Iniciar Sesión
+  // Iniciar Sessió
   authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!window.auth) return window.showAuthError('Firebase no está configurado aún.');
+    if (!window.auth) return window.showAuthError('Firebase no està configurat encara.');
     
     const email = emailInput.value;
     const password = passwordInput.value;
