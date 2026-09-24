@@ -126,6 +126,13 @@ async function loadMapMarkers() {
 
       const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(map);
       
+      const isOwner = window.currentUser && window.currentUser.uid === data.usuarioId;
+      const deleteBtn = isOwner ? `
+        <button onclick="window.borrarPuntoMapa('${doc.id}')" style="margin-top:5px; display:block; width:100%; text-align:center; background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px;">
+          <i class="fas fa-trash-alt"></i> Esborrar
+        </button>
+      ` : '';
+
       let popupContent = `
         <h3 style="margin:0 0 5px 0; color:#0b1320;">${emoji} ${data.nombre}</h3>
         <p style="margin:0; font-size:14px; color:#333;">${data.descripcion || ''}</p>
@@ -133,6 +140,7 @@ async function loadMapMarkers() {
         <a href="https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}" target="_blank" style="display:block; text-align:center; background:#3b82f6; color:white; padding:5px 10px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:14px;">
           <i class="fas fa-directions"></i> Com arribar
         </a>
+        ${deleteBtn}
       `;
       marker.bindPopup(popupContent);
       currentMarkers.push(marker);
@@ -145,4 +153,19 @@ async function loadMapMarkers() {
     }
   }
 }
+
+window.borrarPuntoMapa = async (id) => {
+  if (!window.db || !window.currentUser) return;
+  const confirmar = confirm("Estàs segur que vols esborrar aquest lloc del mapa?");
+  if (!confirmar) return;
+
+  try {
+    await window.db.collection('mapa_puntos').doc(id).delete();
+    alert("Lloc esborrat correctament.");
+    loadMapMarkers();
+  } catch (error) {
+    console.error("Error esborrant punt:", error);
+    alert("Error a l'esborrar. Comprova que tinguis permisos.");
+  }
+};
 
