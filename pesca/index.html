@@ -59,22 +59,38 @@
         </div>
       </section>
 
-      <!-- TAB: MI PEIXDEX -->
+            <!-- TAB: MI PEIXDEX -->
       <section id="tab-registro" class="tab-content" style="display: none;">
         <h2 style="color:var(--primary); margin-top:0; text-align:center;"><i class="fas fa-book-open"></i> La meva Peixdex</h2>
-        <div class="form-group" style="margin-bottom: 15px; display:flex; gap:10px; align-items:center;">
-          <label for="sort-peixdex" style="white-space:nowrap; color:var(--text-muted);"><i class="fas fa-sort"></i> Ordenar per:</label>
-          <select id="sort-peixdex" onchange="ordenarPeixdex()" style="padding:8px; border-radius:8px;">
-            <option value="fecha-desc">Més recents primer</option>
-            <option value="fecha-asc">Més antics primer</option>
-            <option value="peso">Major pes</option>
-            <option value="longitud">Major longitud</option>
-            <option value="especie">Espècie (A-Z)</option>
-            <option value="sitio">Lloc (A-Z)</option>
-          </select>
+        
+        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+          <button id="btn-view-album" class="btn btn-primary" onclick="window.togglePeixdexView('album')"><i class="fas fa-grip-horizontal"></i> Àlbum</button>
+          <button id="btn-view-llista" class="btn btn-secondary" onclick="window.togglePeixdexView('llista')"><i class="fas fa-list"></i> Historial</button>
         </div>
-        <div id="feed-personal" class="feed">
-          <p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant les teves captures...</p>
+
+        <!-- VISTA ALBUM -->
+        <div id="peixdex-album-view" style="display:block;">
+          <div id="peixdex-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-bottom: 30px;">
+            <p class="loading" style="grid-column: 1 / -1;">Calculant els teus cromos...</p>
+          </div>
+        </div>
+
+        <!-- VISTA LLISTA -->
+        <div id="peixdex-llista-view" style="display:none;">
+          <div class="form-group" style="margin-bottom: 15px; display:flex; gap:10px; align-items:center;">
+            <label for="sort-peixdex" style="white-space:nowrap; color:var(--text-muted);"><i class="fas fa-sort"></i> Ordenar per:</label>
+            <select id="sort-peixdex" onchange="window.ordenarPeixdex()" style="padding:8px; border-radius:8px;">
+              <option value="fecha-desc">Més recents primer</option>
+              <option value="fecha-asc">Més antics primer</option>
+              <option value="peso">Major pes</option>
+              <option value="longitud">Major longitud</option>
+              <option value="especie">Espècie (A-Z)</option>
+              <option value="sitio">Lloc (A-Z)</option>
+            </select>
+          </div>
+          <div id="feed-personal" class="feed">
+            <p class="loading">Carregant les teves captures...</p>
+          </div>
         </div>
       </section>
 
@@ -94,7 +110,43 @@
           <div class="form-row">
             <div class="form-group">
               <label>Espècie (Peixdex)*</label>
-              <input type="text" id="cap-especie" required placeholder="Ex: Black Bass">
+              <select id="cap-especie" required>
+                <option value="">Selecciona l'espècie...</option>
+                <option value="Agulla">Agulla</option>
+                <option value="Anguila">Anguila</option>
+                <option value="Atun blanc">Atun blanc</option>
+                <option value="Atun roig">Atun roig</option>
+                <option value="Bacoreta">Bacoreta</option>
+                <option value="Barb">Barb</option>
+                <option value="Barracuda">Barracuda</option>
+                <option value="Blackbass">Blackbass</option>
+                <option value="Brema">Brema</option>
+                <option value="Calamar">Calamar</option>
+                <option value="Caprí">Caprí</option>
+                <option value="Carpa">Carpa</option>
+                <option value="Catxo">Catxo</option>
+                <option value="Cavalla">Cavalla</option>
+                <option value="Esturió">Esturió</option>
+                <option value="Jurel">Jurel</option>
+                <option value="Llampuga">Llampuga</option>
+                <option value="Llisal">Llisal</option>
+                <option value="Llobarro">Llobarro</option>
+                <option value="Lucio">Lucio</option>
+                <option value="Lucioperca">Lucioperca</option>
+                <option value="Mero">Mero</option>
+                <option value="Muixarra / Dorada">Muixarra / Dorada</option>
+                <option value="Palometa">Palometa</option>
+                <option value="Peix gat de canal">Peix gat de canal</option>
+                <option value="Peix gat negre">Peix gat negre</option>
+                <option value="Saboga">Saboga</option>
+                <option value="Sarg">Sarg</option>
+                <option value="Sepia">Sepia</option>
+                <option value="Silur">Silur</option>
+                <option value="Tallahams">Tallahams</option>
+                <option value="Trucha">Trucha</option>
+                <option value="Altre">Altre...</option>
+              </select>
+              <input type="text" id="cap-especie-altre" placeholder="Escriu l'espècie..." style="display:none; margin-top:10px;">
             </div>
           </div>
 
@@ -298,7 +350,7 @@
         </div>
       </section>
 
-      <!-- TAB: PERFIL PÚBLICO -->
+            <!-- TAB: PERFIL PÚBLICO -->
       <section id="tab-perfil" class="tab-content" style="display: none;">
         <div style="padding:20px; background:var(--panel-bg); border-radius:16px; margin-bottom:20px; display:flex; flex-direction:column; align-items:center; text-align:center;">
           <i class="fas fa-user-circle" style="font-size:4rem; color:var(--accent); margin-bottom:10px;"></i>
@@ -308,11 +360,25 @@
         </div>
 
         <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px; margin-top:20px;"><i class="fas fa-book-open"></i> La seva Peixdex</h3>
-        <div id="perfil-feed-capturas" class="feed" style="margin-bottom:40px;">
-          <p class="loading">Carregant...</p>
+        
+        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+          <button id="btn-perfil-view-album" class="btn btn-primary" onclick="window.togglePerfilView('album')"><i class="fas fa-grip-horizontal"></i> Àlbum</button>
+          <button id="btn-perfil-view-llista" class="btn btn-secondary" onclick="window.togglePerfilView('llista')"><i class="fas fa-list"></i> Historial</button>
         </div>
 
-        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;"><i class="fas fa-toolbox"></i> Su Canyadex</h3>
+        <div id="perfil-album-view" style="display:block;">
+          <div id="perfil-peixdex-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-bottom: 30px;">
+            <p class="loading" style="grid-column: 1 / -1;">Calculant els seus cromos...</p>
+          </div>
+        </div>
+
+        <div id="perfil-llista-view" style="display:none;">
+          <div id="perfil-feed-capturas" class="feed" style="margin-bottom:40px;">
+            <p class="loading">Carregant...</p>
+          </div>
+        </div>
+
+        <h3 style="color:var(--accent); border-bottom:1px solid #334155; padding-bottom:5px;"><i class="fas fa-toolbox"></i> La seva Canyadex</h3>
         <div id="perfil-feed-equipos" class="feed" style="margin-bottom:40px;">
           <p class="loading">Carregant...</p>
         </div>

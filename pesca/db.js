@@ -19,7 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       // 1. Recoger datos del formulario
-      const especie = document.getElementById('cap-especie').value.trim();
+      let especie = document.getElementById('cap-especie').value.trim();
+      if (especie === 'Altre') {
+        especie = document.getElementById('cap-especie-altre').value.trim();
+      }
       const peso = document.getElementById('cap-peso').value;
       const longitud = document.getElementById('cap-longitud').value;
       const modalidad = document.getElementById('cap-modalidad').value;
@@ -118,9 +121,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         alert('Captura guardada amb èxit!');
       }
-      formCaptura.reset();
+            formCaptura.reset();
       document.getElementById('foto-preview').style.display = 'none';
       document.getElementById('foto-text').textContent = 'Pujar foto del peix';
+      const especieAltreReset = document.getElementById('cap-especie-altre');
+      if (especieAltreReset) {
+        especieAltreReset.style.display = 'none';
+        especieAltreReset.required = false;
+      }
       
       // Volver al muro
       document.querySelector('[data-target="muro"]').click();
@@ -150,18 +158,46 @@ window.loadMuro = async () => {
       
     feed.innerHTML = ''; 
     
+    
+    const grid = document.getElementById('peixdex-grid');
+    const caught = {};
+    const especiesOficiales = [
+      'Agulla', 'Anguila', 'Atun blanc', 'Atun roig', 'Bacoreta', 'Barb', 'Barracuda', 
+      'Blackbass', 'Brema', 'Calamar', 'Caprí', 'Carpa', 'Catxo', 'Cavalla', 'Esturió', 
+      'Jurel', 'Llampuga', 'Llisal', 'Llobarro', 'Lucio', 'Lucioperca', 'Mero', 
+      'Muixarra / Dorada', 'Palometa', 'Peix gat de canal', 'Peix gat negre', 'Saboga', 
+      'Sarg', 'Sepia', 'Silur', 'Tallahams', 'Trucha'
+    ];
+
     if (snapshot.empty) {
-      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">No hi ha captures encara. Sigues el primer!</p>';
-      return;
+      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">Encara no has registrat res. Ves a pescar!</p>';
+    } else {
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        data.id = doc.id;
+        
+        const esp = data.especie;
+        if (esp) {
+          const espMatch = especiesOficiales.find(e => e.toLowerCase() === esp.toLowerCase());
+          const finalEsp = espMatch || esp; 
+          
+          if (!caught[finalEsp]) {
+            caught[finalEsp] = { count: 0, maxPeso: 0, maxLong: 0 };
+          }
+          caught[finalEsp].count++;
+          if (data.peso && parseFloat(data.peso) > caught[finalEsp].maxPeso) caught[finalEsp].maxPeso = parseFloat(data.peso);
+          if (data.longitud && parseFloat(data.longitud) > caught[finalEsp].maxLong) caught[finalEsp].maxLong = parseFloat(data.longitud);
+        }
+
+        const card = window.createCapturaCard(data);
+        feed.appendChild(card);
+        if (window.cargarComentarios) window.cargarComentarios(data.id);
+      });
     }
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      data.id = doc.id;
-      const card = window.createCapturaCard(data);
-      feed.appendChild(card);
-      if (window.cargarComentarios) window.cargarComentarios(data.id);
-    });
+    if (window.renderAlbum) {
+      window.renderAlbum(caught, grid, false);
+    }
   } catch (error) {
     console.error("Error leyendo muro:", error);
     feed.innerHTML = "<p class='error-msg'>Error al carregar. Assegura't que les regles de Firestore permeten lectura.</p>";
@@ -440,16 +476,46 @@ window.openPerfil = async (userId, userName) => {
     feedCapturas.innerHTML = '';
     document.getElementById('perfil-total').textContent = snapCapturas.size;
     
+    const grid = document.getElementById('perfil-peixdex-grid');
+    const caught = {};
+    const especiesOficiales = [
+      'Agulla', 'Anguila', 'Atun blanc', 'Atun roig', 'Bacoreta', 'Barb', 'Barracuda', 
+      'Blackbass', 'Brema', 'Calamar', 'Caprí', 'Carpa', 'Catxo', 'Cavalla', 'Esturió', 
+      'Jurel', 'Llampuga', 'Llisal', 'Llobarro', 'Lucio', 'Lucioperca', 'Mero', 
+      'Muixarra / Dorada', 'Palometa', 'Peix gat de canal', 'Peix gat negre', 'Saboga', 
+      'Sarg', 'Sepia', 'Silur', 'Tallahams', 'Trucha'
+    ];
+
     if (snapCapturas.empty) {
       feedCapturas.innerHTML = '<p style="text-align:center; color:var(--text-muted);">Sense captures encara.</p>';
     } else {
       snapCapturas.forEach(doc => {
         const data = doc.data();
         data.id = doc.id;
+        
+        const esp = data.especie;
+        if (esp) {
+          const espMatch = especiesOficiales.find(e => e.toLowerCase() === esp.toLowerCase());
+          const finalEsp = espMatch || esp; 
+          
+          if (!caught[finalEsp]) {
+            caught[finalEsp] = { count: 0, maxPeso: 0, maxLong: 0 };
+          }
+          caught[finalEsp].count++;
+          if (data.peso && parseFloat(data.peso) > caught[finalEsp].maxPeso) caught[finalEsp].maxPeso = parseFloat(data.peso);
+          if (data.longitud && parseFloat(data.longitud) > caught[finalEsp].maxLong) caught[finalEsp].maxLong = parseFloat(data.longitud);
+        }
+
         feedCapturas.appendChild(window.createCapturaCard(data));
         if (window.cargarComentarios) window.cargarComentarios(data.id);
       });
     }
+
+    if (window.renderAlbum) {
+      window.renderAlbum(caught, grid, true); // true = isPerfil
+    }
+
+    // 2. Cargar Canyadex (Equipos)
 
     // 2. Cargar Canyadex (Equipos)
     const snapEquipos = await window.db.collection('canadex')
