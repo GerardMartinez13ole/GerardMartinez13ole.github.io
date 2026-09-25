@@ -158,6 +158,37 @@ window.loadMuro = async () => {
       
     feed.innerHTML = ''; 
     
+    if (snapshot.empty) {
+      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">Encara no hi ha captures públiques.</p>';
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      data.id = doc.id;
+      const card = window.createCapturaCard(data);
+      feed.appendChild(card);
+      if (window.cargarComentarios) window.cargarComentarios(data.id);
+    });
+  } catch (error) {
+    console.error("Error leyendo muro:", error);
+    feed.innerHTML = "<p class='error-msg'>Error al carregar. Assegura't que les regles de Firestore permeten lectura.</p>";
+  }
+};
+
+// Cargar Mi Registro
+window.loadPersonalRegistro = async () => {
+  if (!window.db || !window.currentUser) return;
+  const feed = document.getElementById('feed-personal');
+  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant les teves captures...</p>';
+
+  try {
+    const snapshot = await window.db.collection('capturas')
+      .where('usuarioId', '==', window.currentUser.uid)
+      .orderBy('createdAt', 'desc')
+      .get();
+      
+    feed.innerHTML = '';
     
     const grid = document.getElementById('peixdex-grid');
     const caught = {};
@@ -198,38 +229,6 @@ window.loadMuro = async () => {
     if (window.renderAlbum) {
       window.renderAlbum(caught, grid, false);
     }
-  } catch (error) {
-    console.error("Error leyendo muro:", error);
-    feed.innerHTML = "<p class='error-msg'>Error al carregar. Assegura't que les regles de Firestore permeten lectura.</p>";
-  }
-};
-
-// Cargar Mi Registro
-window.loadPersonalRegistro = async () => {
-  if (!window.db || !window.currentUser) return;
-  const feed = document.getElementById('feed-personal');
-  feed.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> Carregant les teves captures...</p>';
-
-  try {
-    const snapshot = await window.db.collection('capturas')
-      .where('usuarioId', '==', window.currentUser.uid)
-      .orderBy('createdAt', 'desc')
-      .get();
-      
-    feed.innerHTML = '';
-    
-    if (snapshot.empty) {
-      feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:30px;">Encara no has registrat res. Ves a pescar!</p>';
-      return;
-    }
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      data.id = doc.id;
-      const card = window.createCapturaCard(data);
-      feed.appendChild(card);
-      if (window.cargarComentarios) window.cargarComentarios(data.id);
-    });
   } catch (error) {
     console.error("Error leyendo registro personal:", error);
     if (error.message.includes('index')) {

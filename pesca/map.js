@@ -20,8 +20,7 @@ window.initMap = () => {
     attribution: '© OpenStreetMap'
   }).addTo(map);
 
-  // Manejar click largo / doble click para añadir marcador
-  map.on('dblclick', function(e) {
+    const handleMapClick = function(e) {
     if (tempMarker) map.removeLayer(tempMarker);
     
     tempMarker = L.marker(e.latlng).addTo(map);
@@ -33,7 +32,13 @@ window.initMap = () => {
     
     // Scroll al formulario
     document.getElementById('form-marker-container').scrollIntoView({behavior: 'smooth'});
-  });
+  };
+
+  // Manejar doble click para PC
+  map.on('dblclick', handleMapClick);
+  
+  // Manejar pulsación larga (contextmenu) para móvil
+  map.on('contextmenu', handleMapClick);
 
   // Selector de tipo de mapa
   document.getElementById('map-type-selector').addEventListener('change', () => {
